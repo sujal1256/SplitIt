@@ -46,13 +46,19 @@ async function handleLogin(req, res) {
     }
 
     const user = await User.findOne({userEmail});
-    if (!user.isPasswordCorrect(password)) {
+    if(!user){
+      return res.status(400).json(new ApiError(400, "❌ User not found"));
+
+    }
+    
+    if (!(await user.isPasswordCorrect(password))) {
       return res.status(400).json(new ApiError(400, "❌ Incorrect Password"));
     }
 
-    const token = user.generateAccessToken();
-    res.cookies.accessToken = token;
-    res.headers.setHeader("Authorization", "Bearer " + token);
+    const token = await user.generateAccessToken();
+    res.cookie("accessToken", token);
+    
+    res.setHeader("Authorization", "Bearer " + token);
 
     return res.status(200).json(new ApiResponse(200, user, "User Logged In"));  
   } catch (error) {
