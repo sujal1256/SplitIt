@@ -4,12 +4,13 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 async function handleRegister(req, res) {
   try {
-    const { userName, userEmail, password } = req.body;
+    const { userName, userEmail, password, phoneNumber } = req.body;
 
     // Check if values are valid or not
-    if ([userEmail, userName, password].some((e) => e.trim() == null)) {
+    if (!phoneNumber || [userEmail, userName, password].some((e) => e.trim() == null)) {
       return res.status(400).json(new ApiError(400, "❌ Values not provided"));
     }
+
 
     // Check if the email already exists
     const user = await User.findOne({ userEmail });
@@ -18,7 +19,7 @@ async function handleRegister(req, res) {
     }
 
     // Creating a new user
-    const newUser = new User({ userName, userEmail, password });
+    const newUser = new User({ userName, userEmail, password, phoneNumber });
     await newUser.save();
 
     return res

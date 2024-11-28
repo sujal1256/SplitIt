@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const userSchema = new mongoose.Schema(
+const userSchema = mongoose.Schema(
   {
     userName: {
       type: String,
@@ -12,6 +12,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+    },
+    phoneNumber: {
+      type: Number,
+      required: true,
     },
     password: {
       type: String,
@@ -36,22 +40,21 @@ userSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 };
 
-
 // use of json web token, to do authentication
 userSchema.methods.generateAccessToken = async function () {
   const token = jwt.sign(
     {
+      userId: this._id,
       userName: this.userName,
       userEmail: this.userEmail,
+      phoneNumber: this.phoneNumber,
     },
     process.env.ACCESS_TOKEN_SECRET,
     { expiresIn: "10d" }
-
   );
 
   return token;
 };
-
 
 const User = mongoose.model("User", userSchema);
 

@@ -6,7 +6,7 @@ async function verifyJWT(req, res, next) {
     
     const token = req.headers["Authorization"] || req.cookies["accessToken"];
       // const token = req.cookies;
-    const decodedUser = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    const decodedUser =  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
   
     // TODO: Redirect to signin page
     
