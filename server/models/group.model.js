@@ -29,6 +29,7 @@ const groupSchema = new mongoose.Schema({
   members: {
     type: [memberSchema],
     required: true,
+    ref: "User",
   },
   groupDesciption: {
     type: String,
