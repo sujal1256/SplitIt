@@ -12,6 +12,7 @@ const PORT = process.env.SERVER_PORT;
 
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
+
 connectToMongoDB();
 app.get("/invite", storeInvitedUser)
 app.use("/api/v1/user", userRouter);

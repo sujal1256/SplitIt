@@ -23,7 +23,7 @@ async function sendEmail(recipentEmail, group) {
    
      console.log("✅ Message sent: %s", mailSent.messageId);   
  } catch (error) {
-    console.log("❌ Error in sending the email", error.message);
+  console.log("❌ Error in sending the email", error.message);
     
  }
 }

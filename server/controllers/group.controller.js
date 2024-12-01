@@ -40,7 +40,6 @@ async function handleAddMemberToGroup(req, res) {
       return res.status(400).json(new ApiError(400, "Email is required"));
     }
 
-    const user = req.user;
 
     const group = await Group.findOne({ _id: groupId });
 
@@ -57,6 +56,7 @@ async function handleAddMemberToGroup(req, res) {
 async function storeInvitedUser(req, res) {
   try {
     const { groupId, memberName, memberEmail } = req.body;
+    // MEMBER WILL BE ADDED TO THE GROUP AND IT WILL BE SHOWN IN USERS DASHBOARD
     const group = await Group.findOne({ _id: groupId });
 
     if (!group) {
