@@ -31,7 +31,7 @@ function LoginRegister() {
       const data = await response.json();
       console.log(data);
             
-      if (data) {
+      if (response.ok) {
         toast.success("Logged In successfully");
       } else {
         toast.error(data.message);

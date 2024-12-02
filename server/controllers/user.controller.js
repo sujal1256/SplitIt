@@ -1,3 +1,4 @@
+import { Group } from "../models/group.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
@@ -61,14 +62,27 @@ async function handleLogin(req, res) {
     const token = await user.generateAccessToken();
     res.cookie("accessToken", token);
 
-    // TODO:
-    res.setHeader("Authorization", "Bearer " + token);
-
     return res.status(200).json(new ApiResponse(200, user, "User Logged In"));
   } catch (error) {
     console.log("Error while logging in", error);
     return res.status(400).json(new ApiError(400, "❌ Error in logging in"));
   }
+}
+
+async function handleGetGroups(req, res) {
+  const { userId } = req.user;
+
+  if (!userId) {
+    return res.status(400).json(new ApiError(400, "User not found"));
+  }
+
+  const groups = await Group.find({
+    "members.memberId": userId,
+  });
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, groups, "Group fetched successfully"));
 }
 
 async function handleCheckLoggedIn(req, res) {
@@ -82,4 +96,4 @@ async function handleCheckLoggedIn(req, res) {
     .json(new ApiResponse(200, req.user, "User is logged In"));
 }
 
-export { handleRegister, handleLogin, handleCheckLoggedIn };
+export { handleRegister, handleLogin, handleCheckLoggedIn, handleGetGroups };

@@ -18,6 +18,7 @@ async function handleCreateGroup(req, res) {
     groupDescription,
     members: [
       {
+        memberId: user.userId,
         memberName: user.userName,
         memberEmail: user.userEmail,
         memberRole: "Admin",
@@ -39,7 +40,6 @@ async function handleAddMemberToGroup(req, res) {
     if (!email) {
       return res.status(400).json(new ApiError(400, "Email is required"));
     }
-
 
     const group = await Group.findOne({ _id: groupId });
 
