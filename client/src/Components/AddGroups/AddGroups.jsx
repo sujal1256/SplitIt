@@ -68,7 +68,7 @@ function AddGroups() {
               placeholder="Group Name"
               value={newGroupName}
               onChange={(e) => setNewGroupName(e.target.value)}
-              className="w-full border-2 border-black-600 p-2 rounded-lg mb-4"
+              className="w-full border-2 border-gray-300 p-2 rounded-lg mb-4"
             />
 
             <h3 className="font-semibold mb-2">Members</h3>
