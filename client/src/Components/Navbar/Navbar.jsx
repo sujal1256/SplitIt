@@ -21,24 +21,20 @@ function Navbar() {
                 {/* Navigation Links */}
                 <ul className="list-none m-0 p-0 flex">
                   <li className="ml-5">
-                    <Link to="/" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-gray-300 hover:-translate-y-1">Home</Link>
+                    <Link to="/" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-amber-900 hover:-translate-y-1">Home</Link>
                   </li>
                   <li className="ml-5">
-                    <Link to="/about" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-gray-300 hover:-translate-y-1">About</Link>
+                    <Link to="/about" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-amber-900 hover:-translate-y-1">About</Link>
                   </li>
                   <li className="ml-5">
-                    <Link to="/contact" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-gray-300 hover:-translate-y-1">Contact</Link>
+                    <Link to="/contact" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-amber-900 hover:-translate-y-1">Contact</Link>
                   </li>
                   <li className="ml-5">
-                    <Link to="/login" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-gray-300 hover:-translate-y-1">Login</Link>
+                    <Link to="/login" className="text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-amber-900 hover:-translate-y-1">Login</Link>
                   </li>
                 </ul>
               </div>
             </nav>
-    
-            <div className="text-center">
-                <h2>Welcome to My Website!</h2>
-            </div>
         </>
     );
 }
