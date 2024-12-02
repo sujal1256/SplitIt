@@ -10,7 +10,16 @@ dotenv.config();
 const app = express();
 const PORT = process.env.SERVER_PORT;
 
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // You can specify a specific origin like "http://localhost:3000" instead of "*"
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Specify allowed methods
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Specify allowed headers
+  next();
+});
+
 app.use(urlencoded({ extended: false }));
+app.use(json());
 app.use(cookieParser());
 
 connectToMongoDB();
