@@ -22,7 +22,7 @@ function AddGroups() {
     <>
       {/* Button to add a new group */}
       <div className="<w-20 h-12 cursor-pointer font-semibold bg-amber-600 text-white border-2 border-gray-400 fixed bottom-5 right-5 rounded-lg shadow-lg">
-        <button onClick={addGroup} className="p-2">Add Group</button>
+        <button onClick={addGroup} className="p-2">Create Group</button>
       </div>
 
       {/* Render the groups */}

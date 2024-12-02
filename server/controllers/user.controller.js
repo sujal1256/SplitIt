@@ -3,7 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 async function handleRegister(req, res) {
-  try {    
+  try {
     console.log(req.body);
     const { userName, userEmail, password, phoneNumber } = req.body;
 
@@ -26,7 +26,7 @@ async function handleRegister(req, res) {
     await newUser.save();
 
     console.log("User created successfully");
-    
+
     return res
       .status(201)
       .json(
@@ -61,7 +61,7 @@ async function handleLogin(req, res) {
     const token = await user.generateAccessToken();
     res.cookie("accessToken", token);
 
-    // TODO: 
+    // TODO:
     res.setHeader("Authorization", "Bearer " + token);
 
     return res.status(200).json(new ApiResponse(200, user, "User Logged In"));
@@ -71,4 +71,15 @@ async function handleLogin(req, res) {
   }
 }
 
-export { handleRegister, handleLogin };
+async function handleCheckLoggedIn(req, res) {
+  if (req.user == null) {
+    return res
+      .status(400)
+      .json(new ApiResponse(400, null, "User is not logged In"));
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.user, "User is logged In"));
+}
+
+export { handleRegister, handleLogin, handleCheckLoggedIn };

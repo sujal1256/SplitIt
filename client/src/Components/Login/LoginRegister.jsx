@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 function LoginRegister() {
   const [action, setAction] = useState("");
@@ -9,9 +9,36 @@ function LoginRegister() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
 
-  const [LoginUsername, setLoginUsername] = useState("");
-  const [LoginEmail, setLoginEmail] = useState("");
-  const [LoginPassword, setLoginPassword] = useState("");
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/v1/user/login", {
+        
+        method: "POST",
+        body: JSON.stringify({
+          userEmail: loginEmail,
+          password: loginPassword,
+        }), 
+        headers: {
+          "Content-Type": "application/json", 
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+            
+      if (data) {
+        toast.success("Logged In successfully");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log("❌  Error in loggin In", error);
+    }
+  }
 
   //   TODO: Add phone number field and send it to backend
   async function handleRegister(e) {
@@ -35,7 +62,7 @@ function LoginRegister() {
       console.log(data);
             
       if (response.ok) {
-        toast.success("User created successfully");
+        toast.success("Signed Up successfully");
       } else {
         toast.error(data.message);
       }
@@ -74,7 +101,8 @@ function LoginRegister() {
                 <div className="relative w-full h-12 my-7">
                   <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="Email"
+                    onChange={(e) => setLoginEmail(e.target.value)}
                     required
                     className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                   />
@@ -85,6 +113,7 @@ function LoginRegister() {
                   <input
                     type="password"
                     placeholder="Password"
+                    onChange={(e) => setLoginPassword(e.target.value)}
                     required
                     className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                   />
@@ -107,6 +136,7 @@ function LoginRegister() {
                 <button
                   type="submit"
                   className="w-full h-11 bg-white border-none outline-none rounded-full shadow-lg cursor-pointer text-lg text-gray-800 font-bold mt-4"
+                  onClick={handleLogin}
                 >
                   Login
                 </button>
