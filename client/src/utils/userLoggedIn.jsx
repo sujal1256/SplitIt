@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 function checkUserLoggedIn() {
   const [userLoggedIn, setUserLoggedIn] = useState({
-  loggedIn: false,
+    loggedIn: false,
     user: null,
   });
 
@@ -10,7 +10,7 @@ function checkUserLoggedIn() {
     const response = await fetch("/api/v1/user/checkLoggedIn");
     const data = await response.json();
     setUserLoggedIn({
-      userLoggedIn: data.statusCode >= 200 && data.statusCode < 300,
+      loggedIn: data.statusCode >= 200 && data.statusCode < 300,
       user: data?.data,
     });
   }
