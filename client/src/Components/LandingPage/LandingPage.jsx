@@ -3,7 +3,7 @@ import BgImg from "../Assets/backgroundLanding.jpg";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 
 function LandingPage() {
-  const logged = checkUserLoggedIn();  
+  const logged = checkUserLoggedIn();
 
   const [groups, setGroups] = useState();
   async function getGroups() {
@@ -25,39 +25,43 @@ function LandingPage() {
 
   // TODO: MODAL WINDOW IS NOT CLOSING
   return (
-    <div className="relative min-h-screen ">
+    <div className="relative min-h-screen overflow-y-hidden">
       {/* Background Image */}
       <div
-        className=" inset-0 bg-cover bg-center fixed -z-10"
+        className="inset-0 bg-cover bg-center fixed -z-10"
         style={{
-          backgroundImage: BgImg,
+          backgroundImage: `url(${BgImg})`, // Use `url()` for the image
         }}
       ></div>
 
       {/* Overlay */}
       <div
-        className={`inset-0 bg-black bg-opacity-50 fixed`}
+        className="inset-0 bg-black bg-opacity-50 fixed -z-5 mt-16"
       ></div>
 
+      {/* TODO: The scroller is visible...remove that */}
       {/* Content */}
       <div
-        className={`relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6 `}
+        className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6 mt-20 "
       >
-        <h1 className="text-4xl md:text-6xl font-bold flex justify-center mt-60">
+        <h1 className="text-4xl md:text-6xl font-bold flex justify-center mt-52">
           Welcome to SplitIt
         </h1>
         <p className="text-lg md:text-2xl mb-6 mt-5">
           Simplify your expenses, track payments, and stay organized
           effortlessly.
         </p>
-        <button className="bg-amber-500 hover:bg-amber-900 text-white py-3 px-6 rounded-lg text-lg shadow-md ">
+        <button className="bg-amber-500 hover:bg-amber-900 text-white py-3 px-6 rounded-lg text-lg shadow-md">
           Get Started
         </button>
       </div>
 
-      {groups?.map((group) => {
-        return <p key={group._id}>{group.groupName}</p>;
-      })}
+      {/* Groups */}
+      <div className="relative z-10 mt-10">
+        {groups?.map((group) => {
+          return <p key={group._id} className="text-white text-center">{group.groupName}</p>;
+        })}
+      </div>
     </div>
   );
 }

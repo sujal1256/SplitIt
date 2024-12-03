@@ -160,13 +160,13 @@ function LoginRegister() {
             <div
               className={`absolute transition-none ${
                 action === " active"
-                  ? "transform translate-x-[35px] translate-y-[-380px]"
+                  ? "transform translate-x-[35px] translate-y-[-420px] pt-3"
                   : "transform translate-x-[400px]"
               }`}
             >
               <form action="">
                 <h1 className="text-3xl text-center">Registration</h1>
-                <div className="relative w-full h-12 my-7">
+                <div className="relative w-full h-8 my-7">
                   <input
                     type="text"
                     placeholder="Username"
@@ -179,7 +179,7 @@ function LoginRegister() {
                   <FaUser className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
-                <div className="relative w-full h-12 my-7">
+                <div className="relative w-full h-8 my-7">
                   <input
                     type="email"
                     placeholder="Email"
@@ -192,7 +192,7 @@ function LoginRegister() {
                   <FaEnvelope className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
-                <div className="relative w-full h-12 my-7">
+                <div className="relative w-full h-8 my-7">
                   <input
                     type="number"
                     placeholder="Phone Number"
@@ -205,7 +205,7 @@ function LoginRegister() {
                   <FaPhone className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
-                <div className="relative w-full h-12 my-7">
+                <div className="relative w-full h-8 my-7">
                   <input
                     type="password"
                     placeholder="Password"
