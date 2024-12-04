@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaUser, FaLock, FaEnvelope , FaPhone} from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
 import { toast } from "react-toastify";
+import loginback from "../Assets/loginback.jpg"
 
 function LoginRegister() {
   const [action, setAction] = useState("");
@@ -84,13 +85,12 @@ function LoginRegister() {
       <Navbar />
       <div
         className="flex justify-center text-center pt-24 bg-cover bg-center"
-        style={{ backgroundImage: `url('Assets/background.avif')` }}
       >
         <div
           className={`relative w-[420px] ${
             action === " active" ? "h-[520px]" : "h-[450px]"
           } bg-amber-500 backdrop-blur-lg rounded-lg shadow-lg text-white flex justify-center items-center overflow-hidden transition-height duration-200 ease-in-out`}
-        >
+          >
           <div className="w-full p-10">
             <div
               className={`transition-transform duration-200 ease-in-out ${

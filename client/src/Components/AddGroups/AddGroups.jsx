@@ -1,24 +1,37 @@
-import React, { memo, useState } from 'react';
-import {toast} from 'react-toastify'
+import React, { useState ,useEffect} from 'react';
+import {toast} from 'react-toastify';
+import {checkUserLoggedIn} from '../../utils/userLoggedIn.jsx';
+
 
 function AddGroups() {
-  const [groups, setGroups] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newMembers, setNewMembers] = useState([{ name: '', email: '' }]);
-  
+  const [groupDesc, setGroupDesc] = useState('');
 
-  // const addGroup = () => {
-  //   const newGroup = {
-  //     id: groups.length + 1,
-  //     name: newGroupName || `Group ${groups.length + 1}`,
-  //     members: newMembers.filter(member => member.name.trim() && member.email.trim()),
-  //   };
-  //   setGroups([...groups, newGroup]);
-  //   setIsModalOpen(false); // Close the modal
-  //   setNewGroupName(''); // Reset the form
-  //   setNewMembers([{ name: '', email: '' }]);
-  // };
+
+  const logged = checkUserLoggedIn();
+
+  const [groups, setGroups] = useState();
+  async function getGroups() {
+    const response = await fetch("/api/v1/user/get-all-groups", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${logged.user?.userId}`,
+      },
+    });
+    const data = await response.json();
+
+    setGroups(data?.data);
+    console.log(groups);
+    
+  }
+
+  useEffect(() => {
+    getGroups();
+  }, [logged]);
+
 
   async function handleCreateGroup(){
     const response = await fetch("api/v1/group/create-group", {
@@ -56,6 +69,13 @@ function AddGroups() {
     setNewMembers(updatedMembers);
   };
 
+  {/* Groups */}
+  <div className="relative z-10 mt-10">
+  {groups?.map((group) => {
+    return <p key={group._id} className="text-white text-center">{group.groupName}</p>;
+  })}
+  </div>
+
   return (
     <>
       <div className="fixed bottom-5 right-5">
@@ -69,19 +89,20 @@ function AddGroups() {
 
       {/* Groups Display */}
       <div className="w-[90%] text-center m-12 flex flex-wrap gap-10 justify-center">
-        {groups.map(group => (
+        {groups?.map(group => (
           <div
             key={group.id}
-            className="w-[calc(50%-30px)] border-2 border-gray-300 bg-gradient-to-l from-amber-600 via-amber-500 to-amber-400 rounded-lg p-4 shadow-md text-center hover:border-amber-500 hover:shadow-xl"
+            className="w-[calc(50%-30px)] border-2 border-gray-300 bg-gradient-to-l from-amber-600 via-amber-500 to-amber-400 rounded-lg p-4 shadow-md text-start hover:border-amber-500 hover:shadow-xl"
           >
-            <h3>{group.name}</h3>
+            <h3 className='font-semibold text-center text-xl'>Group Name : {group.groupName}</h3>
             <div className="members">
               {group.members.map((member, index) => (
                 <div key={index} className="member">
-                  <p>Name: {member.name}</p>
+                  <p><bold>Member</bold> : {member.memberName}</p>
                 </div>
               ))}
             </div>
+            <h3>Group Description : {group.groupDescription}</h3>
           </div>
         ))}
       </div>
@@ -119,6 +140,15 @@ function AddGroups() {
                 />
               </div>
             ))}
+
+            <h2 className="text-lg font-semibold mb-4 mt-3">Group Description</h2>
+            <input
+              type="text"
+              placeholder="Description"
+              value={groupDesc}
+              onChange={(e) => setGroupDesc(e.target.value)}
+              className="w-full border-2 border-gray-300 p-2 rounded-lg mb-4"
+            />
             <button
               onClick={addMemberField}
               className="bg-amber-600 text-white py-2 px-5 mt-3 rounded-lg"

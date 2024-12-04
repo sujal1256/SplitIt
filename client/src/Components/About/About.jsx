@@ -1,12 +1,13 @@
 import React from "react";
 import AboutBack from "../Assets/AboutBack.jpg";
-import bk from "../Assets/Background.avif"
+import bk from "../Assets/Background.avif";
+import dev1 from "../Assets/dev1.jpg"
 
 
 function About() {
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* Hero Section */}
+      
       <section className="text-center bg-gradient-to-r from-amber-500 to-yellow-700 text-white py-20 px-4"
       style={{
         backgroundImage: `url(${AboutBack})`, 
@@ -21,7 +22,7 @@ function About() {
         </p>
       </section>
 
-      {/* About SplitIt */}
+      
       <section className="py-16 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">What is SplitIt?</h2>
@@ -33,7 +34,7 @@ function About() {
         </div>
       </section>
 
-      {/* Features Section */}
+      
       <section className="bg-gray-50 py-16 px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div>
@@ -57,7 +58,6 @@ function About() {
         </div>
       </section>
 
-      {/* How It Works */}
       <section className="py-16 px-6" 
       style={{
         backgroundImage: `url(${bk})`,
@@ -97,7 +97,7 @@ function About() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      
       <section className="bg-gray-100 py-16 px-6">
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">What Our Users Say</h2>
@@ -120,7 +120,24 @@ function About() {
         </div>
       </section>
 
-      {/* CTA Section */}
+
+      <section className="bg-gray-100 py-16 px-6">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-6">Developers</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="p-6 bg-white shadow-lg rounded-lg">
+              <h4 className="mt-4 font-bold"> SHRIYA SETH </h4>
+              {/* <img src={{dev1}} alt="dev1" /> */}
+
+            </div>
+            <div className="p-6 bg-white shadow-lg rounded-lg">
+              <h4 className="mt-4 font-bold">SUJAL MALHOTRA</h4>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       <section className="text-center py-20 bg-amber-500 text-white"
       style={{
         backgroundImage: `url(${AboutBack})`, 
