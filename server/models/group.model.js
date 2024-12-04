@@ -36,7 +36,7 @@ const groupSchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
-  groupDesciption: {
+  groupDescription: {
     type: String,
   },
 });

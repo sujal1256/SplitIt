@@ -12,9 +12,9 @@ function Dashboard() {
     
     <Navbar/>
     {/* <LandingPage/> */}
-    {/* <AddGroups/> */}
+    <AddGroups/>
     {/* <About/> */}
-    <NewGroup/>
+    {/* <NewGroup/> */}
     {/* <Footer/> */}
     </>
   );

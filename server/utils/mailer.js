@@ -2,8 +2,17 @@ import nodemailer from "nodemailer";
 
 async function sendInviteEmail(member, group) {
   try {
-  const inviteEmail = process.env.BACKEND_URL + "/invite?q=" + group._id;
-    //  const inviteEmail = process.env.BACKEND_URL + "/invite?q=" + group._id + "&name=" + member.name + "&email=" + member.email;
+    // Validate member and group
+    if (!member || !member.name || !member.email) {
+      throw new Error("Invalid member details. Name and email are required.");
+    }
+    if (!group || !group._id || !group.groupName) {
+      throw new Error("Invalid group details. ID and group name are required.");
+    }
+
+    // Construct the invite email URL with proper encoding
+    const inviteEmail = `${process.env.BACKEND_URL}/invite?q=${encodeURIComponent(group._id)}&name=${encodeURIComponent(member.name)}&email=${encodeURIComponent(member.email)}`;
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -13,13 +22,13 @@ async function sendInviteEmail(member, group) {
     });
 
     const mailSent = await transporter.sendMail({
-      from: process.env.EMAIL_USER, // sender address
-      to: member.email, // list of receivers
-      subject: "Join Our Group on SplitIt!", // Subject line
+      from: process.env.EMAIL_USER, 
+      to: member.email, 
+      subject: "Join Our Group on SplitIt!", 
       html: `
-             <p>You're invited to join <strong>${group.groupName}</strong>!</p>
-             <p><a href=${inviteEmail}>Click here to accept the invitation.</a></p>
-           `,
+        <p>You're invited to join <strong>${group.groupName}</strong>!</p>
+        <p><a href="${inviteEmail}">Click here to accept the invitation.</a></p>
+      `,
     });
 
     console.log("✅ Message sent: %s", mailSent.messageId);

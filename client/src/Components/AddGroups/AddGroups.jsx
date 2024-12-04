@@ -1,14 +1,12 @@
-import React, { useState ,useEffect} from 'react';
-import {toast} from 'react-toastify';
-import {checkUserLoggedIn} from '../../utils/userLoggedIn.jsx';
-
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 
 function AddGroups() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newGroupName, setNewGroupName] = useState('');
-  const [newMembers, setNewMembers] = useState([{ name: '', email: '' }]);
-  const [groupDesc, setGroupDesc] = useState('');
-
+  const [newGroupName, setNewGroupName] = useState("");
+  const [newMembers, setNewMembers] = useState([{ name: "", email: "" }]);
+  const [groupDesc, setGroupDesc] = useState("");
 
   const logged = checkUserLoggedIn();
 
@@ -25,42 +23,41 @@ function AddGroups() {
 
     setGroups(data?.data);
     console.log(groups);
-    
   }
 
   useEffect(() => {
     getGroups();
   }, [logged]);
 
-
-  async function handleCreateGroup(){
+  async function handleCreateGroup() {
     const response = await fetch("api/v1/group/create-group", {
       method: "POST",
       body: JSON.stringify({
         groupName: newGroupName,
-        members: newMembers
+        members: newMembers,
+        groupDescription: groupDesc,
       }),
-      headers:{
-        "Content-type" : "application/json"
-      }
+      headers: {
+        "Content-type": "application/json",
+      },
     });
     const data = await response.json();
 
-    if(response.ok){
+
+    if (response.ok) {
       toast.success(data.message);
-    }
-    else{
+    } else {
       toast.error("Error in creating group");
     }
 
-    setIsModalOpen(false); 
-    setNewGroupName(''); 
-    setNewMembers([{ name: '', email: '' }]);
-
+    setIsModalOpen(false);
+    setNewGroupName("");
+    setNewMembers([{ name: "", email: "" }]);
+    setGroupDesc("");
   }
 
   const addMemberField = () => {
-    setNewMembers([...newMembers, { name: '', email: '' }]);
+    setNewMembers([...newMembers, { name: "", email: "" }]);
   };
 
   const handleMemberChange = (index, field, value) => {
@@ -69,12 +66,18 @@ function AddGroups() {
     setNewMembers(updatedMembers);
   };
 
-  {/* Groups */}
+  {
+    /* Groups */
+  }
   <div className="relative z-10 mt-10">
-  {groups?.map((group) => {
-    return <p key={group._id} className="text-white text-center">{group.groupName}</p>;
-  })}
-  </div>
+    {groups?.map((group) => {
+      return (
+        <p key={group._id} className="text-white text-center">
+          {group.groupName}
+        </p>
+      );
+    })}
+  </div>;
 
   return (
     <>
@@ -89,16 +92,20 @@ function AddGroups() {
 
       {/* Groups Display */}
       <div className="w-[90%] text-center m-12 flex flex-wrap gap-10 justify-center">
-        {groups?.map(group => (
+        {groups?.map((group) => (
           <div
             key={group.id}
             className="w-[calc(50%-30px)] border-2 border-gray-300 bg-gradient-to-l from-amber-600 via-amber-500 to-amber-400 rounded-lg p-4 shadow-md text-start hover:border-amber-500 hover:shadow-xl"
           >
-            <h3 className='font-semibold text-center text-xl'>Group Name : {group.groupName}</h3>
+            <h3 className="font-semibold text-center text-xl">
+              Group Name : {group.groupName}
+            </h3>
             <div className="members">
               {group.members.map((member, index) => (
                 <div key={index} className="member">
-                  <p><bold>Member</bold> : {member.memberName}</p>
+                  <p>
+                    <bold>Member</bold> : {member.memberName}
+                  </p>
                 </div>
               ))}
             </div>
@@ -126,22 +133,36 @@ function AddGroups() {
                 <input
                   type="text"
                   placeholder="Name"
+                  required={true}
                   value={member.name}
-                  onChange={(e) => handleMemberChange(index, 'name', e.target.value)}
+                  onChange={(e) =>
+                    handleMemberChange(index, "name", e.target.value)
+                  }
                   className="w-1/2 border-2 border-gray-300 p-2 rounded-lg"
                 />
-            
+
                 <input
                   type="text"
                   placeholder="Email"
+                  required={true}
                   value={member.email}
-                  onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
+                  onChange={(e) =>
+                    handleMemberChange(index, "email", e.target.value)
+                  }
                   className="w-1/2 border-2 border-gray-300 p-2 rounded-lg"
                 />
               </div>
             ))}
+            <button
+              onClick={addMemberField}
+              className="bg-amber-600 text-white py-2 px-5 mt-3 rounded-lg"
+            >
+              Add Member
+            </button>
 
-            <h2 className="text-lg font-semibold mb-4 mt-3">Group Description</h2>
+            <h2 className="text-lg font-semibold mb-4 mt-3">
+              Group Description
+            </h2>
             <input
               type="text"
               placeholder="Description"
@@ -149,12 +170,7 @@ function AddGroups() {
               onChange={(e) => setGroupDesc(e.target.value)}
               className="w-full border-2 border-gray-300 p-2 rounded-lg mb-4"
             />
-            <button
-              onClick={addMemberField}
-              className="bg-amber-600 text-white py-2 px-5 mt-3 rounded-lg"
-            >
-              Add Member
-            </button>
+
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setIsModalOpen(false)}

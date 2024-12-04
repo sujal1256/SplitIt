@@ -6,7 +6,7 @@ import {
 import { verifyJWT } from "../middlewares/verifyJWT.js";
 
 const groupRouter = express.Router();
-
+groupRouter.route("")
 groupRouter.route("/create-group").post(verifyJWT, handleCreateGroup);
 groupRouter.route("/add-member-to-group").post(verifyJWT, handleAddMemberToGroup);
 
