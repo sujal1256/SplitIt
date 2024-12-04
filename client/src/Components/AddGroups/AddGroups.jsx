@@ -1,22 +1,50 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
+import {toast} from 'react-toastify'
 
 function AddGroups() {
   const [groups, setGroups] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newMembers, setNewMembers] = useState([{ name: '', email: '' }]);
+  
 
-  const addGroup = () => {
-    const newGroup = {
-      id: groups.length + 1,
-      name: newGroupName || `Group ${groups.length + 1}`,
-      members: newMembers.filter(member => member.name.trim() && member.email.trim()),
-    };
-    setGroups([...groups, newGroup]);
-    setIsModalOpen(false); // Close the modal
-    setNewGroupName(''); // Reset the form
+  // const addGroup = () => {
+  //   const newGroup = {
+  //     id: groups.length + 1,
+  //     name: newGroupName || `Group ${groups.length + 1}`,
+  //     members: newMembers.filter(member => member.name.trim() && member.email.trim()),
+  //   };
+  //   setGroups([...groups, newGroup]);
+  //   setIsModalOpen(false); // Close the modal
+  //   setNewGroupName(''); // Reset the form
+  //   setNewMembers([{ name: '', email: '' }]);
+  // };
+
+  async function handleCreateGroup(){
+    const response = await fetch("api/v1/group/create-group", {
+      method: "POST",
+      body: JSON.stringify({
+        groupName: newGroupName,
+        members: newMembers
+      }),
+      headers:{
+        "Content-type" : "application/json"
+      }
+    });
+    const data = await response.json();
+
+    if(response.ok){
+      toast.success(data.message);
+    }
+    else{
+      toast.error("Error in creating group");
+    }
+
+    setIsModalOpen(false); 
+    setNewGroupName(''); 
     setNewMembers([{ name: '', email: '' }]);
-  };
+
+  }
 
   const addMemberField = () => {
     setNewMembers([...newMembers, { name: '', email: '' }]);
@@ -105,7 +133,7 @@ function AddGroups() {
                 Cancel
               </button>
               <button
-                onClick={addGroup}
+                onClick={handleCreateGroup}
                 className="bg-amber-600 text-white py-2 px-4 rounded-lg"
               >
                 Save Group

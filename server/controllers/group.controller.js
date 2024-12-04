@@ -1,13 +1,16 @@
 import { Group } from "../models/group.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import nodemailer from "nodemailer";
-import { sendEmail } from "../utils/mailer.js";
+import { sendInviteEmail } from "../utils/mailer.js";
 
 async function handleCreateGroup(req, res) {
-  const { groupName, groupDescription } = req.body;
+  const { groupName, groupDescription, members } = req.body;
   if (!groupName) {
     return res.status(400).json(new ApiError(400, "Group name is required"));
+  }
+
+  if (!members) {
+    return res.status(400).json(new ApiError(400, "members are not sent"));
   }
 
   const user = req.user;
@@ -28,6 +31,10 @@ async function handleCreateGroup(req, res) {
 
   await group.save();
 
+  members.map(member=>{
+    sendInviteEmail(member, group);
+  })
+
   return res
     .status(200)
     .json(new ApiResponse(200, group, "Group Created Successfully"));
@@ -43,7 +50,7 @@ async function handleAddMemberToGroup(req, res) {
 
     const group = await Group.findOne({ _id: groupId });
 
-    sendEmail(email, group);
+    sendInviteEmail(email, group);
 
     return res
       .status(200)

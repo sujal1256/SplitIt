@@ -23,7 +23,7 @@ function LandingPage() {
     getGroups();
   }, [logged]);
 
-  // TODO: MODAL WINDOW IS NOT CLOSING
+
   return (
     <div className="relative min-h-screen overflow-y-hidden">
       {/* Background Image */}
@@ -40,6 +40,7 @@ function LandingPage() {
       ></div>
 
       {/* TODO: The scroller is visible...remove that */}
+      
       {/* Content */}
       <div
         className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6 mt-20 "
