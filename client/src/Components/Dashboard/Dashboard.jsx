@@ -3,6 +3,7 @@ import Navbar from "../Navbar/Navbar.jsx";
 import AddGroups from '../AddGroups/AddGroups.jsx'
 import LandingPage from "../LandingPage/LandingPage.jsx";
 import NewGroup from "../NewGroup/NewGroup.jsx";
+import { Outlet } from "react-router-dom";
 
 function Dashboard() {
  
@@ -14,7 +15,8 @@ function Dashboard() {
     {/* <LandingPage/> */}
     {/* <AddGroups/> */}
     {/* <About/> */}
-    <NewGroup/>
+    <Outlet />
+    {/* <NewGroup/> */}
     {/* <Footer/> */}
     </>
   );

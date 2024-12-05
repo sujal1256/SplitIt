@@ -82,7 +82,6 @@ function LoginRegister() {
 
   return (
     <>
-      <Navbar />
       <div
         className="flex justify-center text-center pt-24 bg-cover bg-center"
       >

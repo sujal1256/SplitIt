@@ -1,11 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 
 function NewGroup() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [conversionRate, setConversionRate] = useState(1); // Default to INR to INR (no conversion)
   const [showConverter, setShowConverter] = useState(false);
   const [tempCurrency, setTempCurrency] = useState("INR"); // Temporary currency selection while modal is open
+  const logged = checkUserLoggedIn();
+  const [searchParams] = useSearchParams();
+  const [expenses, setExpenses] = useState([]);
 
+  console.log("logged");
+  
+  async function getGroups() {
+    try {
+      const response = await fetch(
+        `api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}&userId=${
+          logged?.user?._id
+        }`,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        setExpenses(data?.data);
+      }
+
+      console.log(data);
+      
+    } catch (error) {
+      console.log("Error in getting the groups", error.message);
+    }
+  }
+
+  useEffect(() => {
+    getGroups();
+}, [logged]);
+  
   // Hardcoded conversion rates
   const conversionRates = {
     INR: 1,
@@ -14,7 +51,7 @@ function NewGroup() {
   };
 
   // Hardcoded expenses data
-  const expenses = [
+  const hardcodedExpense = [
     {
       id: 1,
       name: "Haridwar hotel",
@@ -48,17 +85,22 @@ function NewGroup() {
   ];
 
   // Calculate totals
-  const totalOwe = expenses.reduce(
-    (total, expense) => (expense.oweOrLent > 0 ? total + expense.oweOrLent : total),
+  const totalOwe = hardcodedExpense.reduce(
+    (total, expense) =>
+      expense.oweOrLent > 0 ? total + expense.oweOrLent : total,
     0
   );
 
-  const totalLent = expenses.reduce(
-    (total, expense) => (expense.oweOrLent < 0 ? total + Math.abs(expense.oweOrLent) : total),
+  const totalLent = hardcodedExpense.reduce(
+    (total, expense) =>
+      expense.oweOrLent < 0 ? total + Math.abs(expense.oweOrLent) : total,
     0
   );
 
-  const totalExpenses = expenses.reduce((total, expense) => total + Math.abs(expense.oweOrLent), 0);
+  const totalExpenses = hardcodedExpense.reduce(
+    (total, expense) => total + Math.abs(expense.oweOrLent),
+    0
+  );
 
   // Convert amounts to the selected currency
   const convertAmount = (amount) => (amount * conversionRate).toFixed(2);
@@ -93,18 +135,23 @@ function NewGroup() {
         <div className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600 w-[calc(50%-30px)]">
           <h2 className="text-center text-xl font-semibold">Expenses</h2>
           <div>
-            {expenses.map((expense, index) => (
-              <div key={index} className="border-b border-gray-300 py-2 flex items-center">
+            {hardcodedExpense.map((expense, index) => (
+              <div
+                key={index}
+                className="border-b border-gray-300 py-2 flex items-center"
+              >
                 <div className="flex-1">
                   <p className="font-semibold">{expense.name}</p>
                   <p className="text-sm text-gray-200">{expense.date}</p>
-                 
-                  
                 </div>
                 <p className="text-right font-bold text-lg">
                   {expense.oweOrLent > 0
-                    ? `Owe: ${selectedCurrency} ${convertAmount(expense.oweOrLent)}`
-                    : `Lent: ${selectedCurrency} ${convertAmount(Math.abs(expense.oweOrLent))}`}
+                    ? `Owe: ${selectedCurrency} ${convertAmount(
+                        expense.oweOrLent
+                      )}`
+                    : `Lent: ${selectedCurrency} ${convertAmount(
+                        Math.abs(expense.oweOrLent)
+                      )}`}
                 </p>
               </div>
             ))}
@@ -124,7 +171,9 @@ function NewGroup() {
       {showConverter && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-5 rounded-lg">
-            <h2 className="text-center text-xl font-bold mb-4">Select Currency</h2>
+            <h2 className="text-center text-xl font-bold mb-4">
+              Select Currency
+            </h2>
             <select
               value={tempCurrency}
               onChange={(e) => setTempCurrency(e.target.value)}
