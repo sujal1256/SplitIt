@@ -44,12 +44,13 @@ async function handleAddExpense(req, res) {
 }
 
 async function handleGetAllExpenses(req, res) {
-  const { groupId, userId } = req.query;
+  const { groupId } = req.query;
+  const userId = req.user.userId;
 
   if (!groupId) {
     return res.status(500).json(new ApiError(500, "Group Id not provided"));
   }
-  if(!userId){
+  if (!userId) {
     return res.status(500).json(new ApiError(500, "User Id not provided"));
   }
 
@@ -84,9 +85,7 @@ async function handleGetAllExpenses(req, res) {
 
   return res
     .status(200)
-    .json(
-      new ApiResponse(200, expenses, "Expenses fetched successfully")
-    );
+    .json(new ApiResponse(200, expenses, "Expenses fetched successfully"));
 }
 
 export { handleAddExpense, handleGetAllExpenses };

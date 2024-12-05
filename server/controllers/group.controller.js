@@ -7,7 +7,7 @@ import { sendInviteEmail } from "../utils/mailer.js";
 async function handleCreateGroup(req, res) {
   const { groupName, groupDescription, members } = req.body;
   console.log(req.body);
-  
+
   if (!groupName) {
     return res.status(400).json(new ApiError(400, "Group name is required"));
   }
@@ -17,7 +17,6 @@ async function handleCreateGroup(req, res) {
   }
 
   console.log(members);
-  
 
   const user = req.user;
 
@@ -69,7 +68,7 @@ async function storeInvitedUser(req, res) {
   try {
     const { q: groupId, name: memberName, email: memberEmail } = req.query;
     console.log(groupId, memberEmail, memberName);
-    
+
     if ((!groupId || !memberName, !memberEmail)) {
       return res.status(500).json(new ApiError(500, "Data not sent properly"));
     }
@@ -110,4 +109,18 @@ async function storeInvitedUser(req, res) {
     console.log("❌ Error in storing the invited user");
   }
 }
-export { handleCreateGroup, handleAddMemberToGroup, storeInvitedUser };
+
+async function handleGetAllMembers(req, res) {
+  const { groupId } = req.query;
+  if (!groupId) {
+    return res.status(500).json(new ApiError(500, "Group Id not found"));
+  }
+
+  const group = await Group.findOne({ _id: groupId });
+  if(!group){
+    return res.status(500).json(new ApiError(500, "Group not found"));
+  }
+  
+  return res.status(201).json(new ApiResponse(200, group.members, "Members fetched successfully"));
+}
+export { handleCreateGroup, handleAddMemberToGroup, storeInvitedUser, handleGetAllMembers };

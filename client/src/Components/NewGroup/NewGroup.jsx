@@ -10,15 +10,14 @@ function NewGroup() {
   const logged = checkUserLoggedIn();
   const [searchParams] = useSearchParams();
   const [expenses, setExpenses] = useState([]);
+  const [members, setMembers] = useState([]);
 
   console.log("logged");
-  
-  async function getGroups() {
+
+  async function getExpenses() {
     try {
       const response = await fetch(
-        `api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}&userId=${
-          logged?.user?._id
-        }`,
+        `api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}`,
         {
           method: "GET",
           headers: {
@@ -33,16 +32,40 @@ function NewGroup() {
       }
 
       console.log(data);
-      
     } catch (error) {
       console.log("Error in getting the groups", error.message);
     }
   }
 
-  useEffect(() => {
-    getGroups();
-}, [logged]);
+  async function getMembers() {
+    try {
+      
+      const response = await fetch(
+        `/api/v1/group/get-all-members?groupId=${searchParams.get("g")}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
   
+      if (response.ok) {
+        setMembers(data?.data);
+        console.log("members: ", data?.data);
+      }
+    } catch (error) {
+      console.log("Error in getting memebers", error.message);
+      
+    }
+  }
+
+  useEffect(() => {
+    getExpenses();
+    getMembers();
+  }, [logged]);
+
   // Hardcoded conversion rates
   const conversionRates = {
     INR: 1,

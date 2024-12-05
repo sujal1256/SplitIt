@@ -3,10 +3,11 @@ import {
   handleAddExpense,
   handleGetAllExpenses,
 } from "../controllers/expense.controller.js";
+import { verifyJWT } from "../middlewares/verifyJWT.js";
 
 const expenseRouter = express.Router();
 
-expenseRouter.route("/create-expense").post(handleAddExpense);
-expenseRouter.route("/get-all-expenses").get(handleGetAllExpenses);
+expenseRouter.route("/create-expense").post(verifyJWT, handleAddExpense);
+expenseRouter.route("/get-all-expenses").get(verifyJWT, handleGetAllExpenses);
 
 export { expenseRouter };
