@@ -3,6 +3,8 @@ import BgImg from "../Assets/backgroundLanding.jpg";
 
 
 function LandingPage() {
+  
+  
    return (
     <div className="relative ">
       {/* Background Image */}
@@ -30,7 +32,7 @@ function LandingPage() {
           Simplify your expenses, track payments, and stay organized
           effortlessly.
         </p>
-        <button className="bg-amber-500 hover:bg-amber-900 text-white py-3 px-6 rounded-lg text-lg shadow-md">
+        <button className="bg-primary hover:bg-Accent text-white py-3 px-6 rounded-lg text-lg shadow-md">
           Get Started
         </button>
       </div>

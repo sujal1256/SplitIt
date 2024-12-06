@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Playpen+Sans:wght@100..800&family=Playwrite+CU:wght@100..400&family=Poppins:wght@400;600;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Pre:wght@400..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Playpen+Sans:wght@100..800&family=Playwrite+CU:wght@100..400&family=Poppins:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -12,6 +11,7 @@
   box-sizing: border-box;
 }
 body{
-  font-family: "Edu AU VIC WA NT Pre", sans-serif;
+  font-family: "Open Sans", sans-serif;
   
 }
+

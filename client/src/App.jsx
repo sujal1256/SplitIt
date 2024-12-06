@@ -8,25 +8,29 @@ import About from "./Components/About/About.jsx";
 import { checkUserLoggedIn } from "./utils/userLoggedIn.jsx";
 import AddGroups from "./Components/AddGroups/AddGroups.jsx";
 import NewGroup from "./Components/NewGroup/NewGroup.jsx";
-
+import { Provider } from 'react-redux';
+import { store } from "./redux/store.js";
 function App() {
   const logged = checkUserLoggedIn();
   console.log("logged", logged);
   
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />}>
-          <Route
-            path="/"
-            element={!logged.loggedIn ? <LandingPage /> : <AddGroups />}
-          />
-          <Route path="login" element={<LoginRegister />} />
-          <Route path="about" element={<About />} />
-          <Route path="group" element={<NewGroup />} />
-        </Route>
-      </Routes>
-    </Router>
+    <Provider store = {store}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Dashboard />}>
+            <Route
+              path="/"
+              element={!logged.loggedIn ? <LandingPage /> : <AddGroups />}
+            />
+            <Route path="login" element={<LoginRegister />} />
+            <Route path="about" element={<About />} />
+            <Route path="group" element={<NewGroup />} />
+          </Route>
+        </Routes>
+      </Router>
+    </Provider>
+
   );
 }
 

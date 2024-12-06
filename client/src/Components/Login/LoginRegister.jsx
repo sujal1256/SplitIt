@@ -3,6 +3,7 @@ import { FaUser, FaLock, FaEnvelope , FaPhone} from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
 import { toast } from "react-toastify";
 import loginback from "../Assets/loginback.jpg"
+import { useNavigate } from "react-router-dom";
 
 function LoginRegister() {
   const [action, setAction] = useState("");
@@ -10,9 +11,12 @@ function LoginRegister() {
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
   const [registerPhone, setregisterPhone] = useState("");
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+
+  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -34,6 +38,8 @@ function LoginRegister() {
             
       if (response.ok) {
         toast.success("Logged In successfully");
+        navigate("/");
+        window.location.reload();
       } else {
         toast.error(data.message);
       }
@@ -82,13 +88,14 @@ function LoginRegister() {
 
   return (
     <>
-      <div
-        className="flex justify-center text-center pt-24 bg-cover bg-center"
-      >
+      <div className="flex justify-center text-center pt-24 bg-cover bg-center bg-gradient-to-l from-Accent to-background-color h-screen">
+
+
+
         <div
           className={`relative w-[420px] ${
             action === " active" ? "h-[520px]" : "h-[450px]"
-          } bg-amber-500 backdrop-blur-lg rounded-lg shadow-lg text-white flex justify-center items-center overflow-hidden transition-height duration-200 ease-in-out`}
+          } bg-primary backdrop-blur-lg rounded-lg shadow-lg text-white flex justify-center items-center overflow-hidden transition-height duration-200 ease-in-out`}
           >
           <div className="w-full p-10">
             <div
@@ -104,7 +111,7 @@ function LoginRegister() {
                     placeholder="Email"
                     onChange={(e) => setLoginEmail(e.target.value)}
                     required
-                    className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                   />
                   <FaUser className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
@@ -115,7 +122,7 @@ function LoginRegister() {
                     placeholder="Password"
                     onChange={(e) => setLoginPassword(e.target.value)}
                     required
-                    className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                   />
                   <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
@@ -164,7 +171,7 @@ function LoginRegister() {
               }`}
             >
               <form action="">
-                <h1 className="text-3xl text-center">Registration</h1>
+                <h1 className="text-3xl text-center p-2">Registration</h1>
                 <div className="relative w-full h-8 my-7">
                   <input
                     type="text"
@@ -173,7 +180,7 @@ function LoginRegister() {
                       setRegisterUsername(e.target.value);
                     }}
                     required
-                    className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
                   />
                   <FaUser className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
@@ -186,7 +193,7 @@ function LoginRegister() {
                     onChange={(e) => {
                       setRegisterEmail(e.target.value);
                     }}
-                    className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
                   />
                   <FaEnvelope className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
@@ -199,7 +206,7 @@ function LoginRegister() {
                       setregisterPhone(e.target.value);
                     }}
                     required
-                    className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
                   />
                   <FaPhone className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
@@ -212,21 +219,30 @@ function LoginRegister() {
                       setRegisterPassword(e.target.value);
                     }}
                     required
-                    className="w-full h-full bg-transparent border-none outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
                   />
                   <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
                 <div className="flex justify-start text-sm my-0 mx-0.5">
                   <label>
-                    <input type="checkbox" className="accent-white mr-1" />I
+                    <input type="checkbox" className="accent-white mr-1" onChange={(e) => setAgreedToTerms(e.target.checked)} />I
                     agree to terms & conditions
                   </label>
                 </div>
 
                 <button
                   type="submit"
-                  onClick={handleRegister}
+                  onClick = {(e) => {
+                    e.preventDefault();
+                    if(agreedToTerms){
+                      handleRegister(e);
+                    }
+                    else
+                    {
+                      toast.error("You must agree to terms and conditions.");
+                    }
+                  }}
                   className="w-full h-11 bg-white border-none outline-none rounded-full shadow-lg cursor-pointer text-lg text-gray-800 font-bold mt-4"
                 >
                   Register

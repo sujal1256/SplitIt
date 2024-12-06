@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
+import {useDispatch, useSelector} from 'react-redux'
+import {addGroup, removeGroup} from '../../redux/group.slice.js'
+
 
 function NewGroup() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
@@ -11,8 +14,17 @@ function NewGroup() {
   const [searchParams] = useSearchParams();
   const [expenses, setExpenses] = useState([]);
   const [members, setMembers] = useState([]);
+  const [expenseTitle, setExpenseTitle] = useState([]);
+  const [amount, setAmount] = useState([]);
+  const [expenseDate, setExpenseDate] = useState([]);
+  const [payer, setPayer] = useState([]);
+  const group = useSelector(store => store.group);
 
-  console.log("logged");
+  const [selectedMembers, setSelectedMembers] = useState([]);
+  console.log("selected members", selectedMembers);
+  
+
+  const dispatch = useDispatch();
 
   async function getExpenses() {
     try {
@@ -31,17 +43,21 @@ function NewGroup() {
         setExpenses(data?.data);
       }
 
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.log("Error in getting the groups", error.message);
     }
   }
 
-  async function getMembers() {
+  console.log("expenses", expenses);
+  console.log("members", members);
+  
+
+  async function getGroup() {
     try {
       
       const response = await fetch(
-        `/api/v1/group/get-all-members?groupId=${searchParams.get("g")}`,
+        `/api/v1/group/get-group-details?groupId=${searchParams.get("g")}`,
         {
           method: "GET",
           headers: {
@@ -52,19 +68,42 @@ function NewGroup() {
       const data = await response.json();
   
       if (response.ok) {
-        setMembers(data?.data);
-        console.log("members: ", data?.data);
+        dispatch(addGroup(data?.data));
+        // console.log("group response:  ", data?.data);
       }
     } catch (error) {
-      console.log("Error in getting memebers", error.message);
+      console.log("Error in getting group", error);
       
     }
   }
 
   useEffect(() => {
     getExpenses();
-    getMembers();
+    getGroup();
+    setSelectedMembers(group.group?.members);
   }, [logged]);
+
+  const addExpense = () => {
+    if(!expenseTitle || !expenseDate || !payer || selectedMembers.length === 0)
+    {
+      alert("Please fill in all the fields!");
+      return;
+    }
+
+    const newExpense = 
+    {
+      id : expenses.length + 1,
+      name : expenseTitle,
+      date : expenseDate,
+      oweOrLent : 0,
+    };
+
+    setExpenses([...expenses, newExpense]);
+    setExpenseTitle("");
+    setExpenseDate("");
+    setPayer("");
+    setSelectedMembers([]);
+  };
 
   // Hardcoded conversion rates
   const conversionRates = {
@@ -73,54 +112,22 @@ function NewGroup() {
     EUR: 0.011, // Example: 1 INR = 0.011 EUR
   };
 
-  // Hardcoded expenses data
-  const hardcodedExpense = [
-    {
-      id: 1,
-      name: "Haridwar hotel",
-      date: "Nov 13",
-      oweOrLent: -133.34, // Lent amount in INR
-    },
-    {
-      id: 2,
-      name: "Photo",
-      date: "Nov 13",
-      oweOrLent: -66.67, // Lent amount in INR
-    },
-    {
-      id: 3,
-      name: "Chai kachori",
-      date: "Nov 13",
-      oweOrLent: -180.0, // Lent amount in INR
-    },
-    {
-      id: 4,
-      name: "Chai",
-      date: "Nov 13",
-      oweOrLent: -46.67, // Lent amount in INR
-    },
-    {
-      id: 5,
-      name: "Ganga Aarti",
-      date: "Nov 13",
-      oweOrLent: 186.66, // Owe amount in INR
-    },
-  ];
+  
 
   // Calculate totals
-  const totalOwe = hardcodedExpense.reduce(
+  const totalOwe = expenses.reduce(
     (total, expense) =>
       expense.oweOrLent > 0 ? total + expense.oweOrLent : total,
     0
   );
 
-  const totalLent = hardcodedExpense.reduce(
+  const totalLent = expenses.reduce(
     (total, expense) =>
       expense.oweOrLent < 0 ? total + Math.abs(expense.oweOrLent) : total,
     0
   );
 
-  const totalExpenses = hardcodedExpense.reduce(
+  const totalExpenses = expenses.reduce(
     (total, expense) => total + Math.abs(expense.oweOrLent),
     0
   );
@@ -129,9 +136,9 @@ function NewGroup() {
   const convertAmount = (amount) => (amount * conversionRate).toFixed(2);
 
   return (
-    <>
-      <div className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600 m-2 text-center">
-        <h1>Uttarakhand</h1>
+    <div className="bg-gradient-to-l from-Accent to-background-color h-screen ">
+      <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 text-center">
+        <h1 className="text-3xl">{group?.group?.groupName}</h1>
         <h2>
           You owe {selectedCurrency} {convertAmount(totalOwe)} overall
         </h2>
@@ -139,26 +146,89 @@ function NewGroup() {
 
       {/* Extra Tabs */}
       <div className="flex justify-center space-x-11 mb-2">
-        <div className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600">
+        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary">
           <h2>Settle up</h2>
         </div>
         <div
-          className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600 cursor-pointer"
+          className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary cursor-pointer"
           onClick={() => setShowConverter(true)}
         >
           <h2>Converted to {selectedCurrency}</h2>
         </div>
-        <div className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600">
+        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary">
           <h2>Balance</h2>
         </div>
       </div>
 
+      {/* Input Form */}
+      <div className="flex justify-center">
+      <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 w-2/3 ">
+        <h2 className="text-center text-xl font-bold pb-4">Add New Expense</h2>
+        <div className="flex flex-col gap-2">
+          <input
+            type="text"
+            placeholder="Expense Title"
+            value={expenseTitle}
+            onChange={(e) => setExpenseTitle(e.target.value)}
+            className="p-2 border rounded-lg text-black"
+          />
+          <input
+            type="text"
+            placeholder="Amount Paid"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="p-2 border rounded-lg text-black"
+          />
+          <input
+            type="date"
+            value={expenseDate}
+            onChange={(e) => setExpenseDate(e.target.value)}
+            className="p-2 border rounded-lg text-black"
+          />
+          
+          <p className="text-xl font-semibold">Group Owner : {logged.user?.userName}</p>
+            
+          {/* </select> */}
+
+          <div className="flex flex-wrap gap-2 ">
+            <p className="text-xl font-semibold"> Select members to split the expense with: </p>
+            <br />
+            {group.group?.members.slice(1).map((member) => (
+              <label key={member.id} className="flex items-center gap-2 text-xl font-semibold ">
+                <input
+                  type="checkbox"
+                  value={member.name}
+                  checked={selectedMembers?.includes(member.memberName)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedMembers([...selectedMembers, member.memberName]);
+                    } else {
+                      setSelectedMembers(
+                        selectedMembers.filter((name) => name !== member.memberName)
+                      );
+                    }
+                  }}
+                />
+                {member.memberName}
+              </label>
+            ))}
+          </div>
+          <button
+            onClick={addExpense}
+            className="bg-primary text-white px-4 py-2 rounded-lg text-xl "
+          >
+            Add Expense
+          </button>
+        </div>
+      </div>
+      </div>
+
       <div className="flex justify-center gap-16">
         {/* Expenses Div */}
-        <div className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600 w-[calc(50%-30px)]">
+        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-[calc(50%-30px)]">
           <h2 className="text-center text-xl font-semibold">Expenses</h2>
           <div>
-            {hardcodedExpense.map((expense, index) => (
+            {expenses.map((expense, index) => (
               <div
                 key={index}
                 className="border-b border-gray-300 py-2 flex items-center"
@@ -182,7 +252,7 @@ function NewGroup() {
         </div>
 
         {/* Total Expenses Div */}
-        <div className="border-2 border-amber-800 p-3 rounded-lg text-white bg-amber-600 w-[calc(30%-30px)]">
+        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-[calc(30%-30px)]">
           <h2 className="text-center text-xl font-semibold">Total Expenses</h2>
           <p className="text-center text-lg mt-3">
             {selectedCurrency} {convertAmount(totalExpenses)}
@@ -227,7 +297,7 @@ function NewGroup() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

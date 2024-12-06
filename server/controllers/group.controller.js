@@ -110,7 +110,7 @@ async function storeInvitedUser(req, res) {
   }
 }
 
-async function handleGetAllMembers(req, res) {
+async function handleGetGroup(req, res) {
   const { groupId } = req.query;
   if (!groupId) {
     return res.status(500).json(new ApiError(500, "Group Id not found"));
@@ -121,6 +121,6 @@ async function handleGetAllMembers(req, res) {
     return res.status(500).json(new ApiError(500, "Group not found"));
   }
   
-  return res.status(201).json(new ApiResponse(200, group.members, "Members fetched successfully"));
+  return res.status(201).json(new ApiResponse(200 ,group,  "Members fetched successfully"));
 }
-export { handleCreateGroup, handleAddMemberToGroup, storeInvitedUser, handleGetAllMembers };
+export { handleCreateGroup, handleAddMemberToGroup, storeInvitedUser, handleGetGroup };
