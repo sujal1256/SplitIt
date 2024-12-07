@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
-import {useDispatch, useSelector} from 'react-redux'
-import {addGroup, removeGroup} from '../../redux/group.slice.js'
-
+import { useDispatch, useSelector } from "react-redux";
+import { addGroup, removeGroup } from "../../redux/group.slice.js";
 
 function NewGroup() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
@@ -18,11 +17,10 @@ function NewGroup() {
   const [amount, setAmount] = useState([]);
   const [expenseDate, setExpenseDate] = useState([]);
   const [payer, setPayer] = useState([]);
-  const group = useSelector(store => store.group);
+  const group = useSelector((store) => store.group);
 
   const [selectedMembers, setSelectedMembers] = useState([]);
   console.log("selected members", selectedMembers);
-  
 
   const dispatch = useDispatch();
 
@@ -49,13 +47,11 @@ function NewGroup() {
     }
   }
 
-  console.log("expenses", expenses);
-  console.log("members", members);
-  
+  // console.log("expenses", expenses);
+  // console.log("members", members);
 
   async function getGroup() {
     try {
-      
       const response = await fetch(
         `/api/v1/group/get-group-details?groupId=${searchParams.get("g")}`,
         {
@@ -66,36 +62,44 @@ function NewGroup() {
         }
       );
       const data = await response.json();
-  
+
       if (response.ok) {
-        dispatch(addGroup(data?.data));
         // console.log("group response:  ", data?.data);
+        dispatch(addGroup(data?.data));
+        localStorage.setItem("group", JSON.stringify(data?.data));
       }
     } catch (error) {
       console.log("Error in getting group", error);
-      
     }
   }
 
   useEffect(() => {
     getExpenses();
-    getGroup();
-    setSelectedMembers(group.group?.members);
+    getGroup().then(() => {
+      setSelectedMembers(JSON.parse(localStorage.getItem("group"))?.members);
+    });
+
+    return () => {
+      localStorage.removeItem("group");
+    };
   }, [logged]);
 
   const addExpense = () => {
-    if(!expenseTitle || !expenseDate || !payer || selectedMembers.length === 0)
-    {
+    if (
+      !expenseTitle ||
+      !expenseDate ||
+      !payer ||
+      selectedMembers.length === 0
+    ) {
       alert("Please fill in all the fields!");
       return;
     }
 
-    const newExpense = 
-    {
-      id : expenses.length + 1,
-      name : expenseTitle,
-      date : expenseDate,
-      oweOrLent : 0,
+    const newExpense = {
+      id: expenses.length + 1,
+      name: expenseTitle,
+      date: expenseDate,
+      oweOrLent: 0,
     };
 
     setExpenses([...expenses, newExpense]);
@@ -111,8 +115,6 @@ function NewGroup() {
     USD: 0.012, // Example: 1 INR = 0.012 USD
     EUR: 0.011, // Example: 1 INR = 0.011 EUR
   };
-
-  
 
   // Calculate totals
   const totalOwe = expenses.reduce(
@@ -162,65 +164,86 @@ function NewGroup() {
 
       {/* Input Form */}
       <div className="flex justify-center">
-      <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 w-2/3 ">
-        <h2 className="text-center text-xl font-bold pb-4">Add New Expense</h2>
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            placeholder="Expense Title"
-            value={expenseTitle}
-            onChange={(e) => setExpenseTitle(e.target.value)}
-            className="p-2 border rounded-lg text-black"
-          />
-          <input
-            type="text"
-            placeholder="Amount Paid"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            className="p-2 border rounded-lg text-black"
-          />
-          <input
-            type="date"
-            value={expenseDate}
-            onChange={(e) => setExpenseDate(e.target.value)}
-            className="p-2 border rounded-lg text-black"
-          />
-          
-          <p className="text-xl font-semibold">Group Owner : {logged.user?.userName}</p>
-            
-          {/* </select> */}
+        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 w-2/3 ">
+          <h2 className="text-center text-xl font-bold pb-4">
+            Add New Expense
+          </h2>
+          <div className="flex flex-col gap-2">
+            <input
+              type="text"
+              placeholder="Expense Title"
+              value={expenseTitle}
+              onChange={(e) => setExpenseTitle(e.target.value)}
+              className="p-2 border rounded-lg text-black"
+            />
+            <input
+              type="text"
+              placeholder="Amount Paid"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="p-2 border rounded-lg text-black"
+            />
+            <input
+              type="date"
+              value={expenseDate}
+              onChange={(e) => setExpenseDate(e.target.value)}
+              className="p-2 border rounded-lg text-black"
+            />
 
-          <div className="flex flex-wrap gap-2 ">
-            <p className="text-xl font-semibold"> Select members to split the expense with: </p>
-            <br />
-            {group.group?.members.slice(1).map((member) => (
-              <label key={member.id} className="flex items-center gap-2 text-xl font-semibold ">
-                <input
-                  type="checkbox"
-                  value={member.name}
-                  checked={selectedMembers?.includes(member.memberName)}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedMembers([...selectedMembers, member.memberName]);
-                    } else {
-                      setSelectedMembers(
-                        selectedMembers.filter((name) => name !== member.memberName)
-                      );
-                    }
-                  }}
-                />
-                {member.memberName}
-              </label>
-            ))}
+            <p className="text-xl font-semibold">
+              Group Owner : {logged.user?.userName}
+            </p>
+
+            {/* </select> */}
+
+            <div className="flex flex-wrap gap-2 ">
+              <p className="text-xl font-semibold">
+                {" "}
+                Select members to split the expense with:{" "}
+              </p>
+              <br />
+
+              {/* FIXME: this should not be slice(1) */}
+              {group.group?.members.slice(1).map((member) => (
+                <label
+                  key={member.id}
+                  className="flex items-center gap-2 text-xl font-semibold"
+                >
+                  <input
+                    type="checkbox"
+                    value={member.name}
+                    checked={selectedMembers?.some(
+                      (selected) => selected._id === member._id
+                    )}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedMembers([...selectedMembers, member]);
+                      } else {
+                        console.log(
+                          selectedMembers.filter(
+                            (selected) => selected._id !== member._id
+                          )
+                        );
+                        setSelectedMembers(
+                          selectedMembers.filter(
+                            (selected) => selected._id !== member._id
+                          )
+                        );
+                      }
+                    }}
+                  />
+                  {member.memberName}
+                </label>
+              ))}
+            </div>
+            <button
+              onClick={addExpense}
+              className="bg-primary text-white px-4 py-2 rounded-lg text-xl "
+            >
+              Add Expense
+            </button>
           </div>
-          <button
-            onClick={addExpense}
-            className="bg-primary text-white px-4 py-2 rounded-lg text-xl "
-          >
-            Add Expense
-          </button>
         </div>
-      </div>
       </div>
 
       <div className="flex justify-center gap-16">
