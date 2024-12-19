@@ -1,9 +1,15 @@
 import React from "react";
 import BgImg from "../Assets/backgroundLanding.jpg";
+import Login from "../Login/LoginRegister.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 function LandingPage() {
+  const navigate = useNavigate(); // Hook for navigation
   
+  const handleGetStarted = () => {
+      navigate("/login"); // Navigate to the login page
+    };  
   
    return (
     <div className="relative ">
@@ -32,7 +38,7 @@ function LandingPage() {
           Simplify your expenses, track payments, and stay organized
           effortlessly.
         </p>
-        <button className="bg-primary hover:bg-Accent text-white py-3 px-6 rounded-lg text-lg shadow-md">
+        <button onClick={handleGetStarted} className="bg-primary hover:bg-Accent text-white py-3 px-6 rounded-lg text-lg shadow-md">
           Get Started
         </button>
       </div>

@@ -14,7 +14,7 @@ function NewGroup() {
   const [expenses, setExpenses] = useState([]);
   const [members, setMembers] = useState([]);
   const [expenseTitle, setExpenseTitle] = useState([]);
-  const [amount, setAmount] = useState([]);
+  const [amount, setAmount] = useState("");
   const [expenseDate, setExpenseDate] = useState([]);
   const [payer, setPayer] = useState([]);
   const group = useSelector((store) => store.group);
@@ -47,8 +47,6 @@ function NewGroup() {
     }
   }
 
-  // console.log("expenses", expenses);
-  // console.log("members", members);
 
   async function getGroup() {
     try {
@@ -91,7 +89,7 @@ function NewGroup() {
       !payer ||
       selectedMembers.length === 0
     ) {
-      alert("Please fill in all the fields!");
+      toast.error("Please fill in all the fields!");
       return;
     }
 
@@ -105,6 +103,7 @@ function NewGroup() {
     setExpenses([...expenses, newExpense]);
     setExpenseTitle("");
     setExpenseDate("");
+    setAmount("");
     setPayer("");
     setSelectedMembers([]);
   };
@@ -278,7 +277,7 @@ function NewGroup() {
         <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-[calc(30%-30px)]">
           <h2 className="text-center text-xl font-semibold">Total Expenses</h2>
           <p className="text-center text-lg mt-3">
-            {selectedCurrency} {convertAmount(totalExpenses)}
+            {selectedCurrency} {convertAmount(amount)}
           </p>
         </div>
       </div>
