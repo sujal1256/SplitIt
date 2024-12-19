@@ -2,7 +2,7 @@ import { Group } from "../models/group.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { sendInviteEmail } from "../utils/mailer.js";
+import { sendEmailToNewUserWithPassword, sendInviteEmail } from "../utils/mailer.js";
 
 async function handleCreateGroup(req, res) {
   const { groupName, groupDescription, members } = req.body;
@@ -64,6 +64,7 @@ async function handleAddMemberToGroup(req, res) {
     console.log("❌ Error in adding the user");
   }
 }
+
 async function storeInvitedUser(req, res) {
   try {
     const { q: groupId, name: memberName, email: memberEmail } = req.query;
@@ -82,9 +83,9 @@ async function storeInvitedUser(req, res) {
       user = new User({
         userName: memberName,
         userEmail: memberEmail,
-        password: 123,
+        password: getRandomPassword(),
       });
-
+      sendEmailToNewUserWithPassword(user, group);
       await user.save();
     }
 
@@ -110,6 +111,18 @@ async function storeInvitedUser(req, res) {
   }
 }
 
+function getRandomPassword() {
+  let chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  let string_length = 5;
+  let randomString = "";
+  for (let i = 0; i < string_length; i++) {
+    let rnum = Math.floor(Math.random() * chars.length);
+    randomString += chars.substring(rnum, rnum + 1);
+  }
+
+  return randomString;
+}
+
 async function handleGetGroup(req, res) {
   const { groupId } = req.query;
   if (!groupId) {
@@ -117,10 +130,18 @@ async function handleGetGroup(req, res) {
   }
 
   const group = await Group.findOne({ _id: groupId });
-  if(!group){
+  if (!group) {
     return res.status(500).json(new ApiError(500, "Group not found"));
   }
-  
-  return res.status(201).json(new ApiResponse(200 ,group,  "Members fetched successfully"));
+
+  group.groupOwner = await User.findOne({ _id: group.groupOwner });
+  return res
+    .status(201)
+    .json(new ApiResponse(200, group, "Members fetched successfully"));
 }
-export { handleCreateGroup, handleAddMemberToGroup, storeInvitedUser, handleGetGroup };
+export {
+  handleCreateGroup,
+  handleAddMemberToGroup,
+  storeInvitedUser,
+  handleGetGroup,
+};

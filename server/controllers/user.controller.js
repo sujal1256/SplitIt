@@ -69,6 +69,10 @@ async function handleLogin(req, res) {
   }
 }
 
+async function handleLogout(req, res) {
+  res.clearCookie("accessToken");
+  return res.send(new ApiResponse(200, {}, "Logged out"));
+}
 async function handleGetGroups(req, res) {
   const { userId } = req.user;
 
@@ -96,4 +100,10 @@ async function handleCheckLoggedIn(req, res) {
     .json(new ApiResponse(200, req.user, "User is logged In"));
 }
 
-export { handleRegister, handleLogin, handleCheckLoggedIn, handleGetGroups };
+export {
+  handleRegister,
+  handleLogin,
+  handleCheckLoggedIn,
+  handleGetGroups,
+  handleLogout,
+};

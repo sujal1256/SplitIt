@@ -190,7 +190,7 @@ function NewGroup() {
             />
 
             <p className="text-xl font-semibold">
-              Group Owner : {logged.user?.userName}
+              Group Owner : {group?.group?.groupOwner?.userName}
             </p>
 
             {/* </select> */}
@@ -201,6 +201,7 @@ function NewGroup() {
                 Select members to split the expense with:{" "}
               </p>
               <br />
+
 
               {/* FIXME: this should not be slice(1) */}
               {group.group?.members.slice(1).map((member) => (
