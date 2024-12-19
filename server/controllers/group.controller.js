@@ -2,7 +2,10 @@ import { Group } from "../models/group.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
-import { sendEmailToNewUserWithPassword, sendInviteEmail } from "../utils/mailer.js";
+import {
+  sendEmailToNewUserWithPassword,
+  sendInviteEmail,
+} from "../utils/mailer.js";
 
 async function handleCreateGroup(req, res) {
   const { groupName, groupDescription, members } = req.body;
@@ -139,9 +142,21 @@ async function handleGetGroup(req, res) {
     .status(201)
     .json(new ApiResponse(200, group, "Members fetched successfully"));
 }
+
+async function handleDelete(req, res) {  
+  const { groupId } = req.body;
+  if (!groupId) {
+    res.status(400).json(new ApiError(400, "groupId not valid"));
+  }
+
+  const group = await Group.deleteOne({ _id: groupId });
+
+  return res.status(200).json(new ApiResponse(200, group, "Group deleted"));
+}
 export {
   handleCreateGroup,
   handleAddMemberToGroup,
   storeInvitedUser,
   handleGetGroup,
+  handleDelete,
 };

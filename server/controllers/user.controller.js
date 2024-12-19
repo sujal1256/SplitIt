@@ -71,7 +71,7 @@ async function handleLogin(req, res) {
 
 async function handleLogout(req, res) {
   res.clearCookie("accessToken");
-  return res.send(new ApiResponse(200, {}, "Logged out"));
+  return res.status(200).json(new ApiResponse(200, {}, "Logged out"));
 }
 async function handleGetGroups(req, res) {
   const { userId } = req.user;
