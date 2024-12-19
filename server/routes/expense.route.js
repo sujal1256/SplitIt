@@ -7,7 +7,7 @@ import { verifyJWT } from "../middlewares/verifyJWT.js";
 
 const expenseRouter = express.Router();
 
-expenseRouter.route("/create-expense").post(verifyJWT, handleAddExpense);
+expenseRouter.route("/add-expense").post(verifyJWT, handleAddExpense);
 expenseRouter.route("/get-all-expenses").get(verifyJWT, handleGetAllExpenses);
 
 export { expenseRouter };

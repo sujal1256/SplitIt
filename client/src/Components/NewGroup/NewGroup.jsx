@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
+import {toast} from 'react-toastify'
 
 function NewGroup() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
@@ -20,7 +21,6 @@ function NewGroup() {
   const group = useSelector((store) => store.group);
 
   const [selectedMembers, setSelectedMembers] = useState([]);
-  console.log("selected members", selectedMembers);
 
   const dispatch = useDispatch();
 
@@ -37,16 +37,17 @@ function NewGroup() {
       );
 
       const data = await response.json();
+
+      console.log(data);
+      
       if (response.ok) {
         setExpenses(data?.data);
       }
 
-      // console.log(data);
     } catch (error) {
       console.log("Error in getting the groups", error.message);
     }
   }
-
 
   async function getGroup() {
     try {
@@ -82,25 +83,48 @@ function NewGroup() {
     };
   }, [logged]);
 
-  const addExpense = () => {
+  const addExpense = async () => {
     if (
       !expenseTitle ||
       !expenseDate ||
       !payer ||
       selectedMembers.length === 0
     ) {
-      toast.error("Please fill in all the fields!");
+      toast.error("Fill in all the fields!");
       return;
     }
 
-    const newExpense = {
-      id: expenses.length + 1,
-      name: expenseTitle,
-      date: expenseDate,
-      oweOrLent: 0,
-    };
+    // const newExpense = {
+    //   id: expenses.length + 1,
+    //   name: expenseTitle,
+    //   date: expenseDate,
+    //   oweOrLent: 0,
+    // };
 
-    setExpenses([...expenses, newExpense]);
+    // setExpenses([...expenses, newExpense]);    
+    const response = await fetch("/api/v1/expense/add-expense", {
+      method: "POST",
+      body: JSON.stringify({
+        groupId: group?.group?._id,
+        memberWhoPaid: logged?.user?.userId,
+        membersIncluded: selectedMembers,
+        amountPaid: Number.parseInt(amount),
+        expenseName: expenseTitle,
+      }),
+      headers: { "Content-type": "application/json" },
+    });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      toast.success("Expense added");
+    } else {
+      toast.error("Error while adding expense");
+    }
+
+    getExpenses();
+
     setExpenseTitle("");
     setExpenseDate("");
     setAmount("");
@@ -202,7 +226,6 @@ function NewGroup() {
               </p>
               <br />
 
-
               {/* FIXME: this should not be slice(1) */}
               {group.group?.members.slice(1).map((member) => (
                 <label
@@ -219,11 +242,6 @@ function NewGroup() {
                       if (e.target.checked) {
                         setSelectedMembers([...selectedMembers, member]);
                       } else {
-                        console.log(
-                          selectedMembers.filter(
-                            (selected) => selected._id !== member._id
-                          )
-                        );
                         setSelectedMembers(
                           selectedMembers.filter(
                             (selected) => selected._id !== member._id

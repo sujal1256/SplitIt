@@ -8,6 +8,8 @@ async function handleAddExpense(req, res) {
     req.body;
 
   console.log(req.body);
+  
+    
 
   if (
     !groupId ||
@@ -56,32 +58,32 @@ async function handleGetAllExpenses(req, res) {
 
   const expenses = await Expense.find({ expenseGroup: groupId });
 
-  const formattedExpenses = expenses.map((e) => {
-    const n = e.membersIncluded.length();
-    if (e.memberWhoPaid == userId) {
-      return {
-        expenseName: e.expenseName,
-        amountPaid: e.amountPaid,
-        amountLentTo: membersIncluded.map((m) => {
-          return { ...m, amountLent: e.amountPaid / n };
-        }),
-        totalAmountLent: e.amountPaid - e.amountPaid / n,
-        memberWhoPaid: e.memberWhoPaid,
-      };
-    } else {
-      return {
-        expenseName: e.expenseName,
-        amountPaid: e.amountPaid,
-        amountOwedFrom: membersIncluded.map((m) => {
-          if (m.memberId != e.memberWhoPaid) {
-            return { ...m, amountBorrowed: e.amountPaid / n };
-          }
-        }),
-        totalAmountLent: e.amountPaid - e.amountPaid / n,
-        memberWhoPaid: e.memberWhoPaid,
-      };
-    }
-  });
+  // const formattedExpenses = expenses.map((e) => {
+  //   const n = membersIncluded.length();
+  //   if (e.memberWhoPaid == userId) {
+  //     return {
+  //       expenseName: e.expenseName,
+  //       amountPaid: e.amountPaid,
+  //       amountLentTo: membersIncluded.map((m) => {
+  //         return { ...m, amountLent: e.amountPaid / n };
+  //       }),
+  //       totalAmountLent: e.amountPaid - e.amountPaid / n,
+  //       memberWhoPaid: e.memberWhoPaid,
+  //     };
+  //   } else {
+  //     return {
+  //       expenseName: e.expenseName,
+  //       amountPaid: e.amountPaid,
+  //       amountOwedFrom: membersIncluded.map((m) => {
+  //         if (m.memberId != e.memberWhoPaid) {
+  //           return { ...m, amountBorrowed: e.amountPaid / n };
+  //         }
+  //       }),
+  //       totalAmountLent: e.amountPaid - e.amountPaid / n,
+  //       memberWhoPaid: e.memberWhoPaid,
+  //     };
+  //   }
+  // });
 
   return res
     .status(200)
