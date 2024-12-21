@@ -7,10 +7,6 @@ async function handleAddExpense(req, res) {
   const { groupId, memberWhoPaid, membersIncluded, amountPaid, expenseName } =
     req.body;
 
-  console.log(req.body);
-  
-    
-
   if (
     !groupId ||
     !memberWhoPaid ||
@@ -44,9 +40,9 @@ async function handleAddExpense(req, res) {
     .status(201)
     .json(new ApiResponse(201, expense, "Expense created successfully"));
 }
-
 async function handleGetAllExpenses(req, res) {
   const { groupId } = req.query;
+  // logged in user
   const userId = req.user.userId;
 
   if (!groupId) {
@@ -56,38 +52,115 @@ async function handleGetAllExpenses(req, res) {
     return res.status(500).json(new ApiError(500, "User Id not provided"));
   }
 
+  const group = await Group.findOne({ _id: groupId });
   const expenses = await Expense.find({ expenseGroup: groupId });
 
-  // const formattedExpenses = expenses.map((e) => {
-  //   const n = membersIncluded.length();
-  //   if (e.memberWhoPaid == userId) {
-  //     return {
-  //       expenseName: e.expenseName,
-  //       amountPaid: e.amountPaid,
-  //       amountLentTo: membersIncluded.map((m) => {
-  //         return { ...m, amountLent: e.amountPaid / n };
-  //       }),
-  //       totalAmountLent: e.amountPaid - e.amountPaid / n,
-  //       memberWhoPaid: e.memberWhoPaid,
-  //     };
-  //   } else {
-  //     return {
-  //       expenseName: e.expenseName,
-  //       amountPaid: e.amountPaid,
-  //       amountOwedFrom: membersIncluded.map((m) => {
-  //         if (m.memberId != e.memberWhoPaid) {
-  //           return { ...m, amountBorrowed: e.amountPaid / n };
-  //         }
-  //       }),
-  //       totalAmountLent: e.amountPaid - e.amountPaid / n,
-  //       memberWhoPaid: e.memberWhoPaid,
-  //     };
-  //   }
-  // });
+  const formattedExpenses = expenses.map((e) => {
+    const n = e.membersIncluded.length;
+
+    if (e.memberWhoPaid == userId) {
+      return {
+        _id: e._id,
+        expenseName: e.expenseName,
+        amountPaid: e.amountPaid,
+        amountLent: e.amountPaid / n,
+        amountLentTo: e.membersIncluded.map((m) => {
+          return {
+            memberEmail: m.memberEmail,
+            memberId: m.memberId,
+            memberName: m.memberName,
+            memberRole: m.memberRole,
+          };
+        }),
+        totalAmountLent: e.amountPaid - e.amountPaid / n,
+        memberWhoPaid: e.memberWhoPaid,
+      };
+    } else {
+      return {
+        _id: e._id,
+        expenseName: e.expenseName,
+        totalAmountPaid: e.amountPaid,
+        amountOwedFrom: e.membersIncluded.map((m) => {
+          if (m.memberId != e.memberWhoPaid) {
+            return {
+              memberEmail: m.memberEmail,
+              memberId: m.memberId,
+              memberName: m.memberName,
+              memberRole: m.memberRole,
+            };
+          }
+        }),
+        amountToBePaid: e.amountPaid / n,
+        memberWhoPaid: e.memberWhoPaid,
+      };
+    }
+  });
+
+  const totalTransaction = formattedExpenses.reduce((acc, e) => {
+    if (e.memberWhoPaid == userId) {
+      return acc + e.totalAmountLent;
+    } else {
+      return acc - e.amountToBePaid;
+    }
+  }, 0);
+
+  const memberTransaction = group?.members
+    .filter((e) => e.memberId.toString() !== userId.toString())
+    .map((m) => {
+      let transaction = 0;
+
+      formattedExpenses.forEach((t) => {
+        const isUserPaid = String(t.memberWhoPaid) === String(userId);
+        const isMemberPaid = String(t.memberWhoPaid) === String(m.memberId);
+
+        if (isUserPaid) {
+          const lentAmount = t?.amountLentTo?.find(
+            (member) => member.memberId.toString() === m.memberId.toString()
+          );
+
+          if (lentAmount) {
+            transaction += t.amountLent;
+          }
+        } else if (isMemberPaid) {
+          const owedAmount = t?.amountOwedFrom?.find(
+            (member) => member.memberId.toString() === m.memberId.toString()
+          );
+
+          if (owedAmount) {
+            transaction -= t.amountToBePaid;
+          }
+        }
+      });
+
+      return {
+        memberName: m.memberName,
+        memberId: m.memberId,
+        transaction,
+      };
+    });
 
   return res
     .status(200)
-    .json(new ApiResponse(200, expenses, "Expenses fetched successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        { totalTransaction, formattedExpenses, memberTransaction },
+        "Expenses fetched successfully"
+      )
+    );
 }
 
-export { handleAddExpense, handleGetAllExpenses };
+async function handleDeleteExpense(req, res) {
+  const { expenseId } = req.body;
+  if (!expenseId) {
+    return res
+      .status(400)
+      .json(new ApiError(400, "Expense Id is not sent correctly"));
+  }
+
+  const expense = await Expense.deleteOne({ _id: expenseId });
+
+  return res.status(200).json(new ApiResponse(200, expense, "Expense deleted"));
+}
+
+export { handleAddExpense, handleGetAllExpenses, handleDeleteExpense };
