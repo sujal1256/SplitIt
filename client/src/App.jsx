@@ -5,6 +5,7 @@ import "./index.css";
 import "react-toastify/dist/ReactToastify.css";
 import LandingPage from "./Components/LandingPage/LandingPage.jsx";
 import About from "./Components/About/About.jsx";
+import Contact from "./Components/Contact/Contact.jsx"
 import { checkUserLoggedIn } from "./utils/userLoggedIn.jsx";
 import AddGroups from "./Components/AddGroups/AddGroups.jsx";
 import NewGroup from "./Components/NewGroup/NewGroup.jsx";
@@ -25,6 +26,7 @@ function App() {
             />
             <Route path="login" element={<LoginRegister />} />
             <Route path="about" element={<About />} />
+            <Route path="contact" element={<Contact/>}/>
             <Route path="group" element={<NewGroup />} />
           </Route>
         </Routes>

@@ -3,7 +3,7 @@ import AboutBack from "../Assets/AboutBack2.jpg";
 
 function Footer() {
   return (
-    <footer className="bg-primary text-text-colour py-10 font-semibold text-3xl"
+    <footer className="bg-primary text-text-colour py-10 font-semibold text-3xl "
     style={{
       backgroundImage: `url(${AboutBack})`, 
       backgroundRepeat: "no-repeat",

@@ -3,7 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
-import {toast} from 'react-toastify'
+import {toast} from 'react-toastify';
+import background from "../Assets/newGroupBack.jpg"
 
 function NewGroup() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
@@ -161,7 +162,7 @@ function NewGroup() {
   const convertAmount = (amount) => (amount * conversionRate).toFixed(2);
 
   return (
-    <div className="bg-gradient-to-l from-Accent to-background-color h-screen ">
+    <div className=" h-screen " style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover' }}>
       <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 text-center">
         <h1 className="text-3xl">{group?.group?.groupName}</h1>
         <h2>
@@ -227,7 +228,9 @@ function NewGroup() {
               <br />
 
               {/* FIXME: this should not be slice(1) */}
-              {group.group?.members.slice(1).map((member) => (
+              {group.group?.members
+              .filter((member, index) => index > 0) // Replace this condition with your specific filter logic
+              .map((member) => (
                 <label
                   key={member.id}
                   className="flex items-center gap-2 text-xl font-semibold"
@@ -253,6 +256,7 @@ function NewGroup() {
                   {member.memberName}
                 </label>
               ))}
+
             </div>
             <button
               onClick={addExpense}

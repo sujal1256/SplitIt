@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 import { Link } from "react-router-dom";
 import noGroupfound from "../Assets/noGroupfound.avif";
+import HomeBack from "../Assets/HomeBack.jpg"
 
 function AddGroups() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,12 +70,6 @@ function AddGroups() {
 
     if (response.ok) {
       toast.success(data.message);
-      // const newGroup = {
-      //   id: data.newGroupId,
-      //   groupName: newGroupName,
-      //   members: newMembers.map((member) => ({ memberName: member.name })),
-      // };
-      // setGroups((prevGroups) => [...prevGroups, newGroup]);
     } else {
       toast.error("Error in creating group");
     }
@@ -103,32 +98,33 @@ function AddGroups() {
   };
 
   return (
-    <>
-      <div className="fixed bottom-5 right-5 ">
+    <div>
+      <div className="bottom-5 right-5 fixed z-10">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-32 h-11 cursor-pointer font-semibold bg-primary text-white border-2 border-secondary rounded-lg shadow-lg"
+          className="w-32 h-11 cursor-pointer font-semibold bg-primary text-black border-2 border-primary rounded-lg shadow-lg hover:bg-secondary"
         >
           Create Group
         </button>
       </div>
 
       {/* Groups Display */}
-      <div className="w-[90%] text-center m-12 flex flex-wrap gap-10 justify-center">
+      <div className="w-[90%] text-center m-12 flex flex-wrap gap-10 justify-center ">
         {groups?.length > 0 ? (
           groups.map((group) => (
             <Link
               to={"/group?g=" + group._id}
               key={group._id}
-              className="w-[calc(50%-30px)] border-2 border-gray-300 bg-gradient-to-l from-primary to-secondary rounded-lg p-4 shadow-md text-start hover:border-Accent hover:shadow-xl"
+              className="w-[calc(50%-30px)] border-2 border-primary bg-gradient-to-l from-primary to-secondary rounded-lg p-4 shadow-md text-start hover:border-Accent hover:shadow-xl"
             >
-              <div>
+              <div className="relative group">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     handleDelete(group._id);
                   }}
+                  className="w-16 h-11 cursor-pointer font-semibold bg-primary text-white border-2 border-secondary rounded-lg shadow-lg absolute bottom-0 right-0 hidden group-hover:block"
                 >
                   Delete
                 </button>
@@ -149,16 +145,16 @@ function AddGroups() {
             </Link>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center text-center">
+          <div className="flex flex-col items-center justify-center text-center bg-white p-5">
             <img
               src={noGroupfound} // Replace with your icon path
               alt="No Data Icon"
-              className="w-2/3"
+              className="w-2/3 rounded-md"
             />
             <h2 className="text-xl font-semibold text-gray-800">
               You have no groups yet
             </h2>
-            <p className="text-gray-600">
+            <p className="text-black">
               It only takes a few seconds to create group and add members.
             </p>
           </div>
@@ -250,7 +246,7 @@ function AddGroups() {
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
 

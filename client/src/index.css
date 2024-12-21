@@ -12,6 +12,10 @@
 }
 body{
   font-family: "Open Sans", sans-serif;
-  
-}
+  background-image: url('../src/Components/Assets/homeBack.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  }
+
 

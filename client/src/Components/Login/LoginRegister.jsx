@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { FaUser, FaLock, FaEnvelope , FaPhone} from "react-icons/fa";
 import Navbar from "../Navbar/Navbar";
 import { toast } from "react-toastify";
-import loginback from "../Assets/loginback.jpg"
 import { useNavigate } from "react-router-dom";
+import loginBack from "../Assets/loginBack.jpeg"
 
 function LoginRegister() {
   const [action, setAction] = useState("");
@@ -88,9 +88,7 @@ function LoginRegister() {
 
   return (
     <>
-      <div className="flex justify-center text-center pt-24 bg-cover bg-center bg-gradient-to-l from-Accent to-background-color h-screen">
-
-
+      <div className="flex justify-center text-center pt-24 bg-cover bg-center h-screen" style={{ backgroundImage: `url(${loginBack})`, backgroundSize: 'cover' }}>
 
         <div
           className={`relative w-[420px] ${

@@ -1,6 +1,7 @@
 import React from "react";
-import AboutBack from "../Assets/AboutBack2.jpg";
-import bk from "../Assets/about2.jpg";
+import bgAbout from "../Assets/bg-about.jpeg"
+import bgAbout2 from "../Assets/bg-about2.jpeg"
+import bgAbout3 from "../Assets/bg-about3.jpeg"
 import dev1 from "../Assets/dev1.jpg"
 import dev2 from "../Assets/dev2.jpg"
 import { FaWhatsapp , FaLinkedin, FaInstagramSquare} from "react-icons/fa";
@@ -10,22 +11,18 @@ function About() {
   return (
     <div className="min-h-screen w-full  overflow-hidden">
   
-  <section className="text-center text-white py-20 px-4 bg-gradient-to-r from-background-color to-Accent" 
-  // style={{
-  //    backgroundImage: `url(${bk})`, 
-  //    backgroundRepeat: "no-repeat", 
-  //    backgroundSize: "cover",
-  //    }} 
+  <section className="text-center text-white py-20 px-4 " 
+   style={{ backgroundImage: `url(${bgAbout2})`, backgroundSize: 'cover' }}
      >
-        <h1 className="text-4xl font-bold mb-4 text-text-colour ">Welcome to SplitIt</h1>
-        <p className="text-lg md:text-2xl max-w-3xl mx-auto text-text-colour">
+        <h1 className="text-4xl font-bold mb-4 ">Welcome to SplitIt</h1>
+        <p className="text-lg md:text-2xl max-w-3xl mx-auto ">
           Simplifying expense management for groups of all sizes. Split, track,
           and settle expenses seamlessly.
         </p>
       </section>
 
-      
-      <section className="py-16 px-6 bg-gray-200 ">
+      <div>
+      <section className="py-16 px-6 bg-gradient-to-r from-background-color to-Accent">
         <div className="max-w-4xl mx-auto text-center ">
           <h2 className="text-3xl font-bold mb-6">What is SplitIt?</h2>
           <p className="text-lg text-gray-600">
@@ -37,7 +34,7 @@ function About() {
       </section>
 
       
-      <section className=" py-16 px-6 bg-gray-200">
+      <section className=" py-16 px-6 bg-gradient-to-r from-background-color to-Accent">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           <div>
             <h3 className="text-xl font-semibold">Group Expense Tracking</h3>
@@ -59,8 +56,9 @@ function About() {
           </div>
         </div>
       </section>
+      </div>
 
-      <section className="py-16 px-6 bg-primary">
+      <section className="py-16 px-6 bg-primary" style={{ backgroundImage: `url(${bgAbout3})`, backgroundSize: 'cover' }}>
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
@@ -93,7 +91,7 @@ function About() {
       </section>
 
       
-      <section className=" py-16 px-6  bg-gray-200">
+      <section className=" py-16 px-6  bg-gray-200 ">
         <div className="max-w-5xl mx-auto text-center ">
           <h2 className="text-3xl font-bold mb-6 ">What Our Users Say</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -116,7 +114,7 @@ function About() {
       </section>
 
 
-      <section className=" py-16 px-6 bg-secondary">
+      <section className=" py-16 px-6 bg-secondary" style={{ backgroundImage: `url(${bgAbout})`, backgroundSize: 'cover' }}>
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6">Developers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
