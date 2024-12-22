@@ -48,7 +48,6 @@ function LoginRegister() {
     }
   }
 
-  //   TODO: Add phone number field and send it to backend
   async function handleRegister(e) {
     e.preventDefault();
 
@@ -224,8 +223,8 @@ function LoginRegister() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
+                  value={registerPassword}
+                  onChange={(e) => setRegisterPassword(e.target.value)}
                   required
                   className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                 />

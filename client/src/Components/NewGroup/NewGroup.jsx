@@ -216,7 +216,9 @@ function NewGroup() {
 
               {/* FIXME: this should not be slice(1) */}
               {group.group?.members
-                .filter((member, index) => index > 0) // Replace this condition with your specific filter logic
+                .filter(
+                  (member, index) => member.memberId != logged.user?.userId
+                ) // Replace this condition with your specific filter logic
                 .map((member) => (
                   <label
                     key={member._id}
