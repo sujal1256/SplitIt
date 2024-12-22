@@ -1,16 +1,26 @@
 import React, { useState } from "react";
-import { FaUser, FaLock, FaEnvelope , FaPhone, FaEye ,FaEyeSlash} from "react-icons/fa";
+import {
+  FaUser,
+  FaLock,
+  FaEnvelope,
+  FaPhone,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import loginBack from "../Assets/loginBack.jpeg"
+import loginBack from "../Assets/loginBack.jpeg";
 
 function LoginRegister() {
   const [action, setAction] = useState("");
-  const [registerUsername, setRegisterUsername] = useState("");
-  const [registerEmail, setRegisterEmail] = useState("");
-  const [registerPassword, setRegisterPassword] = useState("");
-  const [registerPhone, setregisterPhone] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+
+  const [registerUtil, setRegisterUtils] = useState({
+    registerUsername: "",
+    registerEmail: "",
+    registerPhone: "",
+    registerPassword: "",
+  });
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -23,19 +33,18 @@ function LoginRegister() {
 
     try {
       const response = await fetch("/api/v1/user/login", {
-        
         method: "POST",
         body: JSON.stringify({
           userEmail: loginEmail,
           password: loginPassword,
-        }), 
+        }),
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
         },
       });
       const data = await response.json();
       console.log(data);
-            
+
       if (response.ok) {
         toast.success("Logged In successfully");
         navigate("/");
@@ -48,6 +57,14 @@ function LoginRegister() {
     }
   }
 
+  async function formatRegisterInputs() {
+    setRegisterUtils({
+      registerUsername: "",
+      registerEmail: "",
+      registerPhone: "",
+      registerPassword: "",
+    });
+  }
   async function handleRegister(e) {
     e.preventDefault();
 
@@ -56,10 +73,10 @@ function LoginRegister() {
         // Fix typo in endpoint
         method: "POST",
         body: JSON.stringify({
-          userName: registerUsername,
-          userEmail: registerEmail,
-          password: registerPassword,
-          phoneNumber: registerPhone,
+          userName: registerUtil.registerUsername,
+          userEmail: registerUtil.registerEmail,
+          password: registerUtil.registerPassword,
+          phoneNumber: registerUtil.registerPhone,
         }), // Serialize body as JSON
         headers: {
           "Content-Type": "application/json", // Add appropriate headers
@@ -67,7 +84,7 @@ function LoginRegister() {
       });
       const data = await response.json();
       console.log(data);
-            
+
       if (response.ok) {
         toast.success("Signed Up successfully");
       } else {
@@ -78,22 +95,29 @@ function LoginRegister() {
     }
   }
   const registerLink = () => {
+
     setAction(" active");
   };
 
   const loginLink = () => {
+    formatRegisterInputs();
     setAction("");
   };
 
   return (
     <>
-      <div className="flex justify-center text-center pt-24 bg-cover bg-center h-screen" style={{ backgroundImage: `url(${loginBack})`, backgroundSize: 'cover' }}>
-
+      <div
+        className="flex justify-center text-center pt-24 bg-cover bg-center h-screen"
+        style={{
+          backgroundImage: `url(${loginBack})`,
+          backgroundSize: "cover",
+        }}
+      >
         <div
           className={`relative w-[420px] ${
             action === " active" ? "h-[520px]" : "h-[450px]"
           } bg-primary backdrop-blur-lg rounded-lg shadow-lg text-white flex justify-center items-center overflow-hidden transition-height duration-200 ease-in-out`}
-          >
+        >
           <div className="w-full p-10">
             <div
               className={`transition-transform duration-200 ease-in-out ${
@@ -114,26 +138,26 @@ function LoginRegister() {
                 </div>
 
                 <div className="relative w-full h-12 my-7">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  required
-                  className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
-                >
-                  {showPassword ? (
-                    <FaEye className="text-white" />
-                  ) : (
-                    <FaEyeSlash className="text-white" />
-                  )}
-                </button>
-              </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    required
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
+                  >
+                    {showPassword ? (
+                      <FaEye className="text-white" />
+                    ) : (
+                      <FaEyeSlash className="text-white" />
+                    )}
+                  </button>
+                </div>
 
                 <div className="flex justify-between text-sm my-0 mx-0.5">
                   <label>
@@ -184,8 +208,12 @@ function LoginRegister() {
                   <input
                     type="text"
                     placeholder="Username"
+                    value={registerUtil.registerUsername}
                     onChange={(e) => {
-                      setRegisterUsername(e.target.value);
+                      setRegisterUtils({
+                        ...registerUtil,
+                        registerUsername: e.target.value,
+                      });
                     }}
                     required
                     className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
@@ -198,8 +226,12 @@ function LoginRegister() {
                     type="email"
                     placeholder="Email"
                     required
+                    value={registerUtil.registerEmail}
                     onChange={(e) => {
-                      setRegisterEmail(e.target.value);
+                      setRegisterUtils({
+                        ...registerUtil,
+                        registerEmail: e.target.value,
+                      });
                     }}
                     className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
                   />
@@ -210,8 +242,12 @@ function LoginRegister() {
                   <input
                     type="number"
                     placeholder="Phone Number"
+                    value={registerUtil.registerPhone}
                     onChange={(e) => {
-                      setregisterPhone(e.target.value);
+                      setRegisterUtils({
+                        ...registerUtil,
+                        registerPhone: e.target.value,
+                      });
                     }}
                     required
                     className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
@@ -220,43 +256,50 @@ function LoginRegister() {
                 </div>
 
                 <div className="relative w-full h-12 my-7">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Password"
-                  value={registerPassword}
-                  onChange={(e) => setRegisterPassword(e.target.value)}
-                  required
-                  className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
-                >
-                  {showPassword ? (
-                    <FaEye className="text-white" />
-                  ) : (
-                    <FaEyeSlash className="text-white" />
-                  )}
-                </button>
-              </div>
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={registerUtil.registerPassword}
+                    onChange={(e) => {
+                      setRegisterUtils({
+                        ...registerUtil,
+                        registerPassword: e.target.value,
+                      });
+                    }}
+                    required
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
+                  >
+                    {showPassword ? (
+                      <FaEye className="text-white" />
+                    ) : (
+                      <FaEyeSlash className="text-white" />
+                    )}
+                  </button>
+                </div>
 
                 <div className="flex justify-start text-sm my-0 mx-0.5">
                   <label>
-                    <input type="checkbox" className="accent-white mr-1" onChange={(e) => setAgreedToTerms(e.target.checked)} />I
-                    agree to terms & conditions
+                    <input
+                      type="checkbox"
+                      className="accent-white mr-1"
+                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    />
+                    I agree to terms & conditions
                   </label>
                 </div>
 
                 <button
                   type="submit"
-                  onClick = {(e) => {
+                  onClick={(e) => {
                     e.preventDefault();
-                    if(agreedToTerms){
+                    if (agreedToTerms) {
                       handleRegister(e);
-                    }
-                    else
-                    {
+                    } else {
                       toast.error("You must agree to terms and conditions.");
                     }
                   }}
