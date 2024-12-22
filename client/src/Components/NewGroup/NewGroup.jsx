@@ -3,8 +3,9 @@ import { useSearchParams } from "react-router-dom";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
-import {toast} from 'react-toastify';
-import background from "../Assets/newGroupBack.jpg"
+import { toast } from "react-toastify";
+import background from "../Assets/newGroupBack.jpg";
+import TotalExpenses from "./TotalExpenses.jsx";
 
 function NewGroup() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
@@ -18,7 +19,8 @@ function NewGroup() {
   const [expenseTitle, setExpenseTitle] = useState([]);
   const [amount, setAmount] = useState("");
   const [expenseDate, setExpenseDate] = useState([]);
-  const [payer, setPayer] = useState([]);
+  const [totalTransaction, setTotalTransaction] = useState(0);
+  const [memberTransactions, setMembersTransactions] = useState([]);
   const group = useSelector((store) => store.group);
 
   const [selectedMembers, setSelectedMembers] = useState([]);
@@ -38,13 +40,13 @@ function NewGroup() {
       );
 
       const data = await response.json();
+      console.log("data", data);
 
-      console.log(data);
-      
       if (response.ok) {
-        setExpenses(data?.data);
+        setExpenses(data?.data?.formattedExpenses);
+        setTotalTransaction(data?.data?.totalTransaction);
+        setMembersTransactions(data?.data?.memberTransaction);
       }
-
     } catch (error) {
       console.log("Error in getting the groups", error.message);
     }
@@ -82,27 +84,14 @@ function NewGroup() {
     return () => {
       localStorage.removeItem("group");
     };
-  }, [logged]);
+  }, []);
 
   const addExpense = async () => {
-    if (
-      !expenseTitle ||
-      !expenseDate ||
-      !payer ||
-      selectedMembers.length === 0
-    ) {
+    if (!expenseTitle || !expenseDate || selectedMembers.length === 0) {
       toast.error("Fill in all the fields!");
       return;
     }
 
-    // const newExpense = {
-    //   id: expenses.length + 1,
-    //   name: expenseTitle,
-    //   date: expenseDate,
-    //   oweOrLent: 0,
-    // };
-
-    // setExpenses([...expenses, newExpense]);    
     const response = await fetch("/api/v1/expense/add-expense", {
       method: "POST",
       body: JSON.stringify({
@@ -129,8 +118,21 @@ function NewGroup() {
     setExpenseTitle("");
     setExpenseDate("");
     setAmount("");
-    setPayer("");
-    setSelectedMembers([]);
+    setSelectedMembers(group?.group?.members);
+  };
+
+  const handleDelete = async (expenseId) => {
+    console.log("expenseId", expenseId);
+
+    const response = await fetch("/api/v1/expense/delete-expense", {
+      method: "DELETE",
+      body: JSON.stringify({
+        expenseId,
+      }),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
   };
 
   // Hardcoded conversion rates
@@ -140,33 +142,18 @@ function NewGroup() {
     EUR: 0.011, // Example: 1 INR = 0.011 EUR
   };
 
-  // Calculate totals
-  const totalOwe = expenses.reduce(
-    (total, expense) =>
-      expense.oweOrLent > 0 ? total + expense.oweOrLent : total,
-    0
-  );
-
-  const totalLent = expenses.reduce(
-    (total, expense) =>
-      expense.oweOrLent < 0 ? total + Math.abs(expense.oweOrLent) : total,
-    0
-  );
-
-  const totalExpenses = expenses.reduce(
-    (total, expense) => total + Math.abs(expense.oweOrLent),
-    0
-  );
-
   // Convert amounts to the selected currency
   const convertAmount = (amount) => (amount * conversionRate).toFixed(2);
 
   return (
-    <div className=" h-screen " style={{ backgroundImage: `url(${background})`, backgroundSize: 'cover' }}>
+    <div
+      className=" h-screen "
+      style={{ backgroundImage: `url(${background})`, backgroundSize: "cover" }}
+    >
       <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 text-center">
         <h1 className="text-3xl">{group?.group?.groupName}</h1>
         <h2>
-          You owe {selectedCurrency} {convertAmount(totalOwe)} overall
+          {/* You owe {selectedCurrency} {convertAmount(totalOwe)} overall */}
         </h2>
       </div>
 
@@ -229,35 +216,33 @@ function NewGroup() {
 
               {/* FIXME: this should not be slice(1) */}
               {group.group?.members
-              .filter((member, index) => index !== 0) 
-              .map((member) => (
-                <label
-                  key={member.id}
-                  className="flex items-center gap-2 text-xl font-semibold"
-                >
-                  <input
-                    type="checkbox"
-                    value={member.name}
-                    checked={selectedMembers?.some(
-                      (selected) => selected._id === member._id
-                    )}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedMembers([...selectedMembers, member]);
-                      } else {
-                        setSelectedMembers(
-                          selectedMembers.filter(
-                            (selected) => selected._id !== member._id
-                          )
-                        );
-                      }
-                    }}
-                  />
-                  {member.memberName}
-                </label>
-              ))}
-
-
+                .filter((member, index) => index > 0) // Replace this condition with your specific filter logic
+                .map((member) => (
+                  <label
+                    key={member._id}
+                    className="flex items-center gap-2 text-xl font-semibold"
+                  >
+                    <input
+                      type="checkbox"
+                      value={member.name}
+                      checked={selectedMembers?.some(
+                        (selected) => selected._id === member._id
+                      )}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedMembers([...selectedMembers, member]);
+                        } else {
+                          setSelectedMembers(
+                            selectedMembers.filter(
+                              (selected) => selected._id !== member._id
+                            )
+                          );
+                        }
+                      }}
+                    />
+                    {member.memberName}
+                  </label>
+                ))}
             </div>
             <button
               onClick={addExpense}
@@ -276,21 +261,21 @@ function NewGroup() {
           <div>
             {expenses.map((expense, index) => (
               <div
-                key={index}
+                key={expense?._id}
                 className="border-b border-gray-300 py-2 flex items-center"
               >
                 <div className="flex-1">
-                  <p className="font-semibold">{expense.name}</p>
-                  <p className="text-sm text-gray-200">{expense.date}</p>
+                  <p className="font-semibold">{expense.expenseName}</p>
+                  <button onClick={() => handleDelete(expense._id)}>
+                    Delete
+                  </button>
+                  {/*FIXME: <p className="text-sm text-gray-200">{expense.date}</p> */}
                 </div>
                 <p className="text-right font-bold text-lg">
-                  {expense.oweOrLent > 0
-                    ? `Owe: ${selectedCurrency} ${convertAmount(
-                        expense.oweOrLent
-                      )}`
-                    : `Lent: ${selectedCurrency} ${convertAmount(
-                        Math.abs(expense.oweOrLent)
-                      )}`}
+                  {/* + should be in green color and - should be in red color */}
+                  {expense.memberWhoPaid == logged?.user?.userId
+                    ? `+ ${expense.totalAmountLent.toFixed(2)}`
+                    : `- ${expense.amountToBePaid.toFixed(2)}`}
                 </p>
               </div>
             ))}
@@ -298,12 +283,11 @@ function NewGroup() {
         </div>
 
         {/* Total Expenses Div */}
-        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-[calc(30%-30px)]">
-          <h2 className="text-center text-xl font-semibold">Total Expenses</h2>
-          <p className="text-center text-lg mt-3">
-            {selectedCurrency} {convertAmount(amount)}
-          </p>
-        </div>
+        <TotalExpenses
+          totalTransaction={totalTransaction}
+          memberTransactions={memberTransactions}
+          selectedCurrency={selectedCurrency}
+        />
       </div>
 
       {/* Currency Converter Modal */}
