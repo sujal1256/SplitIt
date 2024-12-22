@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { FaUser, FaLock, FaEnvelope , FaPhone} from "react-icons/fa";
-import Navbar from "../Navbar/Navbar";
+import { FaUser, FaLock, FaEnvelope , FaPhone, FaEye ,FaEyeSlash} from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import loginBack from "../Assets/loginBack.jpeg"
@@ -15,6 +14,7 @@ function LoginRegister() {
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -115,15 +115,26 @@ function LoginRegister() {
                 </div>
 
                 <div className="relative w-full h-12 my-7">
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    required
-                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
-                  />
-                  <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
-                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                  className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
+                >
+                  {showPassword ? (
+                    <FaEye className="text-white" />
+                  ) : (
+                    <FaEyeSlash className="text-white" />
+                  )}
+                </button>
+              </div>
 
                 <div className="flex justify-between text-sm my-0 mx-0.5">
                   <label>
@@ -209,18 +220,27 @@ function LoginRegister() {
                   <FaPhone className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
-                <div className="relative w-full h-8 my-7">
-                  <input
-                    type="password"
-                    placeholder="Password"
-                    onChange={(e) => {
-                      setRegisterPassword(e.target.value);
-                    }}
-                    required
-                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
-                  />
-                  <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
-                </div>
+                <div className="relative w-full h-12 my-7">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  required
+                  className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
+                >
+                  {showPassword ? (
+                    <FaEye className="text-white" />
+                  ) : (
+                    <FaEyeSlash className="text-white" />
+                  )}
+                </button>
+              </div>
 
                 <div className="flex justify-start text-sm my-0 mx-0.5">
                   <label>
