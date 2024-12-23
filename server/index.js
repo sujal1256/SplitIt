@@ -6,6 +6,7 @@ import { expenseRouter } from "./routes/expense.route.js";
 import { connectToMongoDB } from "./connect.db.js";
 import cookieParser from "cookie-parser";
 import { storeInvitedUser } from "./controllers/group.controller.js";
+import { mailRouter } from "./routes/mails.route.js";
 dotenv.config();
 
 const app = express();
@@ -16,7 +17,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE"); // Specify allowed methods
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Specify allowed headers
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Specify allowed headers
-  res.header("Content-type", "application/json")
+  res.header("Content-type", "application/json");
   next();
 });
 
@@ -29,6 +30,7 @@ app.get("/invite", storeInvitedUser);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/group", groupRouter);
 app.use("/api/v1/expense", expenseRouter);
+app.use("/api/v1/mail", mailRouter);
 
 app.listen(PORT, () => {
   console.log(`✅ The server is listening to port ${PORT}`);

@@ -71,4 +71,34 @@ async function sendEmailToNewUserWithPassword(newUser, group) {
   }
 }
 
-export { sendInviteEmail, sendEmailToNewUserWithPassword };
+async function sendContactEmail(name, email, message) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      pool: true, // Necessary to permanently make a connection
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailSent = await transporter.sendMail({
+      from: `"Contact Form" <${name}>`, // Your email as the sender
+      to: process.env.EMAIL_USER, // Your email as the recipient
+      replyTo: email, // This sets the reply-to address to the user's email
+      subject: `Contact Form Submission from ${name}`,
+      html: `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Message:</strong> ${message}</p>
+      `,
+    });
+
+    console.log("✅ Message sent: %s", mailSent.messageId);
+  } catch (error) {
+    console.log("❌ Error in sending the email", error);
+  }
+}
+
+export { sendInviteEmail, sendEmailToNewUserWithPassword, sendContactEmail };

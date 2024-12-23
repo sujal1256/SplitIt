@@ -6,8 +6,6 @@ async function verifyJWT(req, res, next) {
     const token = req.cookies["accessToken"];
     const decodedUser = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
-    // TODO: Redirect to signin page
-
     if (!decodedUser) {
       return res.status(401).json(new ApiError(401, "Token expired"));
     }

@@ -15,3 +15,4 @@ userRouter.route("/get-all-groups").get(verifyJWT, handleGetGroups);
 
 
 export { userRouter };
+    
