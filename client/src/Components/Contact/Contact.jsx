@@ -8,6 +8,29 @@ function Contact() {
     message: "",
   });
 
+  const [subscribeEmail, setSubscribeEmail] = useState("");
+
+  async function handleSubscribe(e) {
+    e.preventDefault();
+    const response = await fetch("/api/v1/mail/subscription", {
+      method: "POST",
+      body: JSON.stringify({
+        email: subscribeEmail,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (response.ok) {
+      console.log("Subscribed successfully!");
+    } else {
+      console.error("An error occurred while subscribing");
+    }
+
+    setSubscribeEmail("");
+  }
+
   async function handleSendMessage(e) {
     e.preventDefault();
     const response = await fetch("/api/v1/mail/contact-us", {
@@ -176,11 +199,16 @@ function Contact() {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
               placeholder="Enter your email"
               required
+              value={subscribeEmail}
+              onChange={(e) => {
+                setSubscribeEmail(e.target.value);
+              }}
             />
           </div>
           <button
             type="submit"
             className="w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-Accent"
+            onClick={handleSubscribe}
           >
             Subscribe
           </button>
