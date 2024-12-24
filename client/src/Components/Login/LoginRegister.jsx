@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import loginBack from "../Assets/loginBack.jpeg";
+import { validateEmail, validatePhoneNumber } from "../../utils/regexCheck";
 
 function LoginRegister() {
   const [action, setAction] = useState("");
@@ -30,6 +31,14 @@ function LoginRegister() {
 
   async function handleLogin(e) {
     e.preventDefault();
+    if (!loginEmail || !loginPassword) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+    if (!validateEmail(loginEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
 
     try {
       const response = await fetch("/api/v1/user/login", {
@@ -67,7 +76,24 @@ function LoginRegister() {
   }
   async function handleRegister(e) {
     e.preventDefault();
+    if (
+      !registerUtil.registerUsername ||
+      !registerUtil.registerEmail ||
+      !registerUtil.registerPhone ||
+      !registerUtil.registerPassword
+    ) {
+      toast.error("Please fill all the fields");
+      return;
+    }
 
+    if (!validatePhoneNumber(registerUtil.registerPhone)) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
+    if (!validateEmail(registerUtil.registerEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     try {
       const response = await fetch("/api/v1/user/register", {
         // Fix typo in endpoint
@@ -95,7 +121,6 @@ function LoginRegister() {
     }
   }
   const registerLink = () => {
-
     setAction(" active");
   };
 

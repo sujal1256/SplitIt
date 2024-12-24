@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import contactBack from "../Assets/contactBack.jpg";
+import { toast } from "react-toastify";
+import { validateEmail } from "../../utils/regexCheck";
 
 function Contact() {
   const [contact, setContact] = useState({
@@ -12,6 +14,10 @@ function Contact() {
 
   async function handleSubscribe(e) {
     e.preventDefault();
+    if (!validateEmail(subscribeEmail)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     const response = await fetch("/api/v1/mail/subscription", {
       method: "POST",
       body: JSON.stringify({
@@ -29,10 +35,17 @@ function Contact() {
     }
 
     setSubscribeEmail("");
+    toast.success("Subscribed successfully!");
+
   }
 
   async function handleSendMessage(e) {
     e.preventDefault();
+
+    if (!validateEmail(contact.email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
     const response = await fetch("/api/v1/mail/contact-us", {
       method: "POST",
       body: JSON.stringify({
