@@ -101,4 +101,36 @@ async function sendContactEmail(name, email, message) {
   }
 }
 
-export { sendInviteEmail, sendEmailToNewUserWithPassword, sendContactEmail };
+async function sendNewsletterEmail(email) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      pool: true, // Necessary to permanently make a connection
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailSent = await transporter.sendMail({
+      from: `"Newsletter">`, // Your email as the sender
+      to: email, // Your email as the recipient
+      subject: `Newsletter Subscription`,
+      html: `
+        <p> This is a newsletter email</p>
+      `,
+    });
+
+    console.log("✅ Message sent: %s", mailSent.messageId);
+  } catch (error) {
+    console.log("❌ Error in sending the email", error);
+  }
+}
+
+export {
+  sendInviteEmail,
+  sendEmailToNewUserWithPassword,
+  sendContactEmail,
+  sendNewsletterEmail,
+};

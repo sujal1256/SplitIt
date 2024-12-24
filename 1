@@ -1,0 +1,307 @@
+[33mcommit 1be7c44bafacc75794f6556e8f1224b3da682368[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Wed Dec 25 01:23:28 2024 +0530
+
+    Send subscription Email
+
+[33mcommit ab4857d541960171ba47582017743f75d7c712a9[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Tue Dec 24 03:58:54 2024 +0530
+
+    Implement contact form functionality with email handling
+
+[33mcommit de65805b2fbca8558cfd93ddba6e7948fbce46c3[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Mon Dec 23 15:26:36 2024 +0530
+
+    Created Design document
+
+[33mcommit e72a9d549aab76fa52828fb2bf94ce7ccc6c7737[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Sun Dec 22 20:04:19 2024 +0530
+
+    Create README.md
+    
+    created readme file for the project
+
+[33mcommit 6e36ae80c5545067f32ed71a8305b85a54a65080[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 22 13:13:23 2024 +0530
+
+    Register State Management
+
+[33mcommit 7b021fed710cd66853ce03b7b9be8deaa4cf1ac4[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 22 12:25:09 2024 +0530
+
+    Fixed login
+
+[33mcommit 2cf4a04d8a98cc0b8d154b458bb59ba47916543f[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 22 12:14:48 2024 +0530
+
+    Fixed Changes
+
+[33mcommit d808b646f2cbc4f11797c3196d4d5442d523252a[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Sun Dec 22 11:33:33 2024 +0530
+
+    error fixed in login page
+
+[33mcommit 48fbe5f2f3ef0d23949b4b1de47a0d23b0061226[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 22 03:43:06 2024 +0530
+
+    get all expenses on frontend with the logic and delete expense
+
+[33mcommit 8e8d5c3e155d345221be696a84a1be64c3f3f23f[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Sat Dec 21 11:07:13 2024 +0530
+
+    contact page added and fixed some errors
+
+[33mcommit 606a0b163cde9e01bfa5d488617844a5be4b5932[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Fri Dec 20 03:24:44 2024 +0530
+
+    Expense Added
+
+[33mcommit b87925cf48e243fd04a2a712fba308417af86ffd[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Fri Dec 20 02:58:11 2024 +0530
+
+    Delete group
+
+[33mcommit 97ee2b42496eb8b5ccce264d9c1064f9fbb0ddf5[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Fri Dec 20 00:35:21 2024 +0530
+
+    Logout and send password in email
+
+[33mcommit 8851b054e46ebb22278dc739f3fccb07a5ab7c12[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Thu Dec 19 22:20:31 2024 +0530
+
+    Logout functionality added
+
+[33mcommit 3abe45c856613ab33291af4844d811141a625faa[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 8 02:17:41 2024 +0530
+
+    Fixed Selected members in the project
+
+[33mcommit e60e1d991262a7651d36db40cc73abfb2dc6a272[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Fri Dec 6 17:58:21 2024 +0530
+
+    Fixed colour pallete and features
+
+[33mcommit 5417099dbd77cd5c594edf78d3c74d89166ff7dc[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Thu Dec 5 17:17:12 2024 +0530
+
+    Fixed login
+
+[33mcommit 7a97adb44274a4a669c1228636e46dcbc8f660b6[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Thu Dec 5 15:30:05 2024 +0530
+
+    Get all Members
+
+[33mcommit a3df4ada026a75564f98b73c89346da921a1fa35[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Thu Dec 5 13:12:30 2024 +0530
+
+    expense route, controller, model
+
+[33mcommit 157b79ab3fd7fb8a3e0314e699c5478395ef6036[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Wed Dec 4 23:09:29 2024 +0530
+
+    some extra changes
+
+[33mcommit 1abce08dc74e2f025ca7fe284810f98a7c2b7ab7[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Wed Dec 4 17:16:17 2024 +0530
+
+    Fixed invitational Email
+
+[33mcommit 8903885e7f12d9c90c3eb2f3390382ea4a8854d9[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Wed Dec 4 16:39:26 2024 +0530
+
+    Created new groups page
+
+[33mcommit 14e3ad183d645e29f83a58029ea053dbb5c16d22[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Wed Dec 4 12:10:38 2024 +0530
+
+    send member invite
+
+[33mcommit 2510bbd4b2a2d84fed5336c0f396fa6274ac8807[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Tue Dec 3 17:52:47 2024 +0530
+
+    Fixed landing page and added About page and Footer
+
+[33mcommit a1b984b860e070237f6d571999df661c3563668c[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Tue Dec 3 14:29:36 2024 +0530
+
+    Login fixed
+
+[33mcommit 9a0e5ac7ec8ab3a0e5568bfbe9ae41313a1fa927[m
+Merge: dbb103d 03ed170
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Tue Dec 3 00:13:47 2024 +0530
+
+    MERGIN
+
+[33mcommit dbb103dd8366e5f334de7a28f275a8161402b38b[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Tue Dec 3 00:11:14 2024 +0530
+
+    Get Groups
+
+[33mcommit 845be512123633ca0cc2c13c80c2157f65cb0b57[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Tue Dec 3 00:00:22 2024 +0530
+
+    Get Groups
+
+[33mcommit 03ed170a6d12aafb761c295273b87a7a71c2353f[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Mon Dec 2 22:25:41 2024 +0530
+
+    created landing page
+
+[33mcommit b0b5e40566eab0d42bf9bdc878a4b2f560e8bdc0[m
+Merge: 4c0c390 fdb4d9d
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Mon Dec 2 20:48:20 2024 +0530
+
+    Created form for new groups
+
+[33mcommit 4c0c390ee30e5171a281bf6d5d9e97b4d9e31988[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Mon Dec 2 17:56:59 2024 +0530
+
+    made some changes
+
+[33mcommit fdb4d9d4a5a43bf0352ae4bfb458a2214a14914b[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Mon Dec 2 15:38:31 2024 +0530
+
+    login checkLoggedIn
+
+[33mcommit d0c76b63a60b0750985560b4c2326052e2d3f1fd[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Mon Dec 2 12:41:47 2024 +0530
+
+    fixed Register function and add toastify
+
+[33mcommit 02498794d9354b00534cc9741f2be02e91811edb[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 1 19:05:04 2024 +0530
+
+    Fixed Tailwind
+
+[33mcommit 86b9a4ccba9aefbb55b8be1493011b2ecb1bd9e4[m
+Author: Shriya Seth <shriyaseth25@gmail.com>
+Date:   Sun Dec 1 18:55:59 2024 +0530
+
+    Added Assets
+
+[33mcommit d6badaba1b509e84ad1ce74b4774a327e0208960[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 1 18:46:17 2024 +0530
+
+    adding env file
+
+[33mcommit 0d1be29301e6e7cb2c957655f21523102edb812e[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 1 18:40:10 2024 +0530
+
+    Some Changes2
+
+[33mcommit ff33045dfa537f47c9095859eb57febadb1ce389[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Sun Dec 1 18:38:40 2024 +0530
+
+    Some changes
+
+[33mcommit c6498adf8c1c3b926cc737ab9d83c6f2fe4deda0[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Fri Nov 29 15:11:48 2024 +0530
+
+    Maintain client folder structure
+
+[33mcommit 49a2d8516d9863bec21aaac55eeb5c0fb30c2013[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Fri Nov 29 15:04:57 2024 +0530
+
+    Add member to the group
+
+[33mcommit 62561467b6fb87d6e425f111f22093d46a7fbae7[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Thu Nov 28 22:53:06 2024 +0530
+
+    Group creation
+
+[33mcommit aeed0b9cca2268ddd79f4dae0379a6d42b8698ef[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Wed Nov 27 23:25:56 2024 +0530
+
+    Create Navbar.jsx
+    
+    A navbar for all pages
+
+[33mcommit e372b1ea687b8c27b8f7526d58abd0b7261b3c51[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Wed Nov 27 23:25:17 2024 +0530
+
+    Create LoginRegister.jsx
+    
+    Login page
+
+[33mcommit 6136426a55665e55d5174a964c1f5603f5eb1cef[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Wed Nov 27 23:24:31 2024 +0530
+
+    Create Dashboard.jsx
+    
+    Dashboard / Home page
+
+[33mcommit d05011bd3e913511ce19c0cd74f35779595b780f[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Wed Nov 27 23:23:28 2024 +0530
+
+    Create AddGroups.jsx
+    
+    To add new groups of user
+
+[33mcommit 01e73ab35aa1ecb88c5c68a5f7aae6dd46fa8554[m
+Author: Shriya Seth <123366111+Shriyaseth25@users.noreply.github.com>
+Date:   Wed Nov 27 23:21:45 2024 +0530
+
+    Update App.jsx
+    
+    Added Dashboard and login pages with routing
+
+[33mcommit 3b8096e1b96fe663db49fe1403291596e35a860f[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Wed Nov 27 18:53:45 2024 +0530
+
+    Login function
+
+[33mcommit 9b63d84de6db815e2371e32563604ee08be3660c[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Wed Nov 27 12:32:34 2024 +0530
+
+    Added Login
+
+[33mcommit 1af6ad2ba1cad4ccaa6fb9e98e02d944a9b7037d[m
+Author: Sujal Malhotra <msujal29012004@gmail.com>
+Date:   Wed Nov 27 00:41:50 2024 +0530
+
+    Project Setup and register user
