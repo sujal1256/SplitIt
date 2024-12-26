@@ -59,7 +59,7 @@ function Contact() {
     });
 
     if (response.ok) {
-      console.log("Message sent successfully!");
+      toast.success("Message sent successfully!");
     } else {
       console.error("An error occurred while sending the message");
     }
@@ -108,6 +108,7 @@ function Contact() {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md "
               placeholder="Enter your name"
               required
+              value={contact.name}
               onChange={(e) => {
                 setContact({ ...contact, name: e.target.value });
               }}
@@ -124,6 +125,7 @@ function Contact() {
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md "
               placeholder="Enter your email"
               required
+              value={contact.email}
               onChange={(e) => {
                 setContact({ ...contact, email: e.target.value });
               }}
@@ -140,6 +142,7 @@ function Contact() {
               id="message"
               name="message"
               rows="4"
+              value={contact.message}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
               placeholder="Type your message here..."
               required

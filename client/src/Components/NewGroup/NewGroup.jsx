@@ -77,26 +77,6 @@ function NewGroup() {
     }
   }
 
-  useEffect(() => {
-    getExpenses();
-    getGroup().then(() => {
-      setSelectedMembers(JSON.parse(localStorage.getItem("group"))?.members);
-    });
-
-    return () => {
-      localStorage.removeItem("group");
-    };
-  }, []);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
 
   const addExpense = async () => {
     if (!expenseTitle || !expenseDate || selectedMembers.length === 0) {
@@ -134,8 +114,6 @@ function NewGroup() {
   };
 
   const handleDelete = async (expenseId) => {
-    console.log("expenseId", expenseId);
-
     const response = await fetch("/api/v1/expense/delete-expense", {
       method: "DELETE",
       body: JSON.stringify({
@@ -151,6 +129,7 @@ function NewGroup() {
 
     if (response.ok) {
       toast.success("Expense deleted");
+      getExpenses();
     } else {
       toast.error("Error while deleting expense");
     }
@@ -165,6 +144,27 @@ function NewGroup() {
 
   // Convert amounts to the selected currency
   const convertAmount = (amount) => (amount * conversionRate).toFixed(2);
+
+  
+  useEffect(() => {
+    getExpenses();
+    getGroup().then(() => {
+      setSelectedMembers(JSON.parse(localStorage.getItem("group"))?.members);
+    });
+
+    return () => {
+      localStorage.removeItem("group");
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <div
@@ -298,7 +298,7 @@ function NewGroup() {
   <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-full md:w-[60%] lg:w-[50%] m-3">
     <h2 className="text-center text-xl font-semibold">Expenses</h2>
     <div className="text-start">
-      {expenses.map((expense, index) => (
+      {expenses.map((expense) => (
         <div
           key={expense?._id}
           className="border-b border-gray-300 p-1 flex items-center"

@@ -48,7 +48,7 @@ function AddGroups() {
 
   useEffect(() => {
     getGroups();
-  }, [logged]);
+}, [isModalOpen]);
 
   async function handleCreateGroup(event) {
     event.preventDefault();

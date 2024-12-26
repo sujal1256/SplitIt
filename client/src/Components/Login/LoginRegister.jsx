@@ -113,6 +113,7 @@ function LoginRegister() {
 
       if (response.ok) {
         toast.success("Signed Up successfully");
+        window.location.reload();
       } else {
         toast.error(data.message);
       }

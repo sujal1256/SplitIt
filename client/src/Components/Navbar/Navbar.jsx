@@ -17,6 +17,7 @@ function Navbar() {
 
     if (response.ok) {
       toast.success("Logged out");
+      window.location.href = "/";
     } else {
       toast.error("Error logging out");
     }
