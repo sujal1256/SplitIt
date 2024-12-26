@@ -22,20 +22,20 @@ function LoginRegister() {
     registerPhone: "",
     registerPassword: "",
   });
+  const [loginUtil, setLoginUtils] = useState({
+    loginEmail: "",
+    loginPassword: "",
+  });
 
-  const [loginEmail, setLoginEmail] = useState("");
-  const [loginPassword, setLoginPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
-    if (!loginEmail || !loginPassword) {
+    if (!loginUtil.loginEmail || !loginUtil.loginPassword) {
       toast.error("Please fill all the fields");
       return;
     }
-    if (!validateEmail(loginEmail)) {
+    if (!validateEmail(loginUtil.loginEmail)) {
       toast.error("Please enter a valid email address");
       return;
     }
@@ -44,8 +44,8 @@ function LoginRegister() {
       const response = await fetch("/api/v1/user/login", {
         method: "POST",
         body: JSON.stringify({
-          userEmail: loginEmail,
-          password: loginPassword,
+          userEmail: loginUtil.loginEmail,
+          password: loginUtil.loginPassword,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -56,8 +56,7 @@ function LoginRegister() {
 
       if (response.ok) {
         toast.success("Logged In successfully");
-        navigate("/");
-        window.location.reload();
+        window.location.href = "/";
       } else {
         toast.error(data.message);
       }
@@ -94,6 +93,12 @@ function LoginRegister() {
       toast.error("Please enter a valid email address");
       return;
     }
+
+    if (!agreedToTerms) {
+      toast.error("Please agree to the terms of service");
+      return;
+    }
+
     try {
       const response = await fetch("/api/v1/user/register", {
         // Fix typo in endpoint
@@ -113,7 +118,7 @@ function LoginRegister() {
 
       if (response.ok) {
         toast.success("Signed Up successfully");
-        window.location.reload();
+        setAction("");
       } else {
         toast.error(data.message);
       }
@@ -156,8 +161,14 @@ function LoginRegister() {
                   <input
                     type="text"
                     placeholder="Email"
-                    onChange={(e) => setLoginEmail(e.target.value)}
+                    onChange={(e) =>
+                      setLoginUtils({
+                        ...loginUtil,
+                        loginEmail: e.target.value,
+                      })
+                    }
                     required
+                    value={loginUtil.loginEmail}
                     className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                   />
                   <FaUser className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
@@ -167,8 +178,13 @@ function LoginRegister() {
                   <input
                     type={showPassword ? "text" : "password"}
                     placeholder="Password"
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
+                    value={loginUtil.loginPassword}
+                    onChange={(e) => {
+                      setLoginUtils({
+                        ...loginUtil,
+                        loginPassword: e.target.value,
+                      });
+                    }}
                     required
                     className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
                   />
@@ -266,7 +282,7 @@ function LoginRegister() {
 
                 <div className="relative w-full h-8 my-7">
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Phone Number"
                     value={registerUtil.registerPhone}
                     onChange={(e) => {
@@ -313,7 +329,6 @@ function LoginRegister() {
                   type="submit"
                   className="w-full h-11 bg-white border-none outline-none rounded-full shadow-lg cursor-pointer text-lg text-gray-800 font-bold mt-4"
                   onClick={handleRegister}
-                  disabled={!agreedToTerms}
                 >
                   Register
                 </button>
