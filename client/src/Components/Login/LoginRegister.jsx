@@ -139,7 +139,7 @@ function LoginRegister() {
         }}
       >
         <div
-          className={`relative w-[420px] ${
+          className={`relative w-full max-w-[420px] ${
             action === " active" ? "h-[520px]" : "h-[450px]"
           } bg-primary backdrop-blur-lg rounded-lg shadow-lg text-white flex justify-center items-center overflow-hidden transition-height duration-200 ease-in-out`}
         >
@@ -265,7 +265,7 @@ function LoginRegister() {
 
                 <div className="relative w-full h-8 my-7">
                   <input
-                    type="number"
+                    type="text"
                     placeholder="Phone Number"
                     value={registerUtil.registerPhone}
                     onChange={(e) => {
@@ -280,10 +280,11 @@ function LoginRegister() {
                   <FaPhone className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
-                <div className="relative w-full h-12 my-7">
+                <div className="relative w-full h-8 my-7">
                   <input
-                    type={showPassword ? "text" : "password"}
+                    type="password"
                     placeholder="Password"
+                    required
                     value={registerUtil.registerPassword}
                     onChange={(e) => {
                       setRegisterUtils({
@@ -291,48 +292,30 @@ function LoginRegister() {
                         registerPassword: e.target.value,
                       });
                     }}
-                    required
-                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
+                    className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white p-5 placeholder-white"
                   />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white"
-                  >
-                    {showPassword ? (
-                      <FaEye className="text-white" />
-                    ) : (
-                      <FaEyeSlash className="text-white" />
-                    )}
-                  </button>
+                  <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg" />
                 </div>
 
-                <div className="flex justify-start text-sm my-0 mx-0.5">
+                <div className="flex justify-between text-sm my-0 mx-0.5">
                   <label>
                     <input
                       type="checkbox"
                       className="accent-white mr-1"
-                      onChange={(e) => setAgreedToTerms(e.target.checked)}
+                      onChange={() => setAgreedToTerms(!agreedToTerms)}
                     />
-                    I agree to terms & conditions
+                    I agree to the Terms of Service
                   </label>
                 </div>
 
                 <button
                   type="submit"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (agreedToTerms) {
-                      handleRegister(e);
-                    } else {
-                      toast.error("You must agree to terms and conditions.");
-                    }
-                  }}
                   className="w-full h-11 bg-white border-none outline-none rounded-full shadow-lg cursor-pointer text-lg text-gray-800 font-bold mt-4"
+                  onClick={handleRegister}
+                  disabled={!agreedToTerms}
                 >
                   Register
                 </button>
-
                 <div className="text-sm text-center my-5">
                   <p>
                     Already have an account?{" "}

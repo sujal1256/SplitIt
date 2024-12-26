@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 import { Link } from "react-router-dom";
 import noGroupfound from "../Assets/noGroupfound.avif";
-import HomeBack from "../Assets/HomeBack.jpg"
 
 function AddGroups() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -39,7 +38,6 @@ function AddGroups() {
     });
 
     const data = await response.json();
-    console.log(data);
 
     if (response.ok) {
       toast.success("Group Deleted");
@@ -53,7 +51,7 @@ function AddGroups() {
   }, [logged]);
 
   async function handleCreateGroup(event) {
-    event.preventDefault(); // Prevent form default submission
+    event.preventDefault();
 
     const response = await fetch("api/v1/group/create-group", {
       method: "POST",
@@ -102,69 +100,70 @@ function AddGroups() {
       <div className="bottom-5 right-5 fixed z-10">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-32 h-11 cursor-pointer font-semibold bg-primary text-black border-2 border-primary rounded-lg shadow-lg hover:bg-secondary"
+          className="w-32 h-11 cursor-pointer font-semibold bg-primary text-black border-2 border-text-colour rounded-lg shadow-lg hover:bg-secondary"
         >
           Create Group
         </button>
       </div>
 
       {/* Groups Display */}
-      <div className="w-[90%] text-center m-12 flex flex-wrap gap-10 justify-center ">
-        {groups?.length > 0 ? (
-          groups.map((group) => (
-            <Link
-              to={"/group?g=" + group._id}
-              key={group._id}
-              className="w-[calc(50%-30px)] border-2 border-primary bg-gradient-to-l from-primary to-secondary rounded-lg p-4 shadow-md text-start hover:border-Accent hover:shadow-xl"
+<div className="w-full flex justify-center items-center sm:py-12">
+  <div className="w-[90%] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 py-2">
+    {groups?.length > 0 ? (
+      groups.map((group) => (
+        <Link
+          to={"/group?g=" + group._id}
+          key={group._id}
+          className="border-2 border-primary bg-gradient-to-l from-primary to-secondary rounded-lg p-4 shadow-md text-start hover:border-accent hover:shadow-xl"
+        >
+          <div className="relative group">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                handleDelete(group._id);
+              }}
+              className="w-16 h-11 cursor-pointer font-semibold bg-primary text-white border-2 border-secondary rounded-lg shadow-lg absolute bottom-0 right-0 hidden group-hover:block"
             >
-              <div className="relative group">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    handleDelete(group._id);
-                  }}
-                  className="w-16 h-11 cursor-pointer font-semibold bg-primary text-white border-2 border-secondary rounded-lg shadow-lg absolute bottom-0 right-0 hidden group-hover:block"
-                >
-                  Delete
-                </button>
-                <h3 className="font-semibold text-center text-xl">
-                  Group Name : {group.groupName}
-                </h3>
-                <div className="members">
-                  {group.members.map((member, index) => (
-                    <div key={index} className="member">
-                      <p>
-                        <bold>Member</bold> : {member.memberName}
-                      </p>
-                    </div>
-                  ))}
+              Delete
+            </button>
+            <h3 className="font-semibold text-center text-lg sm:text-xl">
+              Group Name: {group.groupName}
+            </h3>
+            <div className="members">
+              {group.members.map((member, index) => (
+                <div key={index} className="member">
+                  <p>Member: {member.memberName}</p>
                 </div>
-                <h3>Group Description : {group.groupDescription}</h3>
-              </div>
-            </Link>
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center text-center bg-white p-5">
-            <img
-              src={noGroupfound} // Replace with your icon path
-              alt="No Data Icon"
-              className="w-2/3 rounded-md"
-            />
-            <h2 className="text-xl font-semibold text-gray-800">
-              You have no groups yet
-            </h2>
-            <p className="text-black">
-              It only takes a few seconds to create group and add members.
-            </p>
+              ))}
+            </div>
+            <h3>Group Description: {group.groupDescription}</h3>
           </div>
-        )}
+        </Link>
+      ))
+    ) : (
+      <div className="flex flex-col items-center justify-center text-center bg-white p-5 rounded-md">
+        <img
+          src={noGroupfound}
+          alt="No Data Icon"
+          className="w-2/3 sm:w-1/2"
+        />
+        <h2 className="text-lg sm:text-xl font-semibold text-gray-800">
+          You have no groups yet
+        </h2>
+        <p className="text-black">
+          It only takes a few seconds to create a group and add members.
+        </p>
       </div>
+    )}
+  </div>
+</div>
+
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white w-2/3 p-5 rounded-lg shadow-lg h-2/3 overflow-y-auto pt-8">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
+          <div className="bg-white w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 p-5 rounded-lg shadow-lg h-2/3 overflow-y-auto pt-8">
             <h2 className="text-lg font-semibold mb-4">Create New Group</h2>
             <form onSubmit={handleCreateGroup}>
               <input
@@ -178,7 +177,7 @@ function AddGroups() {
 
               <h3 className="font-semibold mb-2">Members</h3>
               {newMembers.map((member, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+                <div key={index} className="flex flex-col sm:flex-row gap-2 mb-2">
                   <input
                     type="text"
                     placeholder="Name"
@@ -186,7 +185,7 @@ function AddGroups() {
                     onChange={(e) =>
                       handleMemberChange(index, "name", e.target.value)
                     }
-                    className="w-1/2 border-2 border-gray-300 p-2 rounded-lg"
+                    className="w-full sm:w-1/2 border-2 border-gray-300 p-2 rounded-lg"
                     required
                   />
                   <input
@@ -196,7 +195,7 @@ function AddGroups() {
                     onChange={(e) =>
                       handleMemberChange(index, "email", e.target.value)
                     }
-                    className="w-1/2 border-2 border-gray-300 p-2 rounded-lg"
+                    className="w-full sm:w-1/2 border-2 border-gray-300 p-2 rounded-lg"
                     required
                   />
                 </div>
@@ -239,7 +238,7 @@ function AddGroups() {
                   type="submit"
                   className="bg-primary border-text-colour text-white py-2 px-4 rounded-lg"
                 >
-                  Save Group
+                  Create Group
                 </button>
               </div>
             </form>
