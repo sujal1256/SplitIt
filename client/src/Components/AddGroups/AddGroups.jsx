@@ -41,6 +41,7 @@ function AddGroups() {
 
     if (response.ok) {
       toast.success("Group Deleted");
+      getGroups();
     } else {
       toast.error("Error in deleting the group");
     }
