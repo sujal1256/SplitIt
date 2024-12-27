@@ -57,10 +57,12 @@ function LoginRegister() {
       console.log(data);
 
       if (response.ok) {
-        toast.success("Logged In successfully");
+        toast.success("Logged In successfully",  {
+          className: "toast-mobile",});
         window.location.href = "/";
       } else {
-        toast.error(data.message);
+        toast.error(data.message,  {
+          className: "toast-mobile",});
       }
     } catch (error) {
       console.log("❌  Error in loggin In", error);

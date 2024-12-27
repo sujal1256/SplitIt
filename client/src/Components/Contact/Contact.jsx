@@ -74,7 +74,7 @@ function Contact() {
     <div
       className="min-h-screen bg-gray-100 flex flex-col items-center p-8"
       style={{
-        backgroundImage: `url(${contactBack})`,
+        backgroundImage: `url(/contactBack.jpg)`, 
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",

@@ -5,30 +5,25 @@ import { useNavigate } from "react-router-dom";
 
 
 function LandingPage() {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate(); 
   
   const handleGetStarted = () => {
-      navigate("/login"); // Navigate to the login page
+      navigate("/login"); 
     };  
   
    return (
     <div className="relative ">
-      {/* Background Image */}
       <div
         className="inset-0 bg-cover bg-center fixed -z-10"
         style={{
-          backgroundImage: `url(${BgImg})`, // Use `url()` for the image
+          backgroundImage: `url(${BgImg})`, 
         }}
       ></div>
 
-      {/* Overlay */}
       <div
         className="inset-0 bg-black bg-opacity-50 fixed -z-5 mt-16 pb-9"
       ></div>
-
-      {/* TODO: The scroller is visible...remove that */}
       
-      {/* Content */}
       <div
         className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-6 mt-56 gap-3 overflow-hidden ">
         <h1 className="text-4xl md:text-6xl font-bold flex justify-center">
