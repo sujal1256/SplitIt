@@ -161,7 +161,7 @@ function Contact() {
         </form>
       </div>
 
-      <div className="bg-primary p-8 mt-5 rounded-lg shadow-lg mb-12 w-2/3 text-center">
+      <div className="bg-primary p-8 mt-5 rounded-lg shadow-lg mb-12 w-full text-center">
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
           Frequently Asked Questions
         </h2>
@@ -193,7 +193,7 @@ function Contact() {
         </div>
       </div>
 
-      <div className="bg-white p-8 rounded-lg shadow-lg w-3/4  mb-12">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full  mb-12">
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-6">
           Stay Updated!
         </h2>

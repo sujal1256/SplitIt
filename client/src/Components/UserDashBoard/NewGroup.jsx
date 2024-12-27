@@ -56,8 +56,8 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4">
-      <div className="bg-white w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 p-5 rounded-lg shadow-lg h-2/3 overflow-y-auto pt-8">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-2 sm:p-0">
+      <div className="bg-white w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2 p-4 sm:p-5 rounded-lg shadow-lg h-2/3 overflow-y-auto pt-6 sm:pt-8">
         <h2 className="text-lg font-semibold mb-4">Create New Group</h2>
         <form onSubmit={handleCreateGroup}>
           <input
@@ -92,9 +92,12 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
                 className="w-full sm:w-1/2 border-2 border-gray-300 p-2 rounded-lg"
                 required
               />
+              <hr className="border-black"/>
             </div>
+            
           ))}
 
+          <div className="flex justify-center ">
           <button
             onClick={addMemberField}
             type="button"
@@ -109,6 +112,7 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
           >
             Remove Last Member
           </button>
+          </div>
 
           <h2 className="text-lg font-semibold mb-4 mt-3">Group Description</h2>
           <input

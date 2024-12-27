@@ -11,14 +11,25 @@ function About() {
   return (
     <div className="min-h-screen w-full  overflow-hidden">
   
-  <section className="text-center text-white py-20 px-4 " 
-   style={{ backgroundImage: `url(${bgAbout2})`, backgroundSize: 'cover' }}
-     >
-        <h1 className="text-4xl font-bold mb-4 ">Welcome to SplitIt</h1>
-        <p className="text-lg md:text-2xl max-w-3xl mx-auto ">
-          Simplifying expense management for groups of all sizes. Split, track,
-          and settle expenses seamlessly.
-        </p>
+        <section
+        className="relative text-center text-white py-20 px-4"
+        style={{
+          backgroundImage: `url(${bgAbout2})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* Black Overlay */}
+        <div className="absolute inset-0 bg-black opacity-40"></div>
+
+        {/* Content */}
+        <div className="relative z-10">
+          <h1 className="text-4xl font-bold mb-4">Welcome to SplitIt</h1>
+          <p className="text-lg md:text-2xl max-w-3xl mx-auto">
+            Simplifying expense management for groups of all sizes. Split, track, and
+            settle expenses seamlessly.
+          </p>
+        </div>
       </section>
 
       <div>
@@ -60,27 +71,27 @@ function About() {
 
       <section className="py-16 px-6 bg-primary" style={{ backgroundImage: `url(${bgAbout3})`, backgroundSize: 'cover' }}>
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-6">How It Works</h2>
+          <h2 className="text-3xl font-bold mb-6 border-2 border-black rounded-lg p-1 bg-primary">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div>
+            <div className="border-2 border-black rounded-lg p-1 bg-primary">
               <h3 className="text-xl font-semibold">1. Create Groups</h3>
               <p className="text-black-600 mt-2">
                 Start by creating a group or joining one.
               </p>
             </div>
-            <div>
+            <div className="border-2 border-black rounded-lg p-1 bg-primary">
               <h3 className="text-xl font-semibold">2. Add Expenses</h3>
               <p className="text-black-600 mt-2">
                 Log expenses and payments easily.
               </p>
             </div>
-            <div>
+            <div className="border-2 border-black rounded-lg p-1 bg-primary">
               <h3 className="text-xl font-semibold">3. Track Balances</h3>
               <p className="text-black-600 mt-2">
                 See who owes what in real-time.
               </p>
             </div>
-            <div>
+            <div className="border-2 border-black rounded-lg p-1 bg-primary">
               <h3 className="text-xl font-semibold">4. Settle Up</h3>
               <p className="text-black-600 mt-2">
                 Pay or get paid with a single tap.
@@ -136,8 +147,8 @@ function About() {
               <p>Leading back-end developer</p>
               <div className="flex justify-center gap-9 text-3xl p-2">
                 <a href=""><FaWhatsapp /></a>
-                <a href=""><FaLinkedin /></a>
-                <a href=""><FaInstagramSquare /></a>
+                <a href="https://www.linkedin.com/in/sujal-malhotra/"><FaLinkedin /></a>
+                <a href="https://www.instagram.com/msujal29/"><FaInstagramSquare /></a>
               </div>
             </div>
           </div>

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import logo from "../Assets/logo.png";
-import { Link } from "react-router-dom";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 import { toast } from "react-toastify";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation(); // Get the current location
   const logged = checkUserLoggedIn();
 
   const handleLogout = async () => {
@@ -23,6 +24,11 @@ function Navbar() {
     }
   };
 
+  const getLinkClass = (path) =>
+    location.pathname === path
+      ? "block text-text-colour no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:-translate-y-1" // Highlighted link style
+      : "block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"; // Default link style
+
   return (
     <>
       <nav className="bg-primary p-4 sticky top-0 z-50 shadow-lg">
@@ -34,6 +40,14 @@ function Navbar() {
               Split-It
             </h1>
           </div>
+
+          <div className="flex justify-between items-stretch ">
+          {/* Welcome Text */}
+          {logged.loggedIn ? (
+            <p className="text-base md:text-2xl text-text-colour font-bold cursor-pointer pt-1 pr-2">
+              WELCOME {logged.user?.userName.toUpperCase()} !!
+            </p>
+          ) : null}
 
           {/* Mobile Menu Toggle */}
           <button
@@ -52,58 +66,37 @@ function Navbar() {
             {logged.loggedIn ? (
               <>
                 <li className="ml-5">
-                  <Link
-                    to="/"
-                    className="block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"
-                  >
+                  <Link to="/" className={getLinkClass("/")}>
                     Home
                   </Link>
                 </li>
                 <li className="ml-5">
-                  <Link
-                    to="/about"
-                    className="block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"
-                  >
+                  <Link to="/about" className={getLinkClass("/about")}>
                     About
                   </Link>
                 </li>
                 <li className="ml-5">
-                  <Link
-                    to="/contact"
-                    className="block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"
-                  >
+                  <Link to="/contact" className={getLinkClass("/contact")}>
                     Contact
                   </Link>
                 </li>
-                <li className="ml-5 relative group">
-                  {/* Welcome Text */}
-                  <p className="text-lg text-white font-bold cursor-pointer">
-                    Welcome {logged.user?.userName} !!
-                  </p>
-
-                  {/* Dropdown Menu */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 bg-primary border border-text-colour rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Link
-                      onClick={handleLogout}
+                <li className="ml-5">
+                  <Link onClick={handleLogout}
                       to="/"
-                      className="block px-4 py-2 text-sm font-medium text-white no-underline hover:bg-secondary hover:text-text-colour rounded-lg"
-                    >
-                      LOGOUT
-                    </Link>
-                  </div>
+                      className={getLinkClass("/logOut")}>
+                    LogOut
+                  </Link>
                 </li>
               </>
             ) : (
               <li className="ml-5">
-                <Link
-                  to="/login"
-                  className="block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"
-                >
+                <Link to="/login" className={getLinkClass("/login")}>
                   Login
                 </Link>
               </li>
             )}
           </ul>
+          </div>
         </div>
       </nav>
     </>

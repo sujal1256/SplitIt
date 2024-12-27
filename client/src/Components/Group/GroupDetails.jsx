@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
 import { toast } from "react-toastify";
 import TotalExpenses from "./TotalExpenses.jsx";
+import { FaTrash } from "react-icons/fa";
+
 
 function GroupDetails() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
@@ -174,7 +176,7 @@ function GroupDetails() {
       </div>
 
       {/* Extra Tabs */}
-      <div className="flex flex-wrap justify-center gap-2 mb-2">
+      {/* <div className="flex flex-wrap justify-center gap-2 mb-2">
         <div className="border-2 border-text-colour p-2 sm:p-3 rounded-lg text-white bg-primary w-2/3 sm:w-auto text-center">
           <h2>Settle up</h2>
         </div>
@@ -187,7 +189,7 @@ function GroupDetails() {
         <div className="border-2 border-text-colour p-2 sm:p-3 rounded-lg text-white bg-primary w-2/3 sm:w-auto text-center">
           <h2>Balance</h2>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex flex-col items-center">
         {/* Responsive Input Form */}
@@ -201,9 +203,9 @@ function GroupDetails() {
         ) : null}
 
         {(showForm || !isMobile) && (
-          <div className="flex justify-center w-full md:w-2/3">
-            <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 w-full">
-              <h2 className="text-center text-xl font-bold pb-4">
+          <div className="flex justify-center w-full sm:w-3/4 md:w-2/3 lg:w-1/2">
+            <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 w-full sm:full">
+              <h2 className="text-center text-xl font-bold pb-4 cursor-pointer">
                 Add New Expense
               </h2>
               <div className="flex flex-col gap-2">
@@ -265,14 +267,14 @@ function GroupDetails() {
                 </div>
                 <button
                   onClick={addExpense}
-                  className="bg-primary text-white px-4 py-2 rounded-lg text-xl"
+                  className="bg-secondary border-2 border-black text-black px-4 py-2 rounded-lg text-xl"
                 >
                   Add Expense
                 </button>
                 {isMobile && (
                   <button
                     onClick={() => setShowForm(false)} // Hide the form on click
-                    className="bg-secondary text-white px-4 py-2 rounded-lg text-xl mt-2"
+                    className="bg-secondary border-2 border-black text-black px-4 py-2 rounded-lg text-xl mt-2 hover:bg-primary"
                   >
                     Cancel
                   </button>
@@ -283,49 +285,50 @@ function GroupDetails() {
         )}
       </div>
 
-      <div className="flex flex-wrap justify-center gap-4 md:gap-16">
-        {/* Expenses Div */}
-        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-full md:w-[60%] lg:w-[50%] m-3">
-          <h2 className="text-center text-xl font-semibold">Expenses</h2>
-          <div className="text-start">
-            {expenses.map((expense) => (
-              <div
-                key={expense?._id}
-                className="border-b border-gray-300 p-1 flex items-center"
-              >
-                <div className="flex-1">
-                  <p className="font-semibold">{expense.expenseName}</p>
-                  {/* FIXME: <p className="text-sm text-gray-200">{expense.date}</p> */}
-                </div>
-                <p
-                  className={`text-right font-bold text-lg bg-background-color p-1 border-2 border-text-colour rounded-lg ${
-                    expense.memberWhoPaid == logged?.user?.userId
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {expense.memberWhoPaid == logged?.user?.userId
-                    ? `+ ${expense.totalAmountLent.toFixed(2)}`
-                    : `- ${expense.amountToBePaid.toFixed(2)}`}
-                </p>
-                <button
-                  onClick={() => handleDelete(expense._id)}
-                  className="border-2 border-text-colour p-1 ml-2 rounded-lg text-sm text-text-colour bg-secondary"
-                >
-                  Delete
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
 
-        {/* Total Expenses Div */}
-        <TotalExpenses
-          totalTransaction={totalTransaction}
-          memberTransactions={memberTransactions}
-          selectedCurrency={selectedCurrency}
-        />
-      </div>
+      <div className="flex flex-wrap justify-center gap-4 md:gap-16 ">
+  {/* Expenses Div */}
+  <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-full sm:w-[75%] md:w-[65%] lg:w-[50%] m-3">
+    <h2 className="text-center text-xl font-semibold">Expenses</h2>
+    <div className="text-start">
+      {expenses.map((expense) => (
+        <div
+          key={expense?._id}
+          className="border-b border-gray-300 p-1 flex items-center"
+        >
+          <div className="flex-1">
+            <p className="font-semibold">{expense.expenseName}</p>
+            {/* FIXME: <p className="text-sm text-gray-200">{expense.date}</p> */}
+          </div>
+          <p
+            className={`text-right font-bold text-lg bg-background-color p-1 border-2 border-text-colour rounded-lg ${
+              expense.memberWhoPaid == logged?.user?.userId
+                ? "text-green-500"
+                : "text-red-500"
+            }`}
+          >
+            {expense.memberWhoPaid == logged?.user?.userId
+              ? `+ ${expense.totalAmountLent.toFixed(2)}`
+              : `- ${expense.amountToBePaid.toFixed(2)}`}
+          </p>
+          <button
+            onClick={() => handleDelete(expense._id)}
+            className="border-2 border-text-colour p-1 ml-2 rounded-lg text-sm text-text-colour bg-secondary"
+          >
+            <FaTrash />
+          </button>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* Total Expenses Div */}
+  <TotalExpenses
+    totalTransaction={totalTransaction}
+    memberTransactions={memberTransactions}
+    selectedCurrency={selectedCurrency}
+  />
+</div>
 
       {/* Currency Converter Modal */}
       {showConverter && (

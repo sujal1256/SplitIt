@@ -14,4 +14,11 @@ body{
   font-family: "Open Sans", sans-serif;
   }
 
+@media (max-width: 768px) {
+    .toast-mobile {
+      width: 75%;
+      margin-left: auto;
+      
+    }
+}
 
