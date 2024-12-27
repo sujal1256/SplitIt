@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-import {toast} from 'react-toastify'
-
-function NewGroup({setIsModalOpen, newMembers, setNewMembers}) {
-      const [newGroupName, setNewGroupName] = useState("");
-      const [groupDesc, setGroupDesc] = useState("");
+import { toast } from "react-toastify";
+import { validateEmail } from "../../utils/regexCheck.js";
+function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
+  const [newGroupName, setNewGroupName] = useState("");
+  const [groupDesc, setGroupDesc] = useState("");
 
   async function handleCreateGroup(event) {
     event.preventDefault();
+
+    if (newMembers.some((member) => validateEmail(member.email) === false)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
 
     const response = await fetch("api/v1/group/create-group", {
       method: "POST",

@@ -3,11 +3,9 @@ logs
 *.log
 npm-debug.log*
 
-<<<<<<< HEAD
-=======
-.env
->>>>>>> fdb4d9d4a5a43bf0352ae4bfb458a2214a14914b
 package-lock.json
+
+.env 
 
 # Runtime data
 pids
