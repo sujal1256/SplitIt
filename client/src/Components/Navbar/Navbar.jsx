@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
@@ -8,6 +8,7 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation(); // Get the current location
   const logged = checkUserLoggedIn();
+  const menuRef = useRef(null); // Reference for the menu
 
   const handleLogout = async () => {
     const response = await fetch("/api/v1/user/logout", {
@@ -17,10 +18,12 @@ function Navbar() {
     const json = await response.json();
 
     if (response.ok) {
-      toast.success("Logged out");
+      toast.success("Logged out", {
+        className: "toast-mobile",});
       window.location.href = "/";
     } else {
-      toast.error("Error logging out");
+      toast.error("Error logging out", {
+        className: "toast-mobile",});
     }
   };
 
@@ -28,6 +31,20 @@ function Navbar() {
     location.pathname === path
       ? "block text-text-colour no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:-translate-y-1" // Highlighted link style
       : "block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"; // Default link style
+
+  useEffect(() => {
+    // Function to close the menu when clicking outside
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -41,61 +58,63 @@ function Navbar() {
             </h1>
           </div>
 
-          <div className="flex justify-between items-stretch ">
-          {/* Welcome Text */}
-          {logged.loggedIn ? (
-            <p className="text-base md:text-2xl text-text-colour font-bold cursor-pointer pt-1 pr-2">
-              WELCOME {logged.user?.userName.toUpperCase()} !!
-            </p>
-          ) : null}
-
-          {/* Mobile Menu Toggle */}
-          <button
-            className="md:hidden text-white text-2xl focus:outline-none"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            ☰
-          </button>
-
-          {/* Navigation Links */}
-          <ul
-            className={`${
-              isMenuOpen ? "block" : "hidden"
-            } md:flex list-none m-0 py-2 absolute md:relative top-16 md:top-0 left-0 w-full md:w-auto bg-primary md:bg-transparent md:flex-row md:items-center transition-all duration-300`}
-          >
+          <div className="flex justify-between items-stretch" ref={menuRef}>
+            {/* Welcome Text */}
             {logged.loggedIn ? (
-              <>
-                <li className="ml-5">
-                  <Link to="/" className={getLinkClass("/")}>
-                    Home
-                  </Link>
-                </li>
-                <li className="ml-5">
-                  <Link to="/about" className={getLinkClass("/about")}>
-                    About
-                  </Link>
-                </li>
-                <li className="ml-5">
-                  <Link to="/contact" className={getLinkClass("/contact")}>
-                    Contact
-                  </Link>
-                </li>
-                <li className="ml-5">
-                  <Link onClick={handleLogout}
+              <p className="text-base md:text-2xl text-text-colour font-bold cursor-pointer pt-1 pr-2">
+                WELCOME {logged.user?.userName.toUpperCase()} !!
+              </p>
+            ) : null}
+
+            {/* Mobile Menu Toggle */}
+            <button
+              className="md:hidden text-white text-2xl focus:outline-none"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              ☰
+            </button>
+
+            {/* Navigation Links */}
+            <ul
+              className={`${
+                isMenuOpen ? "block" : "hidden"
+              } md:flex list-none m-0 py-2 absolute md:relative top-16 md:top-0 left-0 w-full md:w-auto bg-primary md:bg-transparent md:flex-row md:items-center transition-all duration-300`}
+            >
+              {logged.loggedIn ? (
+                <>
+                  <li className="ml-5">
+                    <Link to="/" className={getLinkClass("/")}>
+                      Home
+                    </Link>
+                  </li>
+                  <li className="ml-5">
+                    <Link to="/about" className={getLinkClass("/about")}>
+                      About
+                    </Link>
+                  </li>
+                  <li className="ml-5">
+                    <Link to="/contact" className={getLinkClass("/contact")}>
+                      Contact
+                    </Link>
+                  </li>
+                  <li className="ml-5">
+                    <Link
+                      onClick={handleLogout}
                       to="/"
-                      className={getLinkClass("/logOut")}>
-                    LogOut
+                      className={getLinkClass("/logOut")}
+                    >
+                      LogOut
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <li className="ml-5">
+                  <Link to="/login" className={getLinkClass("/login")}>
+                    Login
                   </Link>
                 </li>
-              </>
-            ) : (
-              <li className="ml-5">
-                <Link to="/login" className={getLinkClass("/login")}>
-                  Login
-                </Link>
-              </li>
-            )}
-          </ul>
+              )}
+            </ul>
           </div>
         </div>
       </nav>

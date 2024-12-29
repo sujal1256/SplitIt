@@ -77,7 +77,8 @@ function GroupDetails() {
 
   const addExpense = async () => {
     if (!expenseTitle || !expenseDate || selectedMembers.length === 0) {
-      toast.error("Fill in all the fields!");
+      toast.error("Fill in all the fields!", {
+        className: "toast-mobile",});
       return;
     }
 
@@ -97,9 +98,11 @@ function GroupDetails() {
     console.log(data);
 
     if (response.ok) {
-      toast.success("Expense added");
+      toast.success("Expense added", {
+        className: "toast-mobile",});
     } else {
-      toast.error("Error while adding expense");
+      toast.error("Error while adding expense", {
+        className: "toast-mobile",});
     }
 
     getExpenses();
@@ -125,10 +128,12 @@ function GroupDetails() {
     console.log(data);
 
     if (response.ok) {
-      toast.success("Expense deleted");
+      toast.success("Expense deleted", {
+        className: "toast-mobile",});
       getExpenses();
     } else {
-      toast.error("Error while deleting expense");
+      toast.error("Error while deleting expense", {
+        className: "toast-mobile",});
     }
   };
 

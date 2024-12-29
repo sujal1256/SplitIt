@@ -39,10 +39,12 @@ function Groups() {
     const data = await response.json();
 
     if (response.ok) {
-      toast.success("Group Deleted");
+      toast.success("Group Deleted", {
+        className: "toast-mobile",});
       getGroups();
     } else {
-      toast.error("Error in deleting the group");
+      toast.error("Error in deleting the group", {
+        className: "toast-mobile",});
     }
   }
 

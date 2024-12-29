@@ -9,7 +9,8 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
     event.preventDefault();
 
     if (newMembers.some((member) => validateEmail(member.email) === false)) {
-      toast.error("Please enter a valid email address");
+      toast.error("Please enter a valid email address", {
+        className: "toast-mobile",});
       return;
     }
 
@@ -27,9 +28,11 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
     const data = await response.json();
 
     if (response.ok) {
-      toast.success(data.message);
+      toast.success(data.message, {
+        className: "toast-mobile",});
     } else {
-      toast.error("Error in creating group");
+      toast.error("Error in creating group", {
+        className: "toast-mobile",});
     }
 
     setIsModalOpen(false);
@@ -45,7 +48,8 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
     if (newMembers.length > 1) {
       setNewMembers(newMembers.slice(0, -1));
     } else {
-      toast.error("You need to have at least one member");
+      toast.error("You need to have at least one member", {
+        className: "toast-mobile",});
     }
   };
 

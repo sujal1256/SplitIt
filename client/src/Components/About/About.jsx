@@ -1,7 +1,6 @@
 import React from "react";
 import bgAbout from "../Assets/bg-about.jpeg"
 import bgAbout2 from "../Assets/bg-about2.jpeg"
-import bgAbout3 from "../Assets/bg-about3.jpeg"
 import dev1 from "../Assets/dev1.jpg"
 import dev2 from "../Assets/dev2.jpg"
 import { FaWhatsapp , FaLinkedin, FaInstagramSquare} from "react-icons/fa";
@@ -69,7 +68,7 @@ function About() {
       </section>
       </div>
 
-      <section className="py-16 px-6 bg-primary" style={{ backgroundImage: `url(${bgAbout3})`, backgroundSize: 'cover' }}>
+      <section className="py-16 px-6 bg-primary" style={{ backgroundImage: `url(${bgAbout})`, backgroundSize: 'cover' }}>
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-6 border-2 border-black rounded-lg p-1 bg-primary">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">

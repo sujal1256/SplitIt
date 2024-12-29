@@ -15,7 +15,8 @@ function Contact() {
   async function handleSubscribe(e) {
     e.preventDefault();
     if (!validateEmail(subscribeEmail)) {
-      toast.error("Please enter a valid email address");
+      toast.error("Please enter a valid email address", {
+        className: "toast-mobile",});
       return;
     }
     const response = await fetch("/api/v1/mail/subscription", {
@@ -35,7 +36,8 @@ function Contact() {
     }
 
     setSubscribeEmail("");
-    toast.success("Subscribed successfully!");
+    toast.success("Subscribed successfully!", {
+      className: "toast-mobile",});
 
   }
 
@@ -59,7 +61,8 @@ function Contact() {
     });
 
     if (response.ok) {
-      toast.success("Message sent successfully!");
+      toast.success("Message sent successfully!", {
+        className: "toast-mobile",});
     } else {
       console.error("An error occurred while sending the message");
     }

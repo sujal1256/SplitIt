@@ -85,21 +85,25 @@ function LoginRegister() {
       !registerUtil.registerPhone ||
       !registerUtil.registerPassword
     ) {
-      toast.error("Please fill all the fields");
+      toast.error("Please fill all the fields", {
+        className: "toast-mobile",});
       return;
     }
 
     if (!validatePhoneNumber(registerUtil.registerPhone)) {
-      toast.error("Please enter a valid phone number");
+      toast.error("Please enter a valid phone number", {
+        className: "toast-mobile",});
       return;
     }
     if (!validateEmail(registerUtil.registerEmail)) {
-      toast.error("Please enter a valid email address");
+      toast.error("Please enter a valid email address", {
+        className: "toast-mobile",});
       return;
     }
 
     if (!agreedToTerms) {
-      toast.error("Please agree to the terms of service");
+      toast.error("Please agree to the terms of service", {
+        className: "toast-mobile",});
       return;
     }
 
@@ -121,10 +125,12 @@ function LoginRegister() {
       console.log(data);
 
       if (response.ok) {
-        toast.success("Signed Up successfully");
+        toast.success("Signed Up successfully", {
+          className: "toast-mobile",});
         setAction("");
       } else {
-        toast.error(data.message);
+        toast.error(data.message, {
+          className: "toast-mobile",});
       }
     } catch (error) {
       console.log("❌ Error in registering", error);
