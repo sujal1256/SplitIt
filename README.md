@@ -1,5 +1,5 @@
 # SplitIt
-# Introduction
+
 SplitIt is a MERN-based expense tracker and manager designed to make splitting expenses between groups and managing your personal finances seamless and efficient. The application provides a user-friendly interface and ensures responsiveness across all devices.
 
 # Features
@@ -33,7 +33,6 @@ This project leverages several key concepts in modern web development, including
   Make sure you have the following installed on your system:
   * React
   * Node.js
-  * Express js
   * Mongo DB
 
 * **Steps**
@@ -48,13 +47,15 @@ This project leverages several key concepts in modern web development, including
 3. Open one Terminal:
    ```
    cd server
-    npm run dev
+   npm install
+   npm run dev
    ```
 
 4. Open another Terminal:
    ```
    cd client
-    npm run dev
+   npm install
+   npm run dev
    ```
 
 
@@ -83,3 +84,4 @@ Contributions are welcome! Please follow these steps:
 * Push to the branch.
 * Open a pull request.
 
+**MADE AND MAINTAINED BY [SUJAL](https://www.linkedin.com/in/sujal-malhotra/) and [SHRIYA](https://www.linkedin.com/in/shriya-seth-a4059b266/)**.
