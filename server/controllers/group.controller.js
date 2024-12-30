@@ -82,12 +82,15 @@ async function storeInvitedUser(req, res) {
       return res.status(500).json(new ApiError(500, "Group not found"));
     }
     let user = await User.findOne({ userEmail: memberEmail });
+    let passwordSent = false;
     if (!user) {
+
       user = new User({
         userName: memberName,
         userEmail: memberEmail,
         password: getRandomPassword(),
       });
+      passwordSent = true;
       sendEmailToNewUserWithPassword(user, group);
       await user.save();
     }
@@ -95,7 +98,7 @@ async function storeInvitedUser(req, res) {
     const member = group.members.find((m) => m.memberEmail == user.userEmail);
 
     if (member) {
-      return res.status(200).redirect("http://localhost:5173");
+      return res.status(200).redirect(process.env.FRONTEND_URL);
     }
 
     group.members.push({
@@ -106,7 +109,7 @@ async function storeInvitedUser(req, res) {
 
     await group.save();
 
-    return res.status(200).redirect("http://localhost:5173");
+    return res.status(200).redirect(`${process.env.FRONTEND_URL}?passwordSent=${passwordSent}`);
   } catch (error) {
     console.log(error);
 

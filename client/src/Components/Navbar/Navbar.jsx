@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 import { toast } from "react-toastify";
@@ -8,6 +8,8 @@ function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation(); // Get the current location
   const logged = checkUserLoggedIn();
+  const [searchParams] = useSearchParams();
+  const [showPasswordToast, setShowPasswordToast] = useState(false);
   const menuRef = useRef(null); // Reference for the menu
 
   const handleLogout = async () => {
@@ -19,11 +21,13 @@ function Navbar() {
 
     if (response.ok) {
       toast.success("Logged out", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
       window.location.href = "/";
     } else {
       toast.error("Error logging out", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     }
   };
 
@@ -33,7 +37,13 @@ function Navbar() {
       : "block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"; // Default link style
 
   useEffect(() => {
-    // Function to close the menu when clicking outside
+    if (searchParams.get("passwordSent") === "true" && !showPasswordToast) {
+      toast.success("Password is sent to your email", {
+        className: "toast-mobile",
+      });
+      setShowPasswordToast(true);
+    }
+
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         setIsMenuOpen(false);
@@ -50,8 +60,10 @@ function Navbar() {
     <>
       <nav className="bg-primary p-4 sticky top-0 z-50 shadow-lg">
         <div className="flex justify-between items-center">
-          {/* Logo */}
-          <div className="flex items-center">
+          <div
+            className="flex items-center"
+            onClick={() => (window.location.href = "/")}
+          >
             <img src={logo} alt="Logo" className="h-8 md:h-10 mr-2" />
             <h1 className="text-white text-xl md:text-2xl font-bold">
               Split-It
@@ -59,14 +71,12 @@ function Navbar() {
           </div>
 
           <div className="flex justify-between items-stretch" ref={menuRef}>
-            {/* Welcome Text */}
             {logged.loggedIn ? (
               <p className="text-base md:text-2xl text-text-colour font-bold cursor-pointer pt-1 pr-2">
                 WELCOME {logged.user?.userName.toUpperCase()} !!
               </p>
             ) : null}
 
-            {/* Mobile Menu Toggle */}
             <button
               className="md:hidden text-white text-2xl focus:outline-none"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -74,7 +84,6 @@ function Navbar() {
               ☰
             </button>
 
-            {/* Navigation Links */}
             <ul
               className={`${
                 isMenuOpen ? "block" : "hidden"
