@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 import { Link } from "react-router-dom";
-import noGroupfound from "../Assets/noGroupfound.avif";
+import noGroupfound from "../Assets/noGroupFound.jpg";
 import NewGroup from "./NewGroup.jsx";
 
 function Groups() {
@@ -10,7 +10,7 @@ function Groups() {
   const [newMembers, setNewMembers] = useState([{ name: "", email: "" }]);
   const logged = checkUserLoggedIn();
   const [groups, setGroups] = useState();
-  const [visibleDeleteButton, setVisibleDeleteButton] = useState(null);
+
 
   async function getGroups() {
     const response = await fetch("/api/v1/user/get-all-groups", {
