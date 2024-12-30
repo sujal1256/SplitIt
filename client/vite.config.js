@@ -1,16 +1,22 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import dotenv from 'dotenv'
 
-// https://vite.dev/config/
+// Manually load the .env file
+dotenv.config()
+
+
+
 export default defineConfig({
   plugins: [react()],
-  server:{
-    proxy:{
+  server: {
+    host: true,
+    proxy: {
       "/api": {
-      target: `http://localhost:2000`,
-      changeOrigin: true,
-      secure: false,
+        target: process.env.BACKEND_URL, // Use the VITE_ prefixed environment variable
+        changeOrigin: true,
+        secure: false,
+      },
     },
-    }
-  }
+  },
 })
