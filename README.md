@@ -2,6 +2,10 @@
 
 SplitIt is a MERN-based expense tracker and manager designed to make splitting expenses between groups and managing your personal finances seamless and efficient. The application provides a user-friendly interface and ensures responsiveness across all devices.
 
+# SnapShot
+![Screenshot 2024-12-30 221706](https://github.com/user-attachments/assets/06273ed9-fa4b-4ccb-8f9f-a767e26dee8d)
+
+
 # Features
 * **_User Authentication_ :** Secure login and registration system to keep user data private and protected.
 * **Group Management :** Create and manage multiple groups for different purposes and add multiple members to each group for effortless expense tracking.
