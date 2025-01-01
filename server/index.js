@@ -31,7 +31,7 @@ app.use(express.static("./public"));
 
 connectToMongoDB();
 app.get("/invite", storeInvitedUser);
-app.get("/check", (req, res) => res.send(process.env.BACKEND_URL));
+app.get("/check", (req, res) => res.send(process.env.BACKEND_URL + "\n" + process.env.FRONTEND_URL));
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/group", groupRouter);
 app.use("/api/v1/expense", expenseRouter);

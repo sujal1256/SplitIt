@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 
+console.log(process.env.BACKEND_URL);
 
 export default defineConfig({
   plugins: [react()],
