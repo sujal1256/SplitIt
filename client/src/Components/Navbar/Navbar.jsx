@@ -30,6 +30,10 @@ function Navbar() {
       toast.success("Logged out", {
         className: "toast-mobile",
       });
+      localStorage.removeItem("accessToken");
+      document.cookie =
+        "accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+
       window.location.href = "/";
     } else {
       toast.error("Error logging out", {
