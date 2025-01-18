@@ -32,7 +32,7 @@ function GroupDetails() {
   async function getExpenses() {
     try {
       const response = await fetch(
-        `api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}`,
+        `${process.env.BBACKEND_URL}/api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}`,
         {
           method: "GET",
           headers: {
@@ -55,7 +55,7 @@ function GroupDetails() {
   async function getGroup() {
     try {
       const response = await fetch(
-        `/api/v1/group/get-group-details?groupId=${searchParams.get("g")}`,
+        `${process.env.BBACKEND_URL}/api/v1/group/get-group-details?groupId=${searchParams.get("g")}`,
         {
           method: "GET",
           headers: {

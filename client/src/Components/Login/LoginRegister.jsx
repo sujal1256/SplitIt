@@ -43,7 +43,7 @@ function LoginRegister() {
     }
 
     try {
-      const response = await fetch("/api/v1/user/login", {
+      const response = await fetch(process.env.BBACKEND_URL +"/api/v1/user/login", {
         method: "POST",
         body: JSON.stringify({
           userEmail: loginUtil.loginEmail,
@@ -108,7 +108,7 @@ function LoginRegister() {
     }
 
     try {
-      const response = await fetch("/api/v1/user/register", {
+      const response = await fetch(process.env.BBACKEND_URL +"/api/v1/user/register", {
         // Fix typo in endpoint
         method: "POST",
         body: JSON.stringify({

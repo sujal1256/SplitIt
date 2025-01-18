@@ -19,7 +19,7 @@ function Contact() {
         className: "toast-mobile",});
       return;
     }
-    const response = await fetch("/api/v1/mail/subscription", {
+    const response = await fetch(process.env.BBACKEND_URL + "/api/v1/mail/subscription", {
       method: "POST",
       body: JSON.stringify({
         email: subscribeEmail,
@@ -48,7 +48,7 @@ function Contact() {
       toast.error("Please enter a valid email address");
       return;
     }
-    const response = await fetch("/api/v1/mail/contact-us", {
+    const response = await fetch(process.env.BBACKEND_URL +"/api/v1/mail/contact-us", {
       method: "POST",
       body: JSON.stringify({
         name: contact.name,
