@@ -16,7 +16,7 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
     }
 
     const response = await fetch(
-      import.meta.env.VITE_BACKEND_URL + "api/v1/group/create-group",
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/group/create-group",
       {
         method: "POST",
         body: JSON.stringify({
