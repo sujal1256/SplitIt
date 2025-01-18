@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 import TotalExpenses from "./TotalExpenses.jsx";
 import { FaTrash } from "react-icons/fa";
 
-
 function GroupDetails() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
   const [conversionRate, setConversionRate] = useState(1); // Default to INR to INR (no conversion)
@@ -32,12 +31,16 @@ function GroupDetails() {
   async function getExpenses() {
     try {
       const response = await fetch(
-        `${process.env.BBACKEND_URL}/api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/v1/expense/get-all-expenses?groupId=${searchParams.get("g")}`,
         {
           method: "GET",
           headers: {
             "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
+          credentials: "include",
         }
       );
 
@@ -55,12 +58,16 @@ function GroupDetails() {
   async function getGroup() {
     try {
       const response = await fetch(
-        `${process.env.BBACKEND_URL}/api/v1/group/get-group-details?groupId=${searchParams.get("g")}`,
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/api/v1/group/get-group-details?groupId=${searchParams.get("g")}`,
         {
           method: "GET",
           headers: {
             "Content-type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
           },
+          credentials: "include",
         }
       );
       const data = await response.json();
@@ -78,31 +85,37 @@ function GroupDetails() {
   const addExpense = async () => {
     if (!expenseTitle || !expenseDate || selectedMembers.length === 0) {
       toast.error("Fill in all the fields!", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
       return;
     }
 
-    const response = await fetch("/api/v1/expense/add-expense", {
-      method: "POST",
-      body: JSON.stringify({
-        groupId: group?.group?._id,
-        memberWhoPaid: logged?.user?.userId,
-        membersIncluded: selectedMembers,
-        amountPaid: Number.parseInt(amount),
-        expenseName: expenseTitle,
-      }),
-      headers: { "Content-type": "application/json" },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/expense/add-expense",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          groupId: group?.group?._id,
+          memberWhoPaid: logged?.user?.userId,
+          membersIncluded: selectedMembers,
+          amountPaid: Number.parseInt(amount),
+          expenseName: expenseTitle,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
 
     const data = await response.json();
     console.log(data);
 
-    if (response.ok) {
-      toast.success("Expense added", {
-        className: "toast-mobile",});
-    } else {
+    if (!response.ok) {
       toast.error("Error while adding expense", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     }
 
     getExpenses();
@@ -114,26 +127,33 @@ function GroupDetails() {
   };
 
   const handleDelete = async (expenseId) => {
-    const response = await fetch("/api/v1/expense/delete-expense", {
-      method: "DELETE",
-      body: JSON.stringify({
-        expenseId,
-      }),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/expense/delete-expense",
+      {
+        method: "DELETE",
+        body: JSON.stringify({
+          expenseId,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
 
     const data = await response.json();
     console.log(data);
 
     if (response.ok) {
       toast.success("Expense deleted", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
       getExpenses();
     } else {
       toast.error("Error while deleting expense", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     }
   };
 
@@ -290,50 +310,49 @@ function GroupDetails() {
         )}
       </div>
 
-
       <div className="flex flex-wrap justify-center gap-4 md:gap-16 ">
-  {/* Expenses Div */}
-  <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-full sm:w-[75%] md:w-[65%] lg:w-[50%] m-3">
-    <h2 className="text-center text-xl font-semibold">Expenses</h2>
-    <div className="text-start">
-      {expenses.map((expense) => (
-        <div
-          key={expense?._id}
-          className="border-b border-gray-300 p-1 flex items-center"
-        >
-          <div className="flex-1">
-            <p className="font-semibold">{expense.expenseName}</p>
-            {/* FIXME: <p className="text-sm text-gray-200">{expense.date}</p> */}
+        {/* Expenses Div */}
+        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-full sm:w-[75%] md:w-[65%] lg:w-[50%] m-3">
+          <h2 className="text-center text-xl font-semibold">Expenses</h2>
+          <div className="text-start">
+            {expenses.map((expense) => (
+              <div
+                key={expense?._id}
+                className="border-b border-gray-300 p-1 flex items-center"
+              >
+                <div className="flex-1">
+                  <p className="font-semibold">{expense.expenseName}</p>
+                  {/* FIXME: <p className="text-sm text-gray-200">{expense.date}</p> */}
+                </div>
+                <p
+                  className={`text-right font-bold text-lg bg-background-color p-1 border-2 border-text-colour rounded-lg ${
+                    expense.memberWhoPaid == logged?.user?.userId
+                      ? "text-green-500"
+                      : "text-red-500"
+                  }`}
+                >
+                  {expense.memberWhoPaid == logged?.user?.userId
+                    ? `+ ${expense.totalAmountLent.toFixed(2)}`
+                    : `- ${expense.amountToBePaid.toFixed(2)}`}
+                </p>
+                <button
+                  onClick={() => handleDelete(expense._id)}
+                  className="border-2 border-text-colour p-1 ml-2 rounded-lg text-sm text-text-colour bg-secondary"
+                >
+                  <FaTrash />
+                </button>
+              </div>
+            ))}
           </div>
-          <p
-            className={`text-right font-bold text-lg bg-background-color p-1 border-2 border-text-colour rounded-lg ${
-              expense.memberWhoPaid == logged?.user?.userId
-                ? "text-green-500"
-                : "text-red-500"
-            }`}
-          >
-            {expense.memberWhoPaid == logged?.user?.userId
-              ? `+ ${expense.totalAmountLent.toFixed(2)}`
-              : `- ${expense.amountToBePaid.toFixed(2)}`}
-          </p>
-          <button
-            onClick={() => handleDelete(expense._id)}
-            className="border-2 border-text-colour p-1 ml-2 rounded-lg text-sm text-text-colour bg-secondary"
-          >
-            <FaTrash />
-          </button>
         </div>
-      ))}
-    </div>
-  </div>
 
-  {/* Total Expenses Div */}
-  <TotalExpenses
-    totalTransaction={totalTransaction}
-    memberTransactions={memberTransactions}
-    selectedCurrency={selectedCurrency}
-  />
-</div>
+        {/* Total Expenses Div */}
+        <TotalExpenses
+          totalTransaction={totalTransaction}
+          memberTransactions={memberTransactions}
+          selectedCurrency={selectedCurrency}
+        />
+      </div>
 
       {/* Currency Converter Modal */}
       {showConverter && (

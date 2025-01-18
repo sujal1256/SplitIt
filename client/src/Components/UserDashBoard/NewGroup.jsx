@@ -10,29 +10,37 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
 
     if (newMembers.some((member) => validateEmail(member.email) === false)) {
       toast.error("Please enter a valid email address", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
       return;
     }
 
-    const response = await fetch("api/v1/group/create-group", {
-      method: "POST",
-      body: JSON.stringify({
-        groupName: newGroupName,
-        members: newMembers,
-        groupDescription: groupDesc,
-      }),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "api/v1/group/create-group",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          groupName: newGroupName,
+          members: newMembers,
+          groupDescription: groupDesc,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
     const data = await response.json();
 
     if (response.ok) {
       toast.success(data.message, {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     } else {
       toast.error("Error in creating group", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     }
 
     setIsModalOpen(false);
@@ -49,7 +57,8 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
       setNewMembers(newMembers.slice(0, -1));
     } else {
       toast.error("You need to have at least one member", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     }
   };
 
@@ -96,26 +105,25 @@ function NewGroup({ setIsModalOpen, newMembers, setNewMembers }) {
                 className="w-full sm:w-1/2 border-2 border-gray-300 p-2 rounded-lg"
                 required
               />
-              <hr className="border-black"/>
+              <hr className="border-black" />
             </div>
-            
           ))}
 
           <div className="flex justify-center ">
-          <button
-            onClick={addMemberField}
-            type="button"
-            className="bg-primary border-text-colour text-white py-2 px-5 mt-3 rounded-lg"
-          >
-            Add Member
-          </button>
-          <button
-            onClick={removeLastMemberField}
-            type="button"
-            className="bg-gray-300 text-black py-2 px-5 mt-3 rounded-lg ml-2"
-          >
-            Remove Last Member
-          </button>
+            <button
+              onClick={addMemberField}
+              type="button"
+              className="bg-primary border-text-colour text-white py-2 px-5 mt-3 rounded-lg"
+            >
+              Add Member
+            </button>
+            <button
+              onClick={removeLastMemberField}
+              type="button"
+              className="bg-gray-300 text-black py-2 px-5 mt-3 rounded-lg ml-2"
+            >
+              Remove Last Member
+            </button>
           </div>
 
           <h2 className="text-lg font-semibold mb-4 mt-3">Group Description</h2>

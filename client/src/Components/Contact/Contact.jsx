@@ -16,18 +16,24 @@ function Contact() {
     e.preventDefault();
     if (!validateEmail(subscribeEmail)) {
       toast.error("Please enter a valid email address", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
       return;
     }
-    const response = await fetch(process.env.BBACKEND_URL + "/api/v1/mail/subscription", {
-      method: "POST",
-      body: JSON.stringify({
-        email: subscribeEmail,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/mail/subscription",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          email: subscribeEmail,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
 
     if (response.ok) {
       console.log("Subscribed successfully!");
@@ -37,8 +43,8 @@ function Contact() {
 
     setSubscribeEmail("");
     toast.success("Subscribed successfully!", {
-      className: "toast-mobile",});
-
+      className: "toast-mobile",
+    });
   }
 
   async function handleSendMessage(e) {
@@ -48,21 +54,27 @@ function Contact() {
       toast.error("Please enter a valid email address");
       return;
     }
-    const response = await fetch(process.env.BBACKEND_URL +"/api/v1/mail/contact-us", {
-      method: "POST",
-      body: JSON.stringify({
-        name: contact.name,
-        email: contact.email,
-        message: contact.message,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/mail/contact-us",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          name: contact.name,
+          email: contact.email,
+          message: contact.message,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
 
     if (response.ok) {
       toast.success("Message sent successfully!", {
-        className: "toast-mobile",});
+        className: "toast-mobile",
+      });
     } else {
       console.error("An error occurred while sending the message");
     }
@@ -77,7 +89,7 @@ function Contact() {
     <div
       className="min-h-screen bg-gray-100 flex flex-col items-center p-8"
       style={{
-        backgroundImage: `url(/contactBack.jpg)`, 
+        backgroundImage: `url(/contactBack.jpg)`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",

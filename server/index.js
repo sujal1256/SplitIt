@@ -1,6 +1,5 @@
 import express, { json, urlencoded } from "express";
 import dotenv from "dotenv";
-import path from "path";
 import { userRouter } from "./routes/user.route.js";
 import { groupRouter } from "./routes/group.route.js";
 import { expenseRouter } from "./routes/expense.route.js";
@@ -15,8 +14,9 @@ const app = express();
 const PORT = process.env.SERVER_PORT;
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL);
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Content-type", "application/json");
   next();
@@ -31,7 +31,9 @@ app.use(express.static("./public"));
 
 connectToMongoDB();
 app.get("/invite", storeInvitedUser);
-app.get("/check", (req, res) => res.send(process.env.BACKEND_URL + "\n" + process.env.FRONTEND_URL));
+app.get("/check", (req, res) =>
+  res.send(process.env.BACKEND_URL + "\n" + process.env.FRONTEND_URL)
+);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/group", groupRouter);
 app.use("/api/v1/expense", expenseRouter);

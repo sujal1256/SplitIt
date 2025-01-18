@@ -1,12 +1,11 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import dotenv from 'dotenv'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import dotenv from "dotenv";
 
 // Manually load the .env file
-dotenv.config()
+dotenv.config();
 
-
-console.log(process.env.BACKEND_URL);
+console.log(process.env.VITE_BACKEND_URL);
 
 export default defineConfig({
   plugins: [react()],
@@ -14,10 +13,10 @@ export default defineConfig({
     host: true,
     proxy: {
       "/api": {
-        target: process.env.BACKEND_URL, // Use the VITE_ prefixed environment variable
+        target: process.env.VITE_BACKEND_URL,
         changeOrigin: true,
         secure: false,
       },
     },
   },
-})
+});

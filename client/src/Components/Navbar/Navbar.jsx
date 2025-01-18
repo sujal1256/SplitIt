@@ -13,10 +13,17 @@ function Navbar() {
   const menuRef = useRef(null); // Reference for the menu
 
   const handleLogout = async () => {
-    const response = await fetch(process.env.BBACKEND_URL +"/api/v1/user/logout", {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-    });
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/user/logout",
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
     const json = await response.json();
 
     if (response.ok) {
@@ -55,8 +62,6 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  
-
 
   return (
     <>

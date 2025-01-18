@@ -60,9 +60,16 @@ async function handleLogin(req, res) {
     }
 
     const token = await user.generateAccessToken();
-    res.cookie("accessToken", token);
+    res.cookie("accessToken", token, {
+      httpOnly: true,
+      sameSite: "None",
+    });
 
-    return res.status(200).json(new ApiResponse(200, user, "User Logged In"));
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, { user, accessToken: token }, "User Logged In")
+      );
   } catch (error) {
     console.log("Error while logging in", error);
     return res.status(400).json(new ApiError(400, "❌ Error in logging in"));
