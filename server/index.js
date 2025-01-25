@@ -31,6 +31,7 @@ app.use(express.static("./public"));
 
 connectToMongoDB();
 app.get("/invite", storeInvitedUser);
+app.get("/",(req, res)=>res.send("Deployed"));
 app.get("/check", (req, res) =>
   res.send(process.env.BACKEND_URL + "\n" + process.env.FRONTEND_URL)
 );
