@@ -29,6 +29,7 @@ function LoginRegister() {
   const [showPassword, setShowPassword] = useState(false);
 
   async function handleLogin(e) {
+
     e.preventDefault();
     if (!loginUtil.loginEmail || !loginUtil.loginPassword) {
       toast.error("Please fill all the fields", {
@@ -64,9 +65,6 @@ function LoginRegister() {
       console.log(data);
 
       if (response.ok) {
-        toast.success("Logged In successfully", {
-          className: "toast-mobile",
-        });
         document.cookie = `accessToken=${data?.data?.accessToken}`;
         localStorage.setItem("accessToken", data?.data?.accessToken);
         window.location.href = "/";

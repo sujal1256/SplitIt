@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 import { Link } from "react-router-dom";
 import noGroupfound from "../Assets/noGroupFound.jpg";
 import NewGroup from "./NewGroup.jsx";
@@ -8,7 +7,6 @@ import NewGroup from "./NewGroup.jsx";
 function Groups() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newMembers, setNewMembers] = useState([{ name: "", email: "" }]);
-  const logged = checkUserLoggedIn();
   const [groups, setGroups] = useState();
 
   async function getGroups() {

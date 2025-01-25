@@ -3,14 +3,18 @@ import { Link, useLocation, useSearchParams } from "react-router-dom";
 import logo from "../Assets/logo.png";
 import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 import { toast } from "react-toastify";
+import { addUser, removeUser } from "../../redux/user.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { use } from "react";
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const location = useLocation(); // Get the current location
-  const logged = checkUserLoggedIn();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const [showPasswordToast, setShowPasswordToast] = useState(false);
-  const menuRef = useRef(null); // Reference for the menu
+  const menuRef = useRef(null);
+  const dispatch = useDispatch();
+  const user = useSelector((store) => store.user);
 
   const handleLogout = async () => {
     const response = await fetch(
@@ -33,6 +37,8 @@ function Navbar() {
       localStorage.removeItem("accessToken");
       document.cookie =
         "accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+      localStorage.removeItem("logged");
+      dispatch(removeUser());
 
       window.location.href = "/";
     } else {
@@ -66,6 +72,31 @@ function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // localStorage.setItem("logged", JSON.stringify({ loggedIn: false, user: {} }));
+
+  useEffect(() => {
+    async function saveLogged() {
+      try {
+        const logged = await checkUserLoggedIn();
+        console.log("saving logged", logged);
+
+        localStorage.setItem("logged", JSON.stringify(logged));
+        dispatch(addUser(logged));
+      } catch (error) {
+        console.error("Error saving logged state:", error);
+      }
+    }
+
+    saveLogged();
+    const interval = setInterval(() => {
+      saveLogged();
+    }, 300000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const logged = user.user;
 
   return (
     <>

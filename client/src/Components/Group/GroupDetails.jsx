@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { checkUserLoggedIn } from "../../utils/userLoggedIn.jsx";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
 import { toast } from "react-toastify";
@@ -9,10 +8,12 @@ import { FaTrash } from "react-icons/fa";
 
 function GroupDetails() {
   const [selectedCurrency, setSelectedCurrency] = useState("INR");
-  const [conversionRate, setConversionRate] = useState(1); // Default to INR to INR (no conversion)
+  const [conversionRate, setConversionRate] = useState(1);
   const [showConverter, setShowConverter] = useState(false);
-  const [tempCurrency, setTempCurrency] = useState("INR"); // Temporary currency selection while modal is open
-  const logged = checkUserLoggedIn();
+  const [tempCurrency, setTempCurrency] = useState("INR");
+  const user = useSelector((store) => store.user);
+
+  const logged = user.user;
   const [searchParams] = useSearchParams();
   const [expenses, setExpenses] = useState([]);
   const [expenseTitle, setExpenseTitle] = useState([]);
@@ -73,7 +74,6 @@ function GroupDetails() {
       const data = await response.json();
 
       if (response.ok) {
-        // console.log("group response:  ", data?.data);
         dispatch(addGroup(data?.data));
         localStorage.setItem("group", JSON.stringify(data?.data));
       }
@@ -175,6 +175,7 @@ function GroupDetails() {
 
     return () => {
       localStorage.removeItem("group");
+      dispatch(removeGroup());
     };
   }, []);
 

@@ -6,15 +6,15 @@ import "react-toastify/dist/ReactToastify.css";
 import LandingPage from "./Components/LandingPage/LandingPage.jsx";
 import About from "./Components/About/About.jsx";
 import Contact from "./Components/Contact/Contact.jsx";
-import { checkUserLoggedIn } from "./utils/userLoggedIn.jsx";
 import Groups from "./Components/UserDashBoard/Groups.jsx";
 import GroupDetails from "./Components/Group/GroupDetails.jsx";
 import { Provider } from "react-redux";
 
 import { store } from "./redux/store.js";
+
 function App() {
-  const logged = checkUserLoggedIn();
-  console.log("logged", logged);
+
+  const logged = JSON.parse(localStorage.getItem("logged"));
 
   return (
     <Provider store={store}>
@@ -23,7 +23,7 @@ function App() {
           <Route path="/" element={<Layout />}>
             <Route
               path="/"
-              element={!logged.loggedIn ? <LandingPage /> : <Groups />}
+              element={!logged?.loggedIn ? <LandingPage /> : <Groups />}
             />
             <Route path="login" element={<LoginRegister />} />
             <Route path="about" element={<About />} />
