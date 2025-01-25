@@ -6,7 +6,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 async function handleAddExpense(req, res) {
   const { groupId, memberWhoPaid, membersIncluded, amountPaid, expenseName } =
     req.body;
-
+      
   if (
     !groupId ||
     !memberWhoPaid ||
