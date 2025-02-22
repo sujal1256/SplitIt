@@ -37,7 +37,7 @@ function ForgotPassword() {
           body: JSON.stringify({ userEmail: email }),
           headers: { "Content-Type": "application/json" },
         }
-      );      
+      );
       const data = await response.json();
       console.log(data);
 
@@ -45,7 +45,6 @@ function ForgotPassword() {
         toast.success("OTP sent to your email", { className: "toast-mobile" });
 
         // ✅ Navigate only after successful OTP request
-        setLoading(false);
         navigate(`otp?email=${email}`);
       } else {
         toast.error(data.message, { className: "toast-mobile" });
@@ -56,6 +55,7 @@ function ForgotPassword() {
         className: "toast-mobile",
       });
     }
+    setLoading(false);
   }
 
   return (
