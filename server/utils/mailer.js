@@ -128,9 +128,37 @@ async function sendNewsletterEmail(email) {
   }
 }
 
+async function sendOTPEmail(email, otp) {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      pool: true, // Necessary to permanently make a connection
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+
+    const mailSent = await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "OTP for password reset",
+      html: `
+        <p>Your OTP for password reset is <strong>${otp}</strong></p>
+      `,
+    });
+
+    console.log("✅ Message sent: %s", mailSent.messageId);
+  } catch (error) {
+    console.log("❌ Error in sending the email", error);
+  }
+  
+}
 export {
   sendInviteEmail,
   sendEmailToNewUserWithPassword,
   sendContactEmail,
   sendNewsletterEmail,
+  sendOTPEmail
 };

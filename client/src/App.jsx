@@ -9,28 +9,33 @@ import Contact from "./Components/Contact/Contact.jsx";
 import Groups from "./Components/UserDashBoard/Groups.jsx";
 import GroupDetails from "./Components/Group/GroupDetails.jsx";
 import { useSelector } from "react-redux";
-
-
+import ForgotPassword from "./Components/Login/ForgotPassword.jsx";
+import OTPLogin from "./Components/Login/OTPLogin.jsx";
+import ResetPassword from "./Components/Login/ResetPassword.jsx";
 
 function App() {
-   const user = useSelector((store)=>store.user);
-   const logged = user.user;  
+  const user = useSelector((store) => store.user);
+  const logged = user.user;
 
   return (
-      <Router>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route
-              path="/"
-              element={!logged?.loggedIn ? <LandingPage /> : <Groups />}
-            />
-            <Route path="login" element={<LoginRegister />} />
-            <Route path="about" element={<About />} />
-            <Route path="contact" element={<Contact />} />
-            <Route path="group" element={<GroupDetails />} />
-          </Route>
-        </Routes>
-      </Router>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route
+            path="/"
+            element={!logged?.loggedIn ? <LandingPage /> : <Groups />}
+          />
+          <Route path="login" element={<LoginRegister />} />
+          <Route path="changepassword" element={<ForgotPassword />} />
+          <Route path="changepassword/otp" element={<OTPLogin />} />
+          <Route path="reset-password" element={<ResetPassword />} />
+
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="group" element={<GroupDetails />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

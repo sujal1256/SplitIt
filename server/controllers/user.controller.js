@@ -2,6 +2,8 @@ import { Group } from "../models/group.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { getRandomOtp } from "../utils/functions.utils.js";
+import { sendOTPEmail } from "../utils/mailer.js";
 
 async function handleRegister(req, res) {
   try {
@@ -107,10 +109,83 @@ async function handleCheckLoggedIn(req, res) {
     .json(new ApiResponse(200, req.user, "User is logged In"));
 }
 
+async function handleForgotPassword(req, res) {
+  console.log(req.body);
+
+  const { userEmail } = req.body;
+
+  if (!userEmail) {
+    return res.status(400).json(new ApiError(400, "Email not provided"));
+  }
+
+  const user = await User.findOne({ userEmail });
+
+  if (!user) {
+    return res.status(400).json(new ApiError(400, "User not found"));
+  }
+  const otp = getRandomOtp();
+  user.otp = otp;
+  sendOTPEmail(userEmail, otp);
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "OTP sent to email"));
+}
+
+async function handleVerifyOTP(req, res) {
+  const { userEmail, otp } = req.body;
+
+  if (!userEmail || !otp) {
+    return res.status(400).json(new ApiError(400, "Email or OTP not provided"));
+  }
+
+  const user = await User.findOne({ userEmail, otp });
+
+  if (!user) {
+    return res.status(400).json(new ApiError(400, "User not found"));
+  }
+  console.log(user.otp, otp);
+  
+  if (user.otp != otp) {
+    return res.status(400).json(new ApiError(400, "OTP not verified"));
+  }
+  
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "OTP verified successfully"));
+}
+
+async function handleResetPassword(req, res) {
+  const { userEmail, newPassword } = req.body;
+
+  if (!userEmail || !newPassword) {
+    return res
+      .status(400)
+      .json(new ApiError(400, "Email or new password not provided"));
+  }
+
+  const user = await User.findOne({ userEmail });
+
+  if (!user) {
+    return res.status(400).json(new ApiError(400, "User not found"));
+  }
+
+  user.password = newPassword;
+  await user.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { user }, "Password updated successfully"));
+}
+
 export {
   handleRegister,
   handleLogin,
   handleCheckLoggedIn,
   handleGetGroups,
   handleLogout,
+  handleForgotPassword,
+  handleVerifyOTP,
+  handleResetPassword
 };
