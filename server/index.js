@@ -5,7 +5,7 @@ import { groupRouter } from "./routes/group.route.js";
 import { expenseRouter } from "./routes/expense.route.js";
 import { connectToMongoDB } from "./connect.db.js";
 import cookieParser from "cookie-parser";
-import { storeInvitedUser } from "./controllers/group.controller.js";
+// import { storeInvitedUser } from "./controllers/group.controller.js";
 import { mailRouter } from "./routes/mails.route.js";
 
 dotenv.config();
@@ -36,7 +36,7 @@ app.use(cookieParser());
 app.use(express.static("./public"));
 
 connectToMongoDB();
-app.get("/invite", storeInvitedUser);
+// app.get("/invite", storeInvitedUser);
 app.get("/",(req, res)=>res.send("Deployed"));
 app.get("/check", (req, res) =>
   res.send(process.env.BACKEND_URL + "\n" + process.env.FRONTEND_URL)

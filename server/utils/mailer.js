@@ -13,10 +13,8 @@ async function sendInviteEmail(member, group) {
 
     // Construct the invite email URL with proper encoding
     const inviteEmail = `${
-      process.env.BACKEND_URL
-    }/invite?q=${encodeURIComponent(group._id)}&name=${encodeURIComponent(
-      member.name
-    )}&email=${encodeURIComponent(member.email)}`;
+      process.env.FRONTEND_URL
+    }/invite?q=${encodeURIComponent(group._id)}&email=${encodeURIComponent(member.email)}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",

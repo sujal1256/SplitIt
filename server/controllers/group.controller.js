@@ -69,11 +69,17 @@ async function handleAddMemberToGroup(req, res) {
 }
 
 async function storeInvitedUser(req, res) {
-  try {
-    const { q: groupId, name: memberName, email: memberEmail } = req.query;
-    console.log(groupId, memberEmail, memberName);
+  console.log(req.body);
 
-    if ((!groupId || !memberName, !memberEmail)) {
+  try {
+    const {
+      groupId,
+      name: memberName,
+      email: memberEmail,
+      password,
+    } = req.body;
+
+    if (!groupId || !memberName || !memberEmail || !password) {
       return res.status(500).json(new ApiError(500, "Data not sent properly"));
     }
     const group = await Group.findOne({ _id: groupId });
@@ -82,23 +88,23 @@ async function storeInvitedUser(req, res) {
       return res.status(500).json(new ApiError(500, "Group not found"));
     }
     let user = await User.findOne({ userEmail: memberEmail });
-    let passwordSent = false;
     if (!user) {
-
       user = new User({
         userName: memberName,
         userEmail: memberEmail,
-        password: getRandomPassword(),
+        password: password,
       });
-      passwordSent = true;
-      sendEmailToNewUserWithPassword(user, group);
       await user.save();
     }
 
     const member = group.members.find((m) => m.memberEmail == user.userEmail);
 
     if (member) {
-      return res.status(200).redirect(process.env.FRONTEND_URL);
+      return res
+        .status(200)
+        .json({
+          message: "User already a member",
+        });
     }
 
     group.members.push({
@@ -109,11 +115,13 @@ async function storeInvitedUser(req, res) {
 
     await group.save();
 
-    return res.status(200).redirect(`${process.env.FRONTEND_URL}?passwordSent=${passwordSent}`);
+    return res
+      .status(200)
+      .json(new ApiResponse(200, group, "Member added successfully"));
   } catch (error) {
     console.log(error);
-
     console.log("❌ Error in storing the invited user");
+    return res.status(500).json({ message: "Server error" });
   }
 }
 
@@ -146,7 +154,7 @@ async function handleGetGroup(req, res) {
     .json(new ApiResponse(200, group, "Members fetched successfully"));
 }
 
-async function handleDelete(req, res) {  
+async function handleDelete(req, res) {
   const { groupId } = req.body;
   if (!groupId) {
     res.status(400).json(new ApiError(400, "groupId not valid"));

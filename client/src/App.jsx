@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import ForgotPassword from "./Components/Login/ForgotPassword.jsx";
 import OTPLogin from "./Components/Login/OTPLogin.jsx";
 import ResetPassword from "./Components/Login/ResetPassword.jsx";
+import InviteMember from "./Components/Group/InviteMember.jsx";
 
 function App() {
   const user = useSelector((store) => store.user);
@@ -29,6 +30,7 @@ function App() {
           <Route path="changepassword" element={<ForgotPassword />} />
           <Route path="changepassword/otp" element={<OTPLogin />} />
           <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="invite" element={<InviteMember />} />
 
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
