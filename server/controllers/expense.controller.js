@@ -57,69 +57,73 @@ async function handleGetAllExpenses(req, res) {
   const expenses = await Expense.find({ expenseGroup: groupId });
   let totalExpenses = 0;
   let yourExpenses = 0;
-  const formattedExpenses = await Promise.all(expenses.map(async (e) => {
-    const n = e.membersIncluded.length;
-    totalExpenses += e.amountPaid;
-    if (e.membersIncluded.find((m) => m.memberId == userId)) {
-      yourExpenses += e.amountPaid / n;
-    }
+  const formattedExpenses = await Promise.all(
+    expenses.map(async (e) => {
+      const n = e.membersIncluded.length;
+      totalExpenses += e.amountPaid;
+      if (e.membersIncluded.find((m) => m.memberId == userId)) {
+        yourExpenses += e.amountPaid / n;
+      }
+      let isUserIncluded = e.membersIncluded.find((m) => m.memberId == userId);
 
-    if (e.memberWhoPaid == userId) {
-      return {
-        _id: e._id,
-        expenseName: e.expenseName,
-        amountPaid: e.amountPaid,
-        amountLent: e.amountPaid / n,
-        amountLentTo: e.membersIncluded.map((m) => {
-          return {
-            memberEmail: m.memberEmail,
-            memberId: m.memberId,
-            memberName: m.memberName,
-            memberRole: m.memberRole,
-          };
-        }),
-        membersIncluded: e.membersIncluded,
-        totalAmountLent: e.amountPaid - e.amountPaid / n,
-        memberWhoPaid: await User.findOne({ _id: e.memberWhoPaid }),
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-      };
-    } else {
-      return {
-        _id: e._id,
-        expenseName: e.expenseName,
-        amountPaid: e.amountPaid,
-        amountOwedFrom: e.membersIncluded.map((m) => {
-          if (m.memberId != e.memberWhoPaid) {
+      if (e.memberWhoPaid == userId) {
+        return {
+          _id: e._id,
+          expenseName: e.expenseName,
+          amountPaid: e.amountPaid,
+          amountLent: e.amountPaid / n,
+          amountLentTo: e.membersIncluded.map((m) => {
             return {
               memberEmail: m.memberEmail,
               memberId: m.memberId,
               memberName: m.memberName,
               memberRole: m.memberRole,
             };
-          }
-        }),
-        membersIncluded: e.membersIncluded,
-        amountToBePaid: e.amountPaid / n,
-        memberWhoPaid: await User.findOne({ _id: e.memberWhoPaid }),
-        createdAt: e.createdAt,
-        updatedAt: e.updatedAt,
-      };
-    }
-  }));
+          }),
+          membersIncluded: e.membersIncluded,
+          totalAmountLent:
+            e.amountPaid - (isUserIncluded ? e.amountPaid / n : 0),
+          memberWhoPaid: await User.findOne({ _id: e.memberWhoPaid }),
+          createdAt: e.createdAt,
+          updatedAt: e.updatedAt,
+        };
+      } else {
+        return {
+          _id: e._id,
+          expenseName: e.expenseName,
+          amountPaid: e.amountPaid,
+          amountOwedFrom: e.membersIncluded.map((m) => {
+            if (m.memberId != e.memberWhoPaid) {
+              return {
+                memberEmail: m.memberEmail,
+                memberId: m.memberId,
+                memberName: m.memberName,
+                memberRole: m.memberRole,
+              };
+            }
+          }),
+          membersIncluded: e.membersIncluded,
+          amountToBePaid: e.amountPaid / n,
+          memberWhoPaid: await User.findOne({ _id: e.memberWhoPaid }),
+          createdAt: e.createdAt,
+          updatedAt: e.updatedAt,
+        };
+      }
+    })
+  );
   // console.log(formattedExpenses);
-  
+
   let balance = 0;
   formattedExpenses.forEach((e) => {
     if (e.memberWhoPaid._id == userId) {
       balance += e.totalAmountLent;
     } else {
-      if(e.amountOwedFrom.find((m) => m.memberId == userId)){
+      if (e.amountOwedFrom.find((m) => m.memberId == userId)) {
         balance -= e.amountToBePaid;
       }
     }
   });
-  
+
   const totalTransaction = formattedExpenses.reduce((acc, e) => {
     if (e.memberWhoPaid._id == userId) {
       return acc + e.totalAmountLent;
@@ -172,7 +176,7 @@ async function handleGetAllExpenses(req, res) {
         memberTransaction,
         totalExpenses,
         yourExpenses,
-        balance
+        balance,
       },
       "Expenses fetched successfully"
     )

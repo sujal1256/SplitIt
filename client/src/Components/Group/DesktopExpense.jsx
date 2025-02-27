@@ -30,24 +30,19 @@ function DesktopExpense({ expense, logged, getExpenses }) {
     }
   };
 
-  // Determine user relationship to the expense
   const isUserPayer = expense.memberWhoPaid?._id === logged?.user?.userId;
   const isUserIncluded = expense.membersIncluded.find(
     (e) => e.memberId === logged?.user?.userId
   );
 
-  // Determine balance color
-  const balanceColor =
-    isUserIncluded && expense.membersIncluded.length === 1
-      ? "text-gray-400"
-      : isUserPayer && isUserIncluded
-      ? "text-green-500"
-      : isUserIncluded
-      ? "text-red-500"
-      : "text-gray-400";
+  const balanceColor = isUserPayer ? "text-green-500" : "text-red-400";
+
+  if (!isUserIncluded && !isUserPayer) {
+    return null;
+  }
 
   return (
-    <div className="grid grid-cols-5 border-b border-gray-500 hover:bg-gray-50">
+    <div className="grid grid-cols-6 border-b border-gray-500 hover:bg-gray-50">
       <div className="p-4 flex items-center">{expense.expenseName}</div>
       <div className="p-4 flex items-center ">
         {expense.memberWhoPaid?.userName}
@@ -57,17 +52,13 @@ function DesktopExpense({ expense, logged, getExpenses }) {
         {new Date(expense.createdAt).getMonth() + 1}/
         {new Date(expense.createdAt).getFullYear()}
       </div>
-      {isUserIncluded && expense.membersIncluded.length > 1 ? (
+      {expense.membersIncluded.length > 1 && (
         <div
           className={`font-bold text-lg p-2 rounded-lg flex items-center ${balanceColor}`}
         >
           {isUserPayer
             ? `+ ${expense.totalAmountLent?.toFixed(2)}`
             : `- ${expense.amountToBePaid?.toFixed(2)}`}
-        </div>
-      ) : (
-        <div className="flex pl-9 justify-left items-center text-2xl text-gray-400">
-          =
         </div>
       )}
 

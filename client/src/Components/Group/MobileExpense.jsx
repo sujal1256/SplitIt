@@ -14,13 +14,11 @@ function MobileExpense({ expense, logged, getExpenses }) {
 
   // Determine balance color
   const balanceColor =
-    isUserIncluded && expense.membersIncluded.length === 1
-      ? "text-gray-400"
-      : isUserPayer && isUserIncluded
-      ? "text-green-500"
-      : isUserIncluded
-      ? "text-red-400"
-      : "text-gray-400";
+    isUserPayer ? "text-green-500" : "text-red-400";
+
+  if (!isUserIncluded && !isUserPayer) {
+    return null; // Skip rendering if the user is not involved.
+  }
 
   return (
     <div className="flex justify-between border-b border-gray-800 py-3 px-4">
@@ -45,7 +43,7 @@ function MobileExpense({ expense, logged, getExpenses }) {
         </div>
       </div>
 
-      {isUserIncluded && expense.membersIncluded.length > 1 ? (
+      {expense.membersIncluded.length > 1 && (
         <div className={`flex flex-col items-end ${balanceColor}`}>
           <span className="text-sm">
             {isUserPayer ? "You Lent" : "You Owe"}
@@ -54,8 +52,6 @@ function MobileExpense({ expense, logged, getExpenses }) {
             ₹{isUserPayer ? expense.totalAmountLent?.toFixed(2) : expense.amountToBePaid?.toFixed(2)}
           </span>
         </div>
-      ) : (
-        <div className="text-gray-400">No balance</div>
       )}
     </div>
   );

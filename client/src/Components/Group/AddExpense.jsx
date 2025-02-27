@@ -2,16 +2,28 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-function AddExpense({ getExpenses, setSelectedMembers, selectedMembers, onClose }) {
+function AddExpense({
+  getExpenses,
+  setSelectedMembers,
+  selectedMembers,
+  onClose,
+}) {
   const [expenseTitle, setExpenseTitle] = useState("");
   const [amount, setAmount] = useState("");
-  const group = useSelector(store => store.group);
-  const user = useSelector(store => store.user);
+  const group = useSelector((store) => store.group);
+  const user = useSelector((store) => store.user);
   const logged = user.user;
 
   const addExpense = async () => {
     if (!expenseTitle || selectedMembers?.length === 0) {
       toast.error("Fill in all the fields!", {
+        className: "toast-mobile",
+      });
+      return;
+    }
+
+    if (amount <= 0) {
+      toast.error("Invalid Amount", {
         className: "toast-mobile",
       });
       return;
@@ -50,7 +62,6 @@ function AddExpense({ getExpenses, setSelectedMembers, selectedMembers, onClose 
         setExpenseTitle("");
         setAmount("");
         setSelectedMembers(group?.group?.members);
-        // Close the modal when successfully added
         if (onClose) onClose();
       }
     } catch (error) {
@@ -70,7 +81,7 @@ function AddExpense({ getExpenses, setSelectedMembers, selectedMembers, onClose 
           className="p-2 border rounded-lg text-black w-full"
         />
         <input
-          type="text"
+          type="number"
           placeholder="Amount Paid"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
@@ -84,35 +95,33 @@ function AddExpense({ getExpenses, setSelectedMembers, selectedMembers, onClose 
             Select members to split the expense with:
           </p>
           <div className="flex flex-wrap gap-3">
-            {group?.group?.members
-              .filter((member) => member.memberId !== logged.user?.userId)
-              .map((member) => (
-                <label
-                  key={member._id}
-                  className="flex items-center gap-2 text-gray-800"
-                >
-                  <input
-                    type="checkbox"
-                    value={member.name}
-                    checked={selectedMembers?.some(
-                      (selected) => selected._id === member._id
-                    )}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedMembers([...selectedMembers, member]);
-                      } else {
-                        setSelectedMembers(
-                          selectedMembers.filter(
-                            (selected) => selected._id !== member._id
-                          )
-                        );
-                      }
-                    }}
-                    className="w-4 h-4"
-                  />
-                  <span>{member.memberName}</span>
-                </label>
-              ))}
+            {group?.group?.members.map((member) => (
+              <label
+                key={member._id}
+                className="flex items-center gap-2 text-gray-800"
+              >
+                <input
+                  type="checkbox"
+                  value={member.name}
+                  checked={selectedMembers?.some(
+                    (selected) => selected._id === member._id
+                  )}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedMembers([...selectedMembers, member]);
+                    } else {
+                      setSelectedMembers(
+                        selectedMembers.filter(
+                          (selected) => selected._id !== member._id
+                        )
+                      );
+                    }
+                  }}
+                  className="w-4 h-4"
+                />
+                <span>{member.memberName}</span>
+              </label>
+            ))}
           </div>
         </div>
 

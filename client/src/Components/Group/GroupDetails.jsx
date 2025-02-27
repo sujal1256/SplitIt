@@ -59,6 +59,7 @@ function GroupDetails() {
       console.log("Error in getting the groups", error.message);
     }
   }
+  console.log(expenses);
 
   async function getGroup() {
     try {
@@ -115,7 +116,7 @@ function GroupDetails() {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-slate-200 p-4">
+    <div className="min-h-screen h-fit flex flex-col bg-slate-200 p-4">
       <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-5 text-center max-w-4xl mx-auto w-full">
         <h1 className="text-3xl">{group?.group?.groupName}</h1>
         {/* FIXME: Show the total Owe from the group */}
@@ -136,12 +137,22 @@ function GroupDetails() {
       />
 
       <div className="w-full max-w-4xl mx-auto my-4 border">
-        <div className="bg-primary text-white p-4 rounded-t-lg flex gap-2 font-medium text-lg">
-          Expenses{" "}
-          <span className="text-sm flex items-center text-slate-300">
-            ({expenses?.length} expenses)
-          </span>
-        </div>
+        {isMobile ? (
+          <div className="bg-primary text-white p-4 rounded-t-lg flex gap-2 font-medium text-lg">
+            Expenses{" "}
+            <span className="text-sm flex items-center text-slate-300">
+              ({expenses?.length} expenses)
+            </span>
+          </div>
+        ) : (
+          <div className="bg-primary text-white p-4 grid grid-cols-6 ">
+            <div>Description</div>
+            <div>Paid By</div>
+            <div>Date</div>
+            <div>Amount</div>
+            <div>Total Amount</div>
+          </div>
+        )}
 
         <div className="border border-gray-500">
           {expenses.map((expense) => {
@@ -163,31 +174,16 @@ function GroupDetails() {
           })}
         </div>
 
-        <div className="w-fit mt-4 mx-auto" onClick={()=>setShowAddExpense(true)}>
-          {/* <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-full">
-            Settle Up
-          </button>
-          <button
-            className="bg-primary hover:bg-green-700 text-white py-2 px-4 rounded-full"
-            onClick={() => setShowAddExpense(true)}
-          >
-            Add Expense
-          </button> */}
-          <p className="text-gray-400 bg-gray-300 rounded-full p-3 text-center"><FaPlus/></p>
+        <div
+          className="w-fit mt-4 mx-auto"
+          onClick={() => setShowAddExpense(true)}
+        >
+          <p className="text-gray-400 bg-gray-300 rounded-full p-3 text-center">
+            <FaPlus />
+          </p>
         </div>
       </div>
 
-      {/* Add Expense Button */}
-      <div className="absolute bottom-4 right-4">
-        <button
-          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700"
-          onClick={() => setShowAddExpense(true)}
-        >
-          <MdOutlineMessage size={24} /> Add Expense
-        </button>
-      </div>
-
-      {/* Modal for Add Expense - styled similar to "Create New Group" modal */}
       {showAddExpense && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal-backdrop"
@@ -210,6 +206,14 @@ function GroupDetails() {
           </div>
         </div>
       )}
+      <div className="fixed bottom-20 right-44">
+        <button
+          className="fixed flex items-center gap-2 bg-primary text-white p-4 rounded-lg shadow-md hover:bg-green-700"
+          onClick={() => setShowAddExpense(true)}
+        >
+          <MdOutlineMessage size={24} /> Add Expense
+        </button>
+      </div>
     </div>
   );
 }
