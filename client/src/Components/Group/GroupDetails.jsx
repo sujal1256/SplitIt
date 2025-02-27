@@ -3,26 +3,30 @@ import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
 import { toast } from "react-toastify";
+import { MdOutlineMessage } from "react-icons/md";
 import TotalExpenses from "./TotalExpenses.jsx";
-import Expense from "./Expense.jsx";
+import DesktopExpense from "./DesktopExpense.jsx";
 import AddExpense from "./AddExpense.jsx";
+import ExpenseSummaryCards from "./ExpenseSummaryCards.jsx";
+import MobileExpense from "./MobileExpense.jsx";
+import { FaPlus } from "react-icons/fa";
 
 function GroupDetails() {
-  const [selectedCurrency, setSelectedCurrency] = useState("INR");
+  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
-  const [showConverter, setShowConverter] = useState(false);
-  const [tempCurrency, setTempCurrency] = useState("INR");
   const user = useSelector((store) => store.user);
-
   const logged = user.user;
   const [searchParams] = useSearchParams();
   const [expenses, setExpenses] = useState([]);
   const [totalTransaction, setTotalTransaction] = useState(0);
   const [memberTransactions, setMembersTransactions] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState();
+  const [yourExpenses, setYourExpenses] = useState();
+  const [balance, setBalance] = useState();
   const [selectedMembers, setSelectedMembers] = useState([]);
 
   const group = useSelector((store) => store.group);
-
   const dispatch = useDispatch();
 
   async function getExpenses() {
@@ -42,10 +46,14 @@ function GroupDetails() {
       );
 
       const data = await response.json();
+
       if (response.ok) {
         setExpenses(data?.data?.formattedExpenses);
         setTotalTransaction(data?.data?.totalTransaction);
         setMembersTransactions(data?.data?.memberTransaction);
+        setTotalExpenses(data?.data?.totalExpenses);
+        setYourExpenses(data?.data?.yourExpenses);
+        setBalance(data?.data?.balance);
       }
     } catch (error) {
       console.log("Error in getting the groups", error.message);
@@ -99,77 +107,106 @@ function GroupDetails() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Close modal if clicked outside
+  const handleCloseModal = (e) => {
+    if (e.target.classList.contains("modal-backdrop")) {
+      setShowAddExpense(false);
+    }
+  };
+
   return (
-    <div className=" h-screen">
-      <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-2 text-center">
+    <div className="h-screen flex flex-col bg-slate-200 p-4">
+      <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-5 text-center max-w-4xl mx-auto w-full">
         <h1 className="text-3xl">{group?.group?.groupName}</h1>
-        <h2>
+        {/* FIXME: Show the total Owe from the group */}
+        {/* <h2>
           {totalTransaction < 0
             ? `You Owe ${selectedCurrency} ${Math.abs(totalTransaction).toFixed(
                 2
               )}`
             : `You Lent ${selectedCurrency} ${totalTransaction.toFixed(2)}`}
-        </h2>
+        </h2> */}
       </div>
-
-      <AddExpense
-        getExpenses={getExpenses}
-        group={group}
-        setSelectedMembers={setSelectedMembers}
-        selectedMembers={selectedMembers}
+      <ExpenseSummaryCards
+        totalTransaction={totalTransaction}
+        memberTransactions={memberTransactions}
+        totalExpenses={totalExpenses}
+        yourExpenses={yourExpenses}
+        balance={balance}
       />
 
-      <div className="flex flex-wrap justify-center gap-4 md:gap-16 ">
-        {/* Expenses Div */}
-        <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary w-full sm:w-[75%] md:w-[65%] lg:w-[50%] m-3">
-          <h2 className="text-center text-xl font-semibold">Expenses</h2>
-          <div className="text-start">
-            {expenses.map((expense) => (
-              <Expense key={expense?._id} expense={expense} logged={logged} />
-            ))}
-          </div>
+      <div className="w-full max-w-4xl mx-auto my-4 border">
+        <div className="bg-primary text-white p-4 rounded-t-lg flex gap-2 font-medium text-lg">
+          Expenses{" "}
+          <span className="text-sm flex items-center text-slate-300">
+            ({expenses?.length} expenses)
+          </span>
         </div>
 
-        <TotalExpenses
-          totalTransaction={totalTransaction}
-          memberTransactions={memberTransactions}
-          selectedCurrency={selectedCurrency}
-        />
+        <div className="border border-gray-500">
+          {expenses.map((expense) => {
+            return isMobile ? (
+              <MobileExpense
+                key={expense?._id}
+                expense={expense}
+                logged={logged}
+                getExpenses={getExpenses}
+              />
+            ) : (
+              <DesktopExpense
+                key={expense?._id}
+                expense={expense}
+                logged={logged}
+                getExpenses={getExpenses}
+              />
+            );
+          })}
+        </div>
+
+        <div className="w-fit mt-4 mx-auto" onClick={()=>setShowAddExpense(true)}>
+          {/* <button className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-full">
+            Settle Up
+          </button>
+          <button
+            className="bg-primary hover:bg-green-700 text-white py-2 px-4 rounded-full"
+            onClick={() => setShowAddExpense(true)}
+          >
+            Add Expense
+          </button> */}
+          <p className="text-gray-400 bg-gray-300 rounded-full p-3 text-center"><FaPlus/></p>
+        </div>
       </div>
 
-      {showConverter && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-5 rounded-lg">
-            <h2 className="text-center text-xl font-bold mb-4">
-              Select Currency
+      {/* Add Expense Button */}
+      <div className="absolute bottom-4 right-4">
+        <button
+          className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700"
+          onClick={() => setShowAddExpense(true)}
+        >
+          <MdOutlineMessage size={24} /> Add Expense
+        </button>
+      </div>
+
+      {/* Modal for Add Expense - styled similar to "Create New Group" modal */}
+      {showAddExpense && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal-backdrop"
+          onClick={handleCloseModal}
+        >
+          <div
+            className="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/5 max-w-2xl p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
+              Add New Expense
             </h2>
-            <select
-              value={tempCurrency}
-              onChange={(e) => setTempCurrency(e.target.value)}
-              className="border p-2 rounded-lg w-full mb-4"
-            >
-              <option value="INR">INR</option>
-              <option value="USD">USD</option>
-              <option value="EUR">EUR</option>
-            </select>
-            <div className="flex justify-center space-x-4">
-              <button
-                className="bg-amber-600 text-white px-4 py-2 rounded-lg"
-                onClick={() => {
-                  setSelectedCurrency(tempCurrency);
-                  setConversionRate(conversionRates[tempCurrency]);
-                  setShowConverter(false);
-                }}
-              >
-                Apply
-              </button>
-              <button
-                className="bg-gray-600 text-white px-4 py-2 rounded-lg"
-                onClick={() => setShowConverter(false)}
-              >
-                Cancel
-              </button>
-            </div>
+
+            <AddExpense
+              getExpenses={getExpenses}
+              setSelectedMembers={setSelectedMembers}
+              selectedMembers={selectedMembers}
+              onClose={() => setShowAddExpense(false)}
+            />
           </div>
         </div>
       )}

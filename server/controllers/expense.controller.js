@@ -1,12 +1,13 @@
 import { Expense } from "../models/expense.model.js";
 import { Group } from "../models/group.model.js";
+import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 async function handleAddExpense(req, res) {
   const { groupId, memberWhoPaid, membersIncluded, amountPaid, expenseName } =
     req.body;
-      
+
   if (
     !groupId ||
     !memberWhoPaid ||
@@ -54,9 +55,14 @@ async function handleGetAllExpenses(req, res) {
 
   const group = await Group.findOne({ _id: groupId });
   const expenses = await Expense.find({ expenseGroup: groupId });
-
-  const formattedExpenses = expenses.map((e) => {
+  let totalExpenses = 0;
+  let yourExpenses = 0;
+  const formattedExpenses = await Promise.all(expenses.map(async (e) => {
     const n = e.membersIncluded.length;
+    totalExpenses += e.amountPaid;
+    if (e.membersIncluded.find((m) => m.memberId == userId)) {
+      yourExpenses += e.amountPaid / n;
+    }
 
     if (e.memberWhoPaid == userId) {
       return {
@@ -72,14 +78,17 @@ async function handleGetAllExpenses(req, res) {
             memberRole: m.memberRole,
           };
         }),
+        membersIncluded: e.membersIncluded,
         totalAmountLent: e.amountPaid - e.amountPaid / n,
-        memberWhoPaid: e.memberWhoPaid,
+        memberWhoPaid: await User.findOne({ _id: e.memberWhoPaid }),
+        createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
       };
     } else {
       return {
         _id: e._id,
         expenseName: e.expenseName,
-        totalAmountPaid: e.amountPaid,
+        amountPaid: e.amountPaid,
         amountOwedFrom: e.membersIncluded.map((m) => {
           if (m.memberId != e.memberWhoPaid) {
             return {
@@ -90,14 +99,29 @@ async function handleGetAllExpenses(req, res) {
             };
           }
         }),
+        membersIncluded: e.membersIncluded,
         amountToBePaid: e.amountPaid / n,
-        memberWhoPaid: e.memberWhoPaid,
+        memberWhoPaid: await User.findOne({ _id: e.memberWhoPaid }),
+        createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
       };
     }
+  }));
+  // console.log(formattedExpenses);
+  
+  let balance = 0;
+  formattedExpenses.forEach((e) => {
+    if (e.memberWhoPaid._id == userId) {
+      balance += e.totalAmountLent;
+    } else {
+      if(e.amountOwedFrom.find((m) => m.memberId == userId)){
+        balance -= e.amountToBePaid;
+      }
+    }
   });
-
+  
   const totalTransaction = formattedExpenses.reduce((acc, e) => {
-    if (e.memberWhoPaid == userId) {
+    if (e.memberWhoPaid._id == userId) {
       return acc + e.totalAmountLent;
     } else {
       return acc - e.amountToBePaid;
@@ -139,15 +163,20 @@ async function handleGetAllExpenses(req, res) {
       };
     });
 
-  return res
-    .status(200)
-    .json(
-      new ApiResponse(
-        200,
-        { totalTransaction, formattedExpenses, memberTransaction },
-        "Expenses fetched successfully"
-      )
-    );
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        totalTransaction,
+        formattedExpenses,
+        memberTransaction,
+        totalExpenses,
+        yourExpenses,
+        balance
+      },
+      "Expenses fetched successfully"
+    )
+  );
 }
 
 async function handleDeleteExpense(req, res) {

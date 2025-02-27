@@ -24,7 +24,7 @@ async function handleCreateGroup(req, res) {
   const user = req.user;
 
   const group = new Group({
-    groupName,
+    groupName: groupName[0].toUpperCase() + groupName.slice(1),
     groupOwner: user.userId,
     groupDescription,
     members: [
