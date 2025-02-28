@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
-import { Analytics } from '@vercel/analytics/vue';
+import { Analytics } from '@vercel/analytics/react';
 
 import { store } from "./redux/store.js";
 
