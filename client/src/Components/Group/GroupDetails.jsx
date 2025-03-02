@@ -10,6 +10,8 @@ import AddExpense from "./AddExpense.jsx";
 import ExpenseSummaryCards from "./ExpenseSummaryCards.jsx";
 import MobileExpense from "./MobileExpense.jsx";
 import { FaPlus } from "react-icons/fa";
+import ShimmerGroupDetails from "./ShimmerGroupDetails.jsx";
+import Skeleton from "react-loading-skeleton";
 
 function GroupDetails() {
   const [showAddExpense, setShowAddExpense] = useState(false);
@@ -115,10 +117,15 @@ function GroupDetails() {
     }
   };
 
+  // return expenses?.length === 0 ? (
+  //   <ShimmerGroupDetails />
+  // ) :
   return (
     <div className="min-h-screen h-fit flex flex-col bg-slate-200 p-4">
       <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-5 text-center max-w-4xl mx-auto w-full">
-        <h1 className="text-3xl">{group?.group?.groupName}</h1>
+        <h1 className="text-3xl">
+          {group?.group != null ? group?.group?.groupName : <Skeleton />}
+        </h1>
         {/* FIXME: Show the total Owe from the group */}
         {/* <h2>
           {totalTransaction < 0
@@ -155,23 +162,27 @@ function GroupDetails() {
         )}
 
         <div className="border border-gray-500">
-          {expenses.map((expense) => {
-            return isMobile ? (
-              <MobileExpense
-                key={expense?._id}
-                expense={expense}
-                logged={logged}
-                getExpenses={getExpenses}
-              />
-            ) : (
-              <DesktopExpense
-                key={expense?._id}
-                expense={expense}
-                logged={logged}
-                getExpenses={getExpenses}
-              />
-            );
-          })}
+          {expenses.length > 0 ? (
+            expenses.map((expense) => {
+              return isMobile ? (
+                <MobileExpense
+                  key={expense?._id}
+                  expense={expense}
+                  logged={logged}
+                  getExpenses={getExpenses}
+                />
+              ) : (
+                <DesktopExpense
+                  key={expense?._id}
+                  expense={expense}
+                  logged={logged}
+                  getExpenses={getExpenses}
+                />
+              );
+            })
+          ) : (
+            <Skeleton height={45} count={8}/>
+          )}
         </div>
 
         <div

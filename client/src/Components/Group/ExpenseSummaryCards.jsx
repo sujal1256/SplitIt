@@ -1,4 +1,5 @@
 import React from "react";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses }) => {
   let negative = balance > 0 ? "" : "-";
@@ -11,7 +12,7 @@ const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses }) => {
             Total Expenses
           </span>
           <span className="text-gray-900 font-bold text-md sm:text-2xl">
-            ₹{totalExpenses?.toFixed(2)}
+            {totalExpenses ? `₹${totalExpenses?.toFixed(2)}` : <Skeleton />}
           </span>
         </div>
       </div>
@@ -22,7 +23,7 @@ const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses }) => {
             Your Expenses
           </span>
           <span className="text-gray-900 font-bold text-md sm:text-2xl">
-            ₹{yourExpenses?.toFixed(2)}
+            {yourExpenses ? `₹${yourExpenses?.toFixed(2)}` : <Skeleton />}
           </span>
         </div>
       </div>
@@ -37,7 +38,7 @@ const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses }) => {
               balance > 0 ? "text-green-600" : "text-red-600"
             } font-bold text-md sm:text-2xl`}
           >
-            {negative}₹{Math.abs(balance)?.toFixed(2)}
+            {balance?`${negative}₹${Math.abs(balance)?.toFixed(2)}`:<Skeleton/>}
           </span>
         </div>
       </div>
