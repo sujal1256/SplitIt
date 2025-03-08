@@ -13,6 +13,8 @@ import ForgotPassword from "./Components/Login/ForgotPassword.jsx";
 import OTPLogin from "./Components/Login/OTPLogin.jsx";
 import ResetPassword from "./Components/Login/ResetPassword.jsx";
 import InviteMember from "./Components/Group/InviteMember.jsx";
+import LoginForm from "./Components/Login/LoginForm.jsx";
+import RegisterForm from "./Components/Login/RegisterForm.jsx";
 
 function App() {
   const user = useSelector((store) => store.user);
@@ -26,7 +28,8 @@ function App() {
             path="/"
             element={!logged?.loggedIn ? <LandingPage /> : <Groups />}
           />
-          <Route path="login" element={<LoginRegister />} />
+          <Route path="login" element={<LoginForm />} />
+          <Route path="signup" element={<RegisterForm />} />
           <Route path="changepassword" element={<ForgotPassword />} />
           <Route path="changepassword/otp" element={<OTPLogin />} />
           <Route path="reset-password" element={<ResetPassword />} />

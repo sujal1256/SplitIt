@@ -4,7 +4,7 @@ import nodemailer from "nodemailer";
 async function sendInviteEmail(member, group) {
   try {
     // Validate member and group
-    if (!member || !member.name || !member.email) {
+    if (!member) {
       throw new Error("Invalid member details. Name and email are required.");
     }
     if (!group || !group._id || !group.groupName) {
@@ -14,7 +14,7 @@ async function sendInviteEmail(member, group) {
     // Construct the invite email URL with proper encoding
     const inviteEmail = `${
       process.env.FRONTEND_URL
-    }/invite?q=${encodeURIComponent(group._id)}&email=${encodeURIComponent(member.email)}`;
+    }/invite?q=${encodeURIComponent(group._id)}&email=${encodeURIComponent(member)}`;
 
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -28,7 +28,7 @@ async function sendInviteEmail(member, group) {
 
     const mailSent = await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: member.email,
+      to: member,
       subject: "Join Our Group on SplitIt!",
       html: `
         <p>You're invited to join <strong>${group.groupName}</strong>!</p>

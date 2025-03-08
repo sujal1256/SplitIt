@@ -91,7 +91,7 @@ async function handleGetGroups(req, res) {
 
   const groups = await Group.find({
     "members.memberId": userId,
-  });
+  });  
 
   res
     .status(200)

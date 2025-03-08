@@ -17,10 +17,6 @@ function LoginRegister() {
   return (
     <div
       className="flex justify-center items-center bg-cover bg-center min-h-screen"
-      style={{
-        backgroundImage: `url(${loginBack})`,
-        backgroundSize: "cover",
-      }}
     >
       <div
         className={`relative w-full max-w-[420px] ${

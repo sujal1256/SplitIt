@@ -19,7 +19,6 @@ async function handleCreateGroup(req, res) {
     return res.status(400).json(new ApiError(400, "members are not sent"));
   }
 
-  console.log(members);
 
   const user = req.user;
 
@@ -39,7 +38,7 @@ async function handleCreateGroup(req, res) {
 
   await group.save();
 
-  members.map((member) => {
+  members.filter(email => email != user.userEmail).map((member) => {
     sendInviteEmail(member, group);
   });
 
