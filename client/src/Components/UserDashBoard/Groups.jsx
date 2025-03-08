@@ -70,8 +70,7 @@ function Groups() {
           Create Group
         </button>
       </div>
-
-      {/* Groups Display */}
+      
       <div className="w-full flex justify-center items-center sm:py-12">
         <div className="w-[90%] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8 py-2 place-content-center">
           {groups?.length > 0 ? (

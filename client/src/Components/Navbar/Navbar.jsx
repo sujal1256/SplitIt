@@ -1,13 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
-import logo from "../Assets/logo.png";
-import { checkUserLoggedIn } from "../../utils/userLoggedIn";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addUser, removeUser } from "../../redux/user.slice";
-import { useDispatch, useSelector } from "react-redux";
-import { use } from "react";
+import { checkUserLoggedIn } from "../../utils/userLoggedIn";
 
-function Navbar() {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -48,11 +46,6 @@ function Navbar() {
     }
   };
 
-  const getLinkClass = (path) =>
-    location.pathname === path
-      ? "block text-text-colour no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:-translate-y-1" // Highlighted link style
-      : "block text-white no-underline text-lg font-medium transition-transform duration-300 ease-in-out hover:text-text-colour hover:-translate-y-1"; // Default link style
-
   useEffect(() => {
     if (searchParams.get("passwordSent") === "true" && !showPasswordToast) {
       toast.success("Password is sent to your email", {
@@ -71,16 +64,12 @@ function Navbar() {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
-
-  // localStorage.setItem("logged", JSON.stringify({ loggedIn: false, user: {} }));
+  }, [searchParams, showPasswordToast]);
 
   useEffect(() => {
     async function saveLogged() {
       try {
         const logged = await checkUserLoggedIn();
-        console.log("saving logged", logged);
-
         localStorage.setItem("logged", JSON.stringify(logged));
         dispatch(addUser(logged));
       } catch (error) {
@@ -94,83 +83,120 @@ function Navbar() {
     }, 300000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [dispatch]);
 
   const logged = user.user;
 
   return (
-    <>
-      <nav className="bg-primary p-4 sticky top-0 z-50 shadow-lg">
-        <div className="flex justify-between items-center">
-          <div
-            className="flex items-center"
-            onClick={() => (window.location.href = "/")}
-          >
-            <img src={logo} alt="Logo" className="h-8 md:h-10 mr-2" />
-            <h1 className="text-white text-xl md:text-2xl font-bold">
-              Split-It
-            </h1>
-          </div>
-
-          <div className="flex justify-between items-stretch" ref={menuRef}>
-            {logged.loggedIn ? (
-              <p className="text-base md:text-2xl text-text-colour font-bold cursor-pointer pt-1 pr-2">
-                WELCOME {logged.user?.userName.toUpperCase()} !!
+    <nav className="py-4 px-6 bg-[#0d121f] border-b border-gray-800">
+      <div className="mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="flex items-center">
+          <span className="text-2xl font-bold text-orange-400">Split<span className="text-white">It</span></span>
+        </Link>
+        
+        {/* Center Navigation Links */}
+        <div className="hidden md:flex space-x-8">
+          <Link to="/" className="text-white hover:text-orange-400 transition duration-300">Home</Link>
+          <Link to="/features" className="text-white hover:text-orange-400 transition duration-300">Features</Link>
+          <Link to="/pricing" className="text-white hover:text-orange-400 transition duration-300">Pricing</Link>
+          <Link to="/about" className="text-white hover:text-orange-400 transition duration-300">About</Link>
+        </div>
+        
+        {/* Authentication Buttons */}
+        <div className="flex items-center space-x-4">
+          {logged?.loggedIn ? (
+            <>
+              <p className="hidden md:block text-white font-medium mr-4">
+                Welcome, {logged.user?.userName}!
               </p>
-            ) : null}
-
-            <button
-              className="md:hidden text-white text-2xl focus:outline-none"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              <button 
+                onClick={handleLogout}
+                className="text-white hover:text-orange-400 transition duration-300"
+              >
+                Log Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="text-white hover:text-orange-400 transition duration-300">Log In</Link>
+              <Link 
+                to="/signup" 
+                className="px-6 py-2 border border-orange-400 rounded text-orange-400 hover:bg-orange-400 hover:text-white transition duration-300"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
+        
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden text-white focus:outline-none"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          ref={menuRef}
+        >
+          ☰
+        </button>
+      </div>
+      
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden mt-4 bg-[#0d121f] p-4 rounded-md">
+          <div className="flex flex-col space-y-4">
+            <Link 
+              to="/" 
+              className="text-white hover:text-orange-400 transition duration-300"
+              onClick={() => setIsMenuOpen(false)}
             >
-              ☰
-            </button>
-
-            <ul
-              className={`${
-                isMenuOpen ? "block" : "hidden"
-              } md:flex list-none m-0 py-2 absolute md:relative top-16 md:top-0 left-0 w-full md:w-auto bg-primary md:bg-transparent md:flex-row md:items-center transition-all duration-300`}
+              Home
+            </Link>
+            <Link 
+              to="/features" 
+              className="text-white hover:text-orange-400 transition duration-300"
+              onClick={() => setIsMenuOpen(false)}
             >
-              {logged.loggedIn ? (
-                <>
-                  <li className="ml-5">
-                    <Link to="/" className={getLinkClass("/")}>
-                      Home
-                    </Link>
-                  </li>
-                  <li className="ml-5">
-                    <Link to="/about" className={getLinkClass("/about")}>
-                      About
-                    </Link>
-                  </li>
-                  <li className="ml-5">
-                    <Link to="/contact" className={getLinkClass("/contact")}>
-                      Contact
-                    </Link>
-                  </li>
-                  <li className="ml-5">
-                    <Link
-                      onClick={handleLogout}
-                      to="/"
-                      className={getLinkClass("/logOut")}
-                    >
-                      LogOut
-                    </Link>
-                  </li>
-                </>
-              ) : (
-                <li className="ml-5">
-                  <Link to="/login" className={getLinkClass("/login")}>
-                    Login
-                  </Link>
-                </li>
-              )}
-            </ul>
+              Features
+            </Link>
+            <Link 
+              to="/pricing" 
+              className="text-white hover:text-orange-400 transition duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Pricing
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-white hover:text-orange-400 transition duration-300"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
+            </Link>
+            
+            {logged?.loggedIn ? (
+              <button 
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="text-white hover:text-orange-400 transition duration-300 text-left"
+              >
+                Log Out
+              </button>
+            ) : (
+              <Link 
+                to="/login" 
+                className="text-white hover:text-orange-400 transition duration-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Log In
+              </Link>
+            )}
           </div>
         </div>
-      </nav>
-    </>
+      )}
+    </nav>
   );
-}
+};
 
 export default Navbar;

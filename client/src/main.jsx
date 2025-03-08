@@ -15,7 +15,7 @@ createRoot(document.getElementById("root")).render(
     <StrictMode>
       <Analytics />
       <ToastContainer />
-      <SkeletonTheme baseColor="#bdbdbd00" highlightColor="#444">
+      <SkeletonTheme baseColor="#bdbdbd00" highlightColor="#d6d8da">
         <App />
       </SkeletonTheme>
     </StrictMode>
