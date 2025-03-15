@@ -131,7 +131,7 @@ function Groups() {
               to={"/group?g=" + group._id}
               className="block group"
               >
-                <div className="bg-[#242a3a] border border-[#2a3040] rounded-lg p-4 py-6 shadow-md hover:shadow-lg hover:border-[#ff7a45] transition-all duration-200 relative">
+                <div className="bg-[#242a3a] border border-[#2a3040] rounded-lg p-4 pb-6 pt-8 shadow-md hover:shadow-lg hover:border-[#ff7a45] transition-all duration-200 relative">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center">
                       <div>
@@ -189,7 +189,7 @@ function Groups() {
 
                   <button
                     onClick={(e) => openDeleteConfirmation(e, group)}
-                    className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition-opacity duration-200"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
