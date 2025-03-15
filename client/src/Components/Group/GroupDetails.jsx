@@ -16,7 +16,7 @@ import Skeleton from "react-loading-skeleton";
 function GroupDetails() {
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-
+  const [showShimmer, setShowShimmer] = useState(true);
   const user = useSelector((store) => store.user);
   const logged = user.user;
   const [searchParams] = useSearchParams();
@@ -56,6 +56,7 @@ function GroupDetails() {
         setTotalExpenses(data?.data?.totalExpenses);
         setYourExpenses(data?.data?.yourExpenses);
         setBalance(data?.data?.balance);
+        setShowShimmer(false);
       }
     } catch (error) {
       console.log("Error in getting the groups", error.message);
@@ -63,6 +64,7 @@ function GroupDetails() {
   }
 
   async function getGroup() {
+
     try {
       const response = await fetch(
         `${
@@ -152,7 +154,7 @@ function GroupDetails() {
         )}
 
         <div className="bg-[#1a2030]">
-          {expenses.length > 0 ? (
+          {(!showShimmer)? (
             expenses.map((expense) => {
               return isMobile ? (
                 <MobileExpense

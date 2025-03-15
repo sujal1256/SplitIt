@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { FaLock } from "react-icons/fa";
+import { FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import loginBack from "../Assets/loginBack.jpeg";
 
 function ResetPassword() {
   const [searchParams] = useSearchParams();
   const email = searchParams.get("email") || "";
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -53,45 +54,91 @@ function ResetPassword() {
   }
 
   return (
-    <div
-      className="flex items-center justify-center h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${loginBack})`, backgroundSize: "cover" }}
-    >
-      <form className="w-full max-w-[420px] mx-auto bg-primary mb-10 p-10 rounded-lg shadow-lg text-white">
-        <h1 className="text-3xl text-center">Reset Password</h1>
-        <div className="relative w-full h-12 my-7">
-          <input
-            type="password"
-            placeholder="New Password"
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-            value={newPassword}
-            className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
-          />
-          <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white" />
+    <div className="flex items-center justify-center min-h-screen bg-[#1A1E2B]">
+      <div className="w-full max-w-[420px] mx-auto p-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">Reset Password</h1>
+          <p className="text-gray-400">Create a new password for your account</p>
         </div>
-        <div className="relative w-full h-12 my-7">
-          <input
-            type="password"
-            placeholder="Confirm New Password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-            value={confirmPassword}
-            className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
-          />
-          <FaLock className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white" />
+        
+        <form className="bg-[#242A3A] p-6 rounded-lg shadow-lg">
+          {email && (
+            <div className="mb-4">
+              <div className="bg-[#1A1E2B] p-3 rounded-lg border border-gray-700 mb-5">
+                <p className="text-gray-400 text-sm">Resetting password for:</p>
+                <p className="text-white font-medium truncate">{email}</p>
+              </div>
+            </div>
+          )}
+          
+          <div className="relative w-full mb-4">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <FaLock className="text-gray-400" />
+            </div>
+            <input
+              type={showNewPassword ? "text" : "password"}
+              placeholder="New Password"
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              value={newPassword}
+              className="w-full bg-[#1A1E2B] text-white border border-gray-700 rounded-lg pl-10 py-3 focus:outline-none focus:border-[#FF6B35]"
+            />
+            <div 
+              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {!showNewPassword ? (
+                <FaEyeSlash className="text-gray-400" />
+              ) : (
+                <FaEye className="text-gray-400" />
+              )}
+            </div>
+          </div>
+
+          <div className="relative w-full mb-6">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <FaLock className="text-gray-400" />
+            </div>
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm New Password"
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+              value={confirmPassword}
+              className="w-full bg-[#1A1E2B] text-white border border-gray-700 rounded-lg pl-10 py-3 focus:outline-none focus:border-[#FF6B35]"
+            />
+            <div 
+              className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {!showConfirmPassword ? (
+                <FaEyeSlash className="text-gray-400" />
+              ) : (
+                <FaEye className="text-gray-400" />
+              )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className={`w-full py-3 bg-[#FF6B35] hover:bg-[#FF7F50] transition-colors duration-200 text-white font-bold rounded-lg ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            onClick={handleResetPassword}
+            disabled={loading}
+          >
+            {loading ? "Resetting..." : "Reset Password"}
+          </button>
+        </form>
+        
+        <div className="mt-6 text-center">
+          <p className="text-gray-400">
+            <a href="/login" className="text-[#FF6B35] hover:underline">
+              Back to login page
+            </a>
+          </p>
         </div>
-        <button
-          type="submit"
-          className={`w-full h-11 bg-white hover:bg-secondary border-none outline-none rounded-full shadow-lg cursor-pointer text-lg text-gray-800 font-bold mt-4 ${
-            loading ? "opacity-50" : "opacity-100"
-          }`}
-          onClick={handleResetPassword}
-          disabled={loading}
-        >
-          Reset Password
-        </button>
-      </form>
+      </div>
     </div>
   );
 }

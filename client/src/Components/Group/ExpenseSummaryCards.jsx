@@ -1,7 +1,7 @@
 import React from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
-const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses }) => {
+const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses}) => {
   let negative = balance > 0 ? "" : "-";
 
   return (

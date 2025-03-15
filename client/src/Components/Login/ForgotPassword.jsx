@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { FaUser } from "react-icons/fa";
+import { FaEnvelope } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { validateEmail } from "../../utils/regexCheck";
-import loginBack from "../Assets/loginBack.jpeg";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 function ForgotPassword() {
@@ -39,12 +38,9 @@ function ForgotPassword() {
         }
       );
       const data = await response.json();
-      console.log(data);
 
       if (response.ok) {
         toast.success("OTP sent to your email", { className: "toast-mobile" });
-
-        // ✅ Navigate only after successful OTP request
         navigate(`otp?email=${email}`);
       } else {
         toast.error(data.message, { className: "toast-mobile" });
@@ -59,37 +55,49 @@ function ForgotPassword() {
   }
 
   return (
-    <div
-      className="flex items-center justify-center h-screen bg-cover bg-center"
-      style={{ backgroundImage: `url(${loginBack})`, backgroundSize: "cover" }}
-    >
-      <form
-        action=""
-        className="w-full max-w-[420px] mx-auto bg-primary mb-10 p-10 rounded-lg shadow-lg text-white"
-      >
-        <h1 className="text-3xl text-center">Forgot Password</h1>
-        <div className="relative w-full h-12 my-7">
-          <input
-            type="text"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            value={email}
-            className="w-full h-full bg-transparent border-white outline-none border-2 border-opacity-10 rounded-full text-lg text-white px-5 py-3 placeholder-white"
-          />
-          <FaUser className="absolute right-5 top-1/2 transform -translate-y-1/2 text-lg text-white" />
+    <div className="flex items-center justify-center min-h-screen bg-[#1A1E2B]">
+      <div className="w-full max-w-[420px] mx-auto p-8">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-white mb-2">Forgot Password</h1>
+          <p className="text-gray-400">Enter your email to receive a verification code</p>
         </div>
-        <button
-          type="submit"
-          className={`w-full h-11 bg-white hover:bg-secondary border-none outline-none rounded-full shadow-lg cursor-pointer text-lg text-gray-800 font-bold mt-4 ${
-            loading ? "opacity-50" : "opacity-100"
-          }`}
-          onClick={handleForgotPassword}
-          disabled={loading}
-        >
-          Send OTP
-        </button>
-      </form>
+        
+        <form className="bg-[#242A3A] p-6 rounded-lg shadow-lg">
+          <div className="relative w-full mb-6">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <FaEnvelope className="text-gray-400" />
+            </div>
+            <input
+              type="text"
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              value={email}
+              className="w-full bg-[#1A1E2B] text-white border border-gray-700 rounded-lg pl-10 py-3 focus:outline-none focus:border-[#FF6B35]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className={`w-full py-3 bg-[#FF6B35] hover:bg-[#FF7F50] transition-colors duration-200 text-white font-bold rounded-lg ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+            onClick={handleForgotPassword}
+            disabled={loading}
+          >
+            {loading ? "Sending..." : "Send OTP"}
+          </button>
+        </form>
+        
+        <div className="mt-6 text-center">
+          <p className="text-gray-400">
+            Remember your password?{" "}
+            <a href="/login" className="text-[#FF6B35] hover:underline">
+              Log in
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
