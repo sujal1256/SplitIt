@@ -98,8 +98,6 @@ const Navbar = () => {
         {/* Center Navigation Links */}
         <div className="hidden md:flex space-x-8">
           <Link to="/" className="text-white hover:text-orange-400 transition duration-300">Home</Link>
-          <Link to="/features" className="text-white hover:text-orange-400 transition duration-300">Features</Link>
-          <Link to="/pricing" className="text-white hover:text-orange-400 transition duration-300">Pricing</Link>
           <Link to="/about" className="text-white hover:text-orange-400 transition duration-300">About</Link>
         </div>
         
@@ -150,20 +148,6 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
             >
               Home
-            </Link>
-            <Link 
-              to="/features" 
-              className="text-white hover:text-orange-400 transition duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Features
-            </Link>
-            <Link 
-              to="/pricing" 
-              className="text-white hover:text-orange-400 transition duration-300"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Pricing
             </Link>
             <Link 
               to="/about" 

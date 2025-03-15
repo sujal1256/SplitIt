@@ -71,7 +71,7 @@ function AddExpense({
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full text-white">
       <div className="flex flex-col gap-4">
         <input
           type="text"
@@ -87,18 +87,18 @@ function AddExpense({
           onChange={(e) => setAmount(e.target.value)}
           className="p-2 border rounded-lg text-black w-full"
         />
-        <p className="text-lg font-semibold text-gray-800">
+        <p className="text-lg font-semibold">
           Group Owner: {group?.group?.groupOwner?.userName}
         </p>
         <div className="mt-2">
-          <p className="text-lg font-semibold text-gray-800 mb-2">
+          <p className="text-lg font-semibold mb-2">
             Select members to split the expense with:
           </p>
           <div className="flex flex-wrap gap-3">
             {group?.group?.members.map((member) => (
               <label
                 key={member._id}
-                className="flex items-center gap-2 text-gray-800"
+                className="flex items-center gap-2"
               >
                 <input
                   type="checkbox"
@@ -128,7 +128,7 @@ function AddExpense({
         <div className="flex justify-end gap-2 mt-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400 text-gray-800"
+            className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
           >
             Cancel
           </button>

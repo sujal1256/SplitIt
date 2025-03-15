@@ -61,7 +61,6 @@ function GroupDetails() {
       console.log("Error in getting the groups", error.message);
     }
   }
-  console.log(expenses);
 
   async function getGroup() {
     try {
@@ -117,24 +116,14 @@ function GroupDetails() {
     }
   };
 
-  // return expenses?.length === 0 ? (
-  //   <ShimmerGroupDetails />
-  // ) :
   return (
-    <div className="min-h-screen h-fit flex flex-col bg-slate-200 p-4">
-      <div className="border-2 border-text-colour p-3 rounded-lg text-white bg-primary m-5 text-center max-w-4xl mx-auto w-full">
-        <h1 className="text-3xl">
-          {group?.group != null ? group?.group?.groupName : <Skeleton />}
+    <div className="min-h-screen h-fit flex flex-col bg-[#121724] p-4 text-white pt-12">
+      <div className="border border-gray-700 p-4 rounded-lg bg-[#1a2030] mb-6 max-w-4xl mx-auto w-full">
+        <h1 className="md:text-4xl text-2xl font-semibold text-center">
+          {group?.group != null ? group?.group?.groupName : <Skeleton baseColor="#2a3142" highlightColor="#3a4152" />}
         </h1>
-        {/* FIXME: Show the total Owe from the group */}
-        {/* <h2>
-          {totalTransaction < 0
-            ? `You Owe ${selectedCurrency} ${Math.abs(totalTransaction).toFixed(
-                2
-              )}`
-            : `You Lent ${selectedCurrency} ${totalTransaction.toFixed(2)}`}
-        </h2> */}
       </div>
+
       <ExpenseSummaryCards
         totalTransaction={totalTransaction}
         memberTransactions={memberTransactions}
@@ -143,25 +132,26 @@ function GroupDetails() {
         balance={balance}
       />
 
-      <div className="w-full max-w-4xl mx-auto my-4 border">
+      <div className="w-full max-w-4xl mx-auto my-4 border border-gray-700 rounded-lg overflow-hidden">
         {isMobile ? (
-          <div className="bg-primary text-white p-4 rounded-t-lg flex gap-2 font-medium text-lg">
+          <div className="bg-[#1f2937] p-4 rounded-t-lg flex gap-2 font-medium text-lg">
             Expenses{" "}
-            <span className="text-sm flex items-center text-slate-300">
+            <span className="text-sm flex items-center text-gray-400">
               ({expenses?.length} expenses)
             </span>
           </div>
         ) : (
-          <div className="bg-primary text-white p-4 grid grid-cols-6 ">
+          <div className="bg-[#1f2937] p-4 grid grid-cols-6 font-medium">
             <div>Description</div>
             <div>Paid By</div>
             <div>Date</div>
             <div>Amount</div>
             <div>Total Amount</div>
+            <div></div>
           </div>
         )}
 
-        <div className="border border-gray-500">
+        <div className="bg-[#1a2030]">
           {expenses.length > 0 ? (
             expenses.map((expense) => {
               return isMobile ? (
@@ -181,30 +171,32 @@ function GroupDetails() {
               );
             })
           ) : (
-            <Skeleton height={45} count={8}/>
+            <Skeleton height={45} count={8} baseColor="#2a3142" highlightColor="#3a4152" />
           )}
         </div>
 
         <div
-          className="w-fit mt-4 mx-auto"
-          onClick={() => setShowAddExpense(true)}
+          className="w-full py-3 flex justify-center bg-[#1a2030] border-t border-gray-700"
         >
-          <p className="text-gray-400 bg-gray-300 rounded-full p-3 text-center">
+          <button 
+            onClick={() => setShowAddExpense(true)}
+            className="text-gray-400 bg-[#2a3142] hover:bg-[#323a4d] rounded-full p-2.5 flex items-center justify-center transition-colors"
+          >
             <FaPlus />
-          </p>
+          </button>
         </div>
       </div>
 
       {showAddExpense && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 modal-backdrop"
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 modal-backdrop"
           onClick={handleCloseModal}
         >
           <div
-            className="bg-white rounded-lg w-11/12 md:w-3/4 lg:w-2/5 max-w-2xl p-6"
+            className="bg-[#1a2030] rounded-lg w-11/12 md:w-3/4 lg:w-2/5 max-w-2xl p-6 border border-gray-700"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold mb-4 text-gray-800">
+            <h2 className="text-xl font-bold mb-4 text-white">
               Add New Expense
             </h2>
 
@@ -217,12 +209,12 @@ function GroupDetails() {
           </div>
         </div>
       )}
-      <div className="fixed bottom-20 right-44">
+      <div className="fixed bottom-5 right-5">
         <button
-          className="fixed flex items-center gap-2 bg-primary text-white p-4 rounded-lg shadow-md hover:bg-green-700"
+          className="flex items-center gap-2 bg-[#ff5733] text-white p-3 rounded-lg shadow-md hover:bg-[#e84c2b] transition-colors"
           onClick={() => setShowAddExpense(true)}
         >
-          <MdOutlineMessage size={24} /> Add Expense
+          <MdOutlineMessage size={20} /> Add Expense
         </button>
       </div>
     </div>

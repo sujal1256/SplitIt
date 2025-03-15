@@ -42,7 +42,7 @@ function DesktopExpense({ expense, logged, getExpenses }) {
   }
 
   return (
-    <div className="grid grid-cols-6 border-b border-gray-500 hover:bg-gray-50">
+    <div className="grid grid-cols-6 border-b border-gray-500 hover:bg-[#121724]">
       <div className="p-4 flex items-center">{expense.expenseName}</div>
       <div className="p-4 flex items-center ">
         {expense.memberWhoPaid?.userName}
