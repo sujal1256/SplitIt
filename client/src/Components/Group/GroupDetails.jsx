@@ -9,6 +9,7 @@ import DesktopExpense from "./DesktopExpense.jsx";
 import AddExpense from "./AddExpense.jsx";
 import ExpenseSummaryCards from "./ExpenseSummaryCards.jsx";
 import MobileExpense from "./MobileExpense.jsx";
+import ExpenseSidebar from "./ExpenseSidebar.jsx";
 import { FaPlus } from "react-icons/fa";
 import ShimmerGroupDetails from "./ShimmerGroupDetails.jsx";
 import Skeleton from "react-loading-skeleton";
@@ -27,6 +28,8 @@ function GroupDetails() {
   const [yourExpenses, setYourExpenses] = useState();
   const [balance, setBalance] = useState();
   const [selectedMembers, setSelectedMembers] = useState([]);
+  const [selectedExpense, setSelectedExpense] = useState(null);
+  const [showSidebar, setShowSidebar] = useState(false);
 
   const group = useSelector((store) => store.group);
   const dispatch = useDispatch();
@@ -64,7 +67,6 @@ function GroupDetails() {
   }
 
   async function getGroup() {
-
     try {
       const response = await fetch(
         `${
@@ -111,12 +113,41 @@ function GroupDetails() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Handle expense selection to show in sidebar
+  const handleSelectExpense = (expense) => {
+    setSelectedExpense(expense);
+    setShowSidebar(true);
+    
+    // Add a class to the body to prevent scrolling when sidebar is open on mobile
+    if (isMobile) {
+      document.body.classList.add('overflow-hidden');
+    }
+  };
+
+  // Close sidebar
+  const handleCloseSidebar = () => {
+    setShowSidebar(false);
+    document.body.classList.remove('overflow-hidden');
+  };
+
   // Close modal if clicked outside
   const handleCloseModal = (e) => {
     if (e.target.classList.contains("modal-backdrop")) {
       setShowAddExpense(false);
     }
   };
+
+  // Close sidebar on escape key
+  useEffect(() => {
+    const handleEscKey = (e) => {
+      if (e.key === 'Escape') {
+        handleCloseSidebar();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscKey);
+    return () => window.removeEventListener('keydown', handleEscKey);
+  }, []);
 
   return (
     <div className="min-h-screen h-fit flex flex-col bg-[#121724] p-4 text-white pt-12">
@@ -162,6 +193,7 @@ function GroupDetails() {
                   expense={expense}
                   logged={logged}
                   getExpenses={getExpenses}
+                  onSelectExpense={handleSelectExpense}
                 />
               ) : (
                 <DesktopExpense
@@ -169,6 +201,7 @@ function GroupDetails() {
                   expense={expense}
                   logged={logged}
                   getExpenses={getExpenses}
+                  onSelectExpense={handleSelectExpense}
                 />
               );
             })
@@ -189,6 +222,7 @@ function GroupDetails() {
         </div>
       </div>
 
+      {/* Add Expense Modal */}
       {showAddExpense && (
         <div
           className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 modal-backdrop"
@@ -211,6 +245,25 @@ function GroupDetails() {
           </div>
         </div>
       )}
+
+      {/* Expense Sidebar */}
+      {showSidebar && (
+        <>
+          {/* Backdrop for mobile - clicking this closes the sidebar */}
+          <div 
+            className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+            onClick={handleCloseSidebar}
+          ></div>
+          
+          {/* The actual sidebar */}
+          <ExpenseSidebar 
+            expense={selectedExpense} 
+            onClose={handleCloseSidebar} 
+            loggedUser={logged}
+          />
+        </>
+      )}
+
       <div className="fixed bottom-5 right-5">
         <button
           className="flex items-center gap-2 bg-[#ff5733] text-white p-3 rounded-lg shadow-md hover:bg-[#e84c2b] transition-colors"

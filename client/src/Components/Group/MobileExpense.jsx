@@ -1,58 +1,79 @@
 import React from "react";
+import { FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
-function MobileExpense({ expense, logged, getExpenses }) {
-  // Extract date information
-  const expenseDate = new Date(expense.createdAt);
-  const month = expenseDate.toLocaleString("default", { month: "short" });
-  const day = expenseDate.getDate();
+function MobileExpense({ expense, logged, getExpenses, onSelectExpense }) {
+  const handleDelete = async (e, expenseId) => {
+    e.stopPropagation(); // Prevent triggering the parent onClick
+    
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/api/v1/expense/delete-expense",
+      {
+        method: "DELETE",
+        body: JSON.stringify({
+          expenseId,
+        }),
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        credentials: "include",
+      }
+    );
 
-  // Determine user relationship to the expense
+    const data = await response.json();
+    console.log(data);
+
+    if (response.ok) {
+      getExpenses();
+    } else {
+      toast.error("Error while deleting expense", {
+        className: "toast-mobile",
+      });
+    }
+  };
+
   const isUserPayer = expense.memberWhoPaid?._id === logged?.user?.userId;
   const isUserIncluded = expense.membersIncluded.find(
     (e) => e.memberId === logged?.user?.userId
   );
 
-  // Determine balance color
-  const balanceColor =
-    isUserPayer ? "text-green-500" : "text-red-400";
+  const balanceColor = isUserPayer ? "text-green-500" : "text-red-400";
 
   if (!isUserIncluded && !isUserPayer) {
-    return null; // Skip rendering if the user is not involved.
+    return null;
   }
 
   return (
-    <div className="flex justify-between border-b border-gray-800 py-3 px-4">
-      <div className="flex gap-2">
-        <div className="flex flex-col items-center mr-3">
-          <div className="text-sm">{month}</div>
-          <div className="text-sm">{day}</div>
-        </div>
-
-        <div className="flex flex-col">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-700 rounded-md flex items-center justify-center">
-              <span className="text-xs">📝</span>
-            </div>
-            <span className="font-medium">{expense.expenseName}</span>
-          </div>
-
-          <div className="text-sm text-gray-400 mt-1">
-            {isUserPayer ? "You" : expense.memberWhoPaid.userName} paid{" "}
-            {expense.amountPaid}
-          </div>
+    <div 
+      className="p-3 border-b border-gray-700 hover:bg-[#121724] cursor-pointer transition-colors"
+      onClick={() => onSelectExpense(expense)}
+    >
+      <div className="flex justify-between items-center mb-2">
+        <div className="font-medium">{expense.expenseName}</div>
+        <div className={`font-bold ${balanceColor}`}>
+          {isUserPayer
+            ? `+ ${expense.totalAmountLent?.toFixed(2)}`
+            : `- ${expense.amountToBePaid?.toFixed(2)}`}
         </div>
       </div>
-
-      {expense.membersIncluded.length > 1 && (
-        <div className={`flex flex-col items-end ${balanceColor}`}>
-          <span className="text-sm">
-            {isUserPayer ? "You Lent" : "You Owe"}
+      
+      <div className="flex justify-between items-center text-sm text-gray-400">
+        <div>Paid by {expense.memberWhoPaid?.userName}</div>
+        <div className="flex items-center gap-4">
+          <span>
+            {new Date(expense.createdAt).getDate()}/
+            {new Date(expense.createdAt).getMonth() + 1}/
+            {new Date(expense.createdAt).getFullYear()}
           </span>
-          <span className="text-lg font-bold">
-            ₹{isUserPayer ? expense.totalAmountLent?.toFixed(2) : expense.amountToBePaid?.toFixed(2)}
-          </span>
+          <button
+            onClick={(e) => handleDelete(e, expense._id)}
+            className="text-red-500 p-1"
+          >
+            <FaTrash />
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
