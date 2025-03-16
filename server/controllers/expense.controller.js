@@ -111,7 +111,6 @@ async function handleGetAllExpenses(req, res) {
       }
     })
   );
-  // console.log(formattedExpenses);
 
   let balance = 0;
   formattedExpenses.forEach((e) => {
@@ -138,23 +137,22 @@ async function handleGetAllExpenses(req, res) {
       let transaction = 0;
 
       formattedExpenses.forEach((t) => {
-        const isUserPaid = String(t.memberWhoPaid) === String(userId);
-        const isMemberPaid = String(t.memberWhoPaid) === String(m.memberId);
+        const isUserPaid = t.memberWhoPaid.equals(userId);
+        const isMemberPaid = t.memberWhoPaid.equals(m.memberId);
 
         if (isUserPaid) {
-          const lentAmount = t?.amountLentTo?.find(
+          const isAmountLent = t?.amountLentTo?.find(
             (member) => member.memberId.toString() === m.memberId.toString()
           );
-
-          if (lentAmount) {
+          if (isAmountLent) {
             transaction += t.amountLent;
           }
         } else if (isMemberPaid) {
-          const owedAmount = t?.amountOwedFrom?.find(
+          const isAmountOwed = t?.amountOwedFrom?.find(
             (member) => member.memberId.toString() === m.memberId.toString()
           );
 
-          if (owedAmount) {
+          if (isAmountOwed) {
             transaction -= t.amountToBePaid;
           }
         }

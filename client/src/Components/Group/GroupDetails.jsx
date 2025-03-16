@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
-import { toast } from "react-toastify";
+import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { MdOutlineMessage } from "react-icons/md";
 import TotalExpenses from "./TotalExpenses.jsx";
 import DesktopExpense from "./DesktopExpense.jsx";
@@ -11,7 +11,8 @@ import ExpenseSummaryCards from "./ExpenseSummaryCards.jsx";
 import MobileExpense from "./MobileExpense.jsx";
 import ExpenseSidebar from "./ExpenseSidebar.jsx";
 import { FaPlus } from "react-icons/fa";
-import ShimmerGroupDetails from "./ShimmerGroupDetails.jsx";
+import SettleUp from "./SettleUpExpense.jsx";
+
 import Skeleton from "react-loading-skeleton";
 
 function GroupDetails() {
@@ -30,6 +31,7 @@ function GroupDetails() {
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [selectedExpense, setSelectedExpense] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
+  const [isSettleUpOpen, setSettleUpOpen] = useState(false);
 
   const group = useSelector((store) => store.group);
   const dispatch = useDispatch();
@@ -117,17 +119,17 @@ function GroupDetails() {
   const handleSelectExpense = (expense) => {
     setSelectedExpense(expense);
     setShowSidebar(true);
-    
+
     // Add a class to the body to prevent scrolling when sidebar is open on mobile
     if (isMobile) {
-      document.body.classList.add('overflow-hidden');
+      document.body.classList.add("overflow-hidden");
     }
   };
 
   // Close sidebar
   const handleCloseSidebar = () => {
     setShowSidebar(false);
-    document.body.classList.remove('overflow-hidden');
+    document.body.classList.remove("overflow-hidden");
   };
 
   // Close modal if clicked outside
@@ -140,20 +142,30 @@ function GroupDetails() {
   // Close sidebar on escape key
   useEffect(() => {
     const handleEscKey = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         handleCloseSidebar();
       }
     };
-    
-    window.addEventListener('keydown', handleEscKey);
-    return () => window.removeEventListener('keydown', handleEscKey);
+
+    window.addEventListener("keydown", handleEscKey);
+    return () => window.removeEventListener("keydown", handleEscKey);
   }, []);
+
+  const handleCloseSettleModal = (e) => {
+    if (e.target.classList.contains("modal-backdrop")) {
+      setSettleUpOpen(false);
+    }
+  };
 
   return (
     <div className="min-h-screen h-fit flex flex-col bg-[#121724] p-4 text-white pt-12">
       <div className="border border-gray-700 p-4 rounded-lg bg-[#1a2030] mb-6 max-w-4xl mx-auto w-full">
         <h1 className="md:text-4xl text-2xl font-semibold text-center">
-          {group?.group != null ? group?.group?.groupName : <Skeleton baseColor="#2a3142" highlightColor="#3a4152" />}
+          {group?.group != null ? (
+            group?.group?.groupName
+          ) : (
+            <Skeleton baseColor="#2a3142" highlightColor="#3a4152" />
+          )}
         </h1>
       </div>
 
@@ -165,7 +177,7 @@ function GroupDetails() {
         balance={balance}
       />
 
-      <div className="w-full max-w-4xl mx-auto my-4 border border-gray-700 rounded-lg overflow-hidden">
+      <div className="w-full max-w-4xl mx-auto my-4 mb-16 border border-gray-700 rounded-lg overflow-hidden">
         {isMobile ? (
           <div className="bg-[#1f2937] p-4 rounded-t-lg flex gap-2 font-medium text-lg">
             Expenses{" "}
@@ -185,7 +197,7 @@ function GroupDetails() {
         )}
 
         <div className="bg-[#1a2030]">
-          {(!showShimmer)? (
+          {!showShimmer ? (
             expenses.map((expense) => {
               return isMobile ? (
                 <MobileExpense
@@ -206,14 +218,17 @@ function GroupDetails() {
               );
             })
           ) : (
-            <Skeleton height={45} count={8} baseColor="#2a3142" highlightColor="#3a4152" />
+            <Skeleton
+              height={45}
+              count={8}
+              baseColor="#2a3142"
+              highlightColor="#3a4152"
+            />
           )}
         </div>
 
-        <div
-          className="w-full py-3 flex justify-center bg-[#1a2030] border-t border-gray-700"
-        >
-          <button 
+        <div className="w-full py-3 flex justify-center bg-[#1a2030] border-t border-gray-700">
+          <button
             onClick={() => setShowAddExpense(true)}
             className="text-gray-400 bg-[#2a3142] hover:bg-[#323a4d] rounded-full p-2.5 flex items-center justify-center transition-colors"
           >
@@ -235,7 +250,6 @@ function GroupDetails() {
             <h2 className="text-xl font-bold mb-4 text-white">
               Add New Expense
             </h2>
-
             <AddExpense
               getExpenses={getExpenses}
               setSelectedMembers={setSelectedMembers}
@@ -246,25 +260,46 @@ function GroupDetails() {
         </div>
       )}
 
+      {/* Settle Up Modal */}
+      {isSettleUpOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 modal-backdrop"
+          onClick={handleCloseSettleModal}
+        >
+          <SettleUp
+            memberTransactions={memberTransactions}
+            totalTransaction={totalTransaction}
+            isOpen={isSettleUpOpen}
+            onClose={() => setSettleUpOpen(false)}
+          />
+        </div>
+      )}
+
       {/* Expense Sidebar */}
       {showSidebar && (
         <>
           {/* Backdrop for mobile - clicking this closes the sidebar */}
-          <div 
+          <div
             className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
             onClick={handleCloseSidebar}
           ></div>
-          
+
           {/* The actual sidebar */}
-          <ExpenseSidebar 
-            expense={selectedExpense} 
-            onClose={handleCloseSidebar} 
+          <ExpenseSidebar
+            expense={selectedExpense}
+            onClose={handleCloseSidebar}
             loggedUser={logged}
           />
         </>
       )}
 
-      <div className="fixed bottom-5 right-5">
+      <div className="fixed bottom-5 right-5 flex gap-3">
+        <button
+          className="flex items-center gap-2 bg-[#4C9AFF] text-white p-3 rounded-lg shadow-md hover:bg-[#3D8BE5] transition-colors"
+          onClick={() => setSettleUpOpen(true)}
+        >
+          <MdOutlineAccountBalanceWallet size={20} /> Settle Up
+        </button>
         <button
           className="flex items-center gap-2 bg-[#ff5733] text-white p-3 rounded-lg shadow-md hover:bg-[#e84c2b] transition-colors"
           onClick={() => setShowAddExpense(true)}

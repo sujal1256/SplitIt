@@ -28,6 +28,7 @@ function AddExpense({
       });
       return;
     }
+    console.log(selectedMembers)
 
     try {
       const response = await fetch(

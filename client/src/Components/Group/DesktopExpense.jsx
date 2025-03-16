@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 function DesktopExpense({ expense, logged, getExpenses, onSelectExpense }) {
   const handleDelete = async (e, expenseId) => {
     e.stopPropagation(); // Prevent triggering the parent onClick
-
+    
     const response = await fetch(
       import.meta.env.VITE_BACKEND_URL + "/api/v1/expense/delete-expense",
       {
@@ -45,7 +45,7 @@ function DesktopExpense({ expense, logged, getExpenses, onSelectExpense }) {
   }
 
   return (
-    <div
+    <div 
       className="grid grid-cols-6 border-b border-gray-500 hover:bg-[#121724] cursor-pointer transition-colors"
       onClick={() => onSelectExpense(expense)}
     >
@@ -58,13 +58,13 @@ function DesktopExpense({ expense, logged, getExpenses, onSelectExpense }) {
         {new Date(expense.createdAt).getMonth() + 1}/
         {new Date(expense.createdAt).getFullYear()}
       </div>
-      <div
-        className={`font-bold text-lg p-2 rounded-lg flex items-center ${balanceColor}`}
-      >
-        {isUserPayer
-          ? `+ ${expense.totalAmountLent?.toFixed(2)}`
-          : `- ${expense.amountToBePaid?.toFixed(2)}`}
-      </div>
+        <div
+          className={`font-bold text-lg p-2 rounded-lg flex items-center ${balanceColor}`}
+        >
+          {isUserPayer
+            ? `+ ${expense.totalAmountLent?.toFixed(2)}`
+            : `- ${expense.amountToBePaid?.toFixed(2)}`}
+        </div>
 
       <div className="flex items-center pl-5">{expense.amountPaid}</div>
       <div className="flex items-center">
