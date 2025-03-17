@@ -91,7 +91,7 @@ async function handleGetGroups(req, res) {
 
   const groups = await Group.find({
     "members.memberId": userId,
-  });  
+  });
 
   res
     .status(200)
@@ -146,11 +146,11 @@ async function handleVerifyOTP(req, res) {
     return res.status(400).json(new ApiError(400, "User not found"));
   }
   console.log(user.otp, otp);
-  
+
   if (user.otp != otp) {
     return res.status(400).json(new ApiError(400, "OTP not verified"));
   }
-  
+
   return res
     .status(200)
     .json(new ApiResponse(200, { user }, "OTP verified successfully"));
@@ -179,6 +179,24 @@ async function handleResetPassword(req, res) {
     .json(new ApiResponse(200, { user }, "Password updated successfully"));
 }
 
+async function handleCheckExistingUser(req, res) {
+  const email = req.query.email;
+
+  if (!email) {
+    return res.status(400).json(new ApiError(400, "No email provided"));
+  }
+
+  const user = await User.findOne({ userEmail: email });
+  if (user) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, user, "User is already there in database"));
+  }
+  return res
+    .status(400)
+    .json(new ApiError(400, "User is not there in databse"));
+}
+
 export {
   handleRegister,
   handleLogin,
@@ -187,5 +205,6 @@ export {
   handleLogout,
   handleForgotPassword,
   handleVerifyOTP,
-  handleResetPassword
+  handleResetPassword,
+  handleCheckExistingUser,
 };

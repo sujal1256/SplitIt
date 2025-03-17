@@ -9,6 +9,7 @@ import {
   handleForgotPassword,
   handleVerifyOTP,
   handleResetPassword,
+  handleCheckExistingUser,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/verifyJWT.js";
 
@@ -19,10 +20,11 @@ userRouter.route("/register").post(handleRegister);
 userRouter.route("/login").post(handleLogin);
 userRouter.route("/logout").post(verifyJWT, handleLogout);
 
-userRouter.route("/checkLoggedIn").get(verifyJWT, handleCheckLoggedIn);
+userRouter.route("/checkLoggedIn").get(verifyJWT, handleCheckLoggedIn); 
 userRouter.route("/get-all-groups").get(verifyJWT, handleGetGroups);
 userRouter.route("/forgot-password").post(handleForgotPassword);
 userRouter.route("/verify-otp").post(handleVerifyOTP);
 userRouter.route("/reset-password").post(handleResetPassword);
+userRouter.route("/check-user").get(handleCheckExistingUser);
 
 export { userRouter };

@@ -75,7 +75,7 @@ async function storeInvitedUser(req, res) {
       groupId,
       name: memberName,
       email: memberEmail,
-      password,
+      password = "default",
     } = req.body;
 
     if (!groupId || !memberName || !memberEmail || !password) {

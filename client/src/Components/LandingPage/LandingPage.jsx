@@ -8,6 +8,7 @@ import {
 import FeaturesSection from "./FeturesSection.jsx";
 import TestimonialSection from "./Testimonials.jsx";
 import Footer from "./FooterSection.jsx";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -25,13 +26,13 @@ const LandingPage = () => {
             Track expenses, split bills, and manage shared costs with friends,
             roommates, and family.
           </p>
-          <button className="mx-auto md:mx-0 px-6 py-2 sm:py-3 bg-orange-400 text-white rounded hover:bg-orange-500 transition flex items-center justify-center">
+          <Link to={"/login"} className="w-fit mx-auto md:mx-0 px-6 py-2 sm:py-3 bg-orange-400 text-white rounded hover:bg-orange-500 transition flex items-center justify-center">
             <span>Get Started</span>
-          </button>
+          </Link>
         </div>
 
         {/* Right Content - App Preview */}
-        <div className="md:w-1/2 relative h-96 sm:h-80 md:h-96 w-full max-w-md mx-auto">
+        <div className="hidden md:block md:w-1/2 relative h-96 sm:h-80 md:h-96 w-full max-w-md mx-auto">
           {/* Dashboard Card */}
           <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-lg transform rotate-3 mb-4 border border-gray-700 absolute inset-x-0 top-0">
             <div className="mb-4">
