@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import { userRouter } from "./routes/user.route.js";
 import { groupRouter } from "./routes/group.route.js";
 import { expenseRouter } from "./routes/expense.route.js";
-import { connectToMongoDB } from "./connect.db.js";
+import { connectToMongoDB, connectToRedis } from "./connect.db.js";
 import cookieParser from "cookie-parser";
 // import { storeInvitedUser } from "./controllers/group.controller.js";
 import { mailRouter } from "./routes/mails.route.js";
@@ -36,6 +36,8 @@ app.use(cookieParser());
 app.use(express.static("./public"));
 
 connectToMongoDB();
+connectToRedis();
+
 // app.get("/invite", storeInvitedUser);
 app.get("/",(req, res)=>res.send("Deployed"));
 app.get("/check", (req, res) =>
