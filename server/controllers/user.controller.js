@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { getRandomOtp } from "../utils/functions.utils.js";
 import { sendOTPEmail } from "../utils/mailer.js";
+import { redisClient } from "../connect.db.js";
 
 async function handleRegister(req, res) {
   try {
@@ -82,6 +83,7 @@ async function handleLogout(req, res) {
   res.clearCookie("accessToken");
   return res.status(200).json(new ApiResponse(200, {}, "Logged out"));
 }
+
 async function handleGetGroups(req, res) {
   const { userId } = req.user;
 
@@ -89,13 +91,37 @@ async function handleGetGroups(req, res) {
     return res.status(400).json(new ApiError(400, "User not found"));
   }
 
-  const groups = await Group.find({
-    "members.memberId": userId,
-  });
+  try {
+    const cachedGroups = await redisClient.get(`groups:${userId}`);
+    if (cachedGroups) {
+      return res
+        .status(200)
+        .json(
+          new ApiResponse(
+            200,
+            JSON.parse(cachedGroups),
+            "Groups fetched successfully from cache"
+          )
+        );
+    }
 
-  res
-    .status(200)
-    .json(new ApiResponse(200, groups, "Group fetched successfully"));
+    const groups = await Group.find({
+      "members.memberId": userId,
+    });
+
+    await redisClient.set(
+      `groups:${userId}`,
+      JSON.stringify(groups),
+      "EX",
+      3600
+    );
+
+    res
+      .status(200)
+      .json(new ApiResponse(200, groups, "Group fetched successfully"));
+  } catch (error) {
+    res.status(500).json(new ApiError(500, "Error fetching groups", error));
+  }
 }
 
 async function handleCheckLoggedIn(req, res) {

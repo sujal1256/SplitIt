@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addGroup, removeGroup } from "../../redux/group.slice.js";
 import { MdOutlineAccountBalanceWallet } from "react-icons/md";
 import { MdOutlineMessage } from "react-icons/md";
-import TotalExpenses from "./TotalExpenses.jsx";
 import DesktopExpense from "./DesktopExpense.jsx";
 import AddExpense from "./AddExpense.jsx";
 import ExpenseSummaryCards from "./ExpenseSummaryCards.jsx";
@@ -198,7 +197,7 @@ function GroupDetails() {
 
         <div className="bg-[#1a2030]">
           {!showShimmer ? (
-            expenses.map((expense) => {
+            expenses?.map((expense) => {
               return isMobile ? (
                 <MobileExpense
                   key={expense?._id}
