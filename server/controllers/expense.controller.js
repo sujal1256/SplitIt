@@ -67,6 +67,7 @@ async function handleGetAllExpenses(req, res) {
     const expenses = await Expense.find({ expenseGroup: groupId });
     let totalExpenses = 0;
     let yourExpenses = 0;
+    let balance = 0;
     const formattedExpenses = await Promise.all(
       expenses.map(async (e) => {
         const n = e.membersIncluded.length;
@@ -122,7 +123,6 @@ async function handleGetAllExpenses(req, res) {
       })
     );
 
-    let balance = 0;
     formattedExpenses.forEach((e) => {
       if (e.memberWhoPaid._id == userId) {
         balance += e.totalAmountLent;
@@ -132,7 +132,6 @@ async function handleGetAllExpenses(req, res) {
         }
       }
     });
-
     const totalTransaction = formattedExpenses.reduce((acc, e) => {
       if (e.memberWhoPaid._id == userId) {
         return acc + e.totalAmountLent;
@@ -187,14 +186,7 @@ async function handleGetAllExpenses(req, res) {
     return res.status(200).json(
       new ApiResponse(
         200,
-        {
-          totalTransaction,
-          formattedExpenses,
-          memberTransaction,
-          totalExpenses,
-          yourExpenses,
-          balance,
-        },
+        obj,
         "Expenses fetched successfully"
       )
     );

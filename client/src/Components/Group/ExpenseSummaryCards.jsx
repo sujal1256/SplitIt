@@ -38,7 +38,7 @@ const ExpenseSummaryCards = ({ balance, yourExpenses, totalExpenses}) => {
               balance > 0 ? "text-green-500" : "text-red-600"
             } font-bold text-md sm:text-2xl`}
           >
-            {balance?`${negative}₹${Math.abs(balance)?.toFixed(2)}`:<Skeleton/>}
+            {balance !== null?`${negative}₹${Math.abs(balance)?.toFixed(2)}`:<Skeleton/>}
           </span>
         </div>
       </div>
